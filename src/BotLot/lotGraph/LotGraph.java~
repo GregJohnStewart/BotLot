@@ -1,0 +1,17 @@
+/**
+
+
+
+
+**/
+
+/* imports*/
+import java.util.Arrays;//for the edges
+import java.util.HashMap;//for attributes
+
+
+public class LotEdge{
+    public LotNode curNode;//the node we are currently attatched to    
+    
+    
+}//class LotEdge

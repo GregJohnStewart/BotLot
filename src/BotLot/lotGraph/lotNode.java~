@@ -1,0 +1,20 @@
+/**
+
+
+
+
+**/
+
+/* imports*/
+import java.util.HashMap;
+
+
+public class LotNode{
+    public String id;//the ID of the node, required
+    private HashMap<String,String> attributes;//user defined attributes of the node, defaults to empty
+    public long metric;//the metric for the node, defaults to 0
+    private ArrayList<lotEdge> edges//edges attatched to this node, default empty
+    
+    
+    
+}//class LotNode
