@@ -15,7 +15,6 @@ Last Edit: 10/10/15
 import java.util.Arrays;//for the edges
 import java.util.HashMap;//for attributes
 
-
 public class LotNode{
     private String id;//the ID of the node, required before setting edges
     private long metric;//the metric for the node, defaults to 0
@@ -26,7 +25,7 @@ public class LotNode{
     //    Constructors
     //region Constructors
     //=========================================================================
-
+    
     /** LotNode(String idIn)
      *
      * Constructor to initialize the ID.
@@ -38,7 +37,7 @@ public class LotNode{
         this.setID(idIn);
     }//LotNode(String idIn)
 
-    /** LotNode(String idIn)
+    /** LotNode()
      *
      * empty constructor to initialize the node
      * <p>
