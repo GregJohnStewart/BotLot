@@ -3,11 +3,12 @@ LotEdge.java
 
 Sets up the Edge object for the BotLot graph structure.
 
-Original Author: Greg Stewart
-Other Contributor(s):
+@author Greg Stewart
 
 Started: 10/7/15
-Last Edit: 10/10/15
+Last Edit: 10/15/15
+
+@version 0.1
 
 **/
 
@@ -40,7 +41,6 @@ public class LotEdge{
     /** LotEdge(String idIn)
      *
      * empty constructor to initialize the node
-     * <p>
      */
     public void LotEdge(){
         this.attributes = new HashMap<String,String>;
@@ -132,6 +132,8 @@ public class LotEdge{
     /** setNodeTwo
      * 
      * Sets nodeTwo to the input node
+	 * 
+	 * @param	nodeIn	The node to set nodeTwo to
      */
     public void setNodeTwo(LotNode nodeIn){
         this.nodeTwo = nodeIn
@@ -146,5 +148,77 @@ public class LotEdge{
     }//setNodeTwo
     
     //endregion
+	
+	
+    //=========================================================================
+    //    Getters
+    //region getters
+    //=========================================================================
     
+	/**
+	 * gets this edge's ID
+	 *
+	 * @return		The id of this edge
+	 */
+	public String getId(){
+		return this.id;
+	}//getId
+	
+	/**
+	 * gets this edge's metric
+	 *
+	 * @return		The metric of this edge
+	 */
+	public long getMetric(){
+		return this.metric;
+	}//getMetric
+	
+	
+	/** getAtt(String)
+     * 
+     * Returns the metric of this node
+     * 
+	 * @param	attKey	The key of the attribute being retrieved.
+	 * @return			The metric of this node.
+	 */
+	public String getAtt(String attKey){
+		return this.attributes.get(attKey);
+	}//getAtt
+	
+	/**
+	 * gets this edge's nodeOne
+	 *
+	 * @return		The nodeOne of this edge
+	 */
+	public LotNode getNodeOne(){
+		return this.nodeOne;
+	}//getNodeOne
+	
+	/**
+	 * gets this edge's nodeTwo
+	 *
+	 * @return		The nodeTwo of this edge
+	 */
+	public LotNode getNodeTwo(){
+		return this.nodeTwo;
+	}//getNodeTwo
+	
+	/**
+	 *gets the node on the other side of the edge
+	 *
+	 * @param	nodeAt	The node we are currently at
+	 * @return		The node on the other side of the edge
+	 */
+	 public LotNode getOtherNode(LotNode nodeAt){
+		 if(this.nodeOne == nodeAt){
+			 return this.getNodeTwo;
+		 }else if(this.nodeTwo == nodeAt){
+			 return this.getNodeOne;
+		 }else{
+			 return null;
+		 }
+	 }//getOtherNode
+	
+    //endregion
+	
 }//class LotEdge

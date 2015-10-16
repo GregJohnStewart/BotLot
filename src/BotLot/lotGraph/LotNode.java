@@ -3,11 +3,13 @@ LotNode.java
 
 Sets up the Node object for the BotLot graph structure.
 
-Original Author: Greg Stewart
+@author Greg Stewart
 Other Contributor(s):
 
 Started: 10/7/15
-Last Edit: 10/10/15
+Last Edit: 10/15/15
+
+@version 1.0
 
 **/
 
