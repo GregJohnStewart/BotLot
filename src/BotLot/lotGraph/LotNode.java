@@ -4,10 +4,9 @@ LotNode.java
 Sets up the Node object for the BotLot graph structure.
 
 @author Greg Stewart
-Other Contributor(s):
 
 Started: 10/7/15
-Last Edit: 10/15/15
+Last Edit: 10/17/15
 
 @version 1.0
 
@@ -18,7 +17,7 @@ import java.util.Arrays;//for the edges
 import java.util.HashMap;//for attributes
 
 public class LotNode{
-    private String id;//the ID of the node, required before setting edges
+    private String id;//the Id of the node, required before setting edges
     private long metric;//the metric for the node, defaults to 0
     private HashMap<String,String> attributes;//user defined attributes of the node, defaults to empty
     private ArrayList<lotEdge> edges//edges attached to this node, default empty
@@ -28,15 +27,31 @@ public class LotNode{
     //region Constructors
     //=========================================================================
     
+	/** LotNode(String idIn)
+     *
+     * Constructor to initialize the Id.
+     * 
+     * @param   idIn    		the Id to give the node
+     * @param   metricIn    the metric to give the node
+     * @param   attsIn    	the attributes to give the node
+     * @param   edges	    	the edges to give the node
+     */
+    public void LotNode(String idIn, long metricIn, HashMap<String,String> attsIn, ArrayList<LotEdge> edgesIn){
+        this.LotNode(idIn);
+		this.setMetric(metricIn);
+		this.setAtts(attsIn);
+		this.setEdges(edgesIn);
+    }//LotNode(String idIn)
+	
     /** LotNode(String idIn)
      *
-     * Constructor to initialize the ID.
+     * Constructor to initialize the Id.
      * 
-     * @param   idIn    the ID to give the node
+     * @param   idIn    the Id to give the node
      */
     public void LotNode(String idIn){
         this.LotNode();
-        this.setID(idIn);
+        this.setId(idIn);
     }//LotNode(String idIn)
 
     /** LotNode()
@@ -58,18 +73,18 @@ public class LotNode{
     //region Setters
     //=========================================================================
     
-    /** setID(String idIn)
+    /** setId(String idIn)
      * 
      * Sets the node's id.
      * <p>
-     * Trusts that the ID being given is valid, and does not conflict with other ID's
+     * Trusts that the Id being given is valid, and does not conflict with other Id's
      * TODO: error check for this by going through all nodes currently in contact with?
      *
-     * @param   idIn    The new ID to set to.
+     * @param   idIn    The new Id to set to.
      */
-    public void setID(String idIn){
+    public void setId(String idIn){
         this.id = idIn;
-    }//setID
+    }//setId
     
     /** setMetric(long metricIn)
      * 
@@ -92,7 +107,17 @@ public class LotNode{
      */
     public void setAtt(String attKeyIn, String attValIn){
         this.attributes.put(attKeyIn, attValIn);
-    }//setID
+    }//setAtt
+
+    /** setAtts(HashMap<String, String> attsIn)
+     * 
+     * Sets a new value of the attribute in. Adds new attribute if not there
+	 *
+     * @param   attsIn    The attributes to set this Node's attributes to
+     */
+    public void setAtts(HashMap<String, String> attsIn){
+        this.attributes = attsIn;
+    }//setAtts
 	
 	/** remAtt(String attKeyIn, String attValIn)
      * 
@@ -102,7 +127,7 @@ public class LotNode{
      */
     public void remAtt(String attKeyIn){
         this.attributes.remove(attKeyIn);
-    }//setID
+    }//setId
 	
 	/** clearAtts()
      * 
@@ -115,9 +140,7 @@ public class LotNode{
 	
 	/** addEdge(LotEdge newEdge)
      * 
-     * Sets a new value of the attribute in. Adds new attribute if not there
-     * <p>
-     * Use this to add or edit attributes
+     * Sets a new edge.
      *
      * @param   newEdge    Adds the edge to this node
 	 */
@@ -125,14 +148,73 @@ public class LotNode{
 		this.edges.add(newEdge);
 	}//addEdge
 	
+	/** repEdge(LotEdge oldEdge, LotEdge newEdge)
+     * 
+     * Replaces an edge
+	 * <p>
+	 * If it does not have the old edge, adds it
+     *
+     * @param   oldEdge    the edge to replace
+     * @param   newEdge    Adds the edge to this node
+	 */
+	public void repEdge(LotEdge oldEdge, LotEdge newEdge){
+		if(!this.hasEdge(oldEdge)){
+			this.addEdge(newEdge);
+		}else{
+			this.remEdge(oldEdge);
+			this.addEdge(newEdge);
+		}
+	}//repEdge
+	
+	/** repEdge(String oldEdge, LotEdge newEdge)
+     * 
+     * Replaces an edge based in an Id
+	 * <p>
+	 * If it does not have the old edge, adds it
+     *
+     * @param   oldEdgeId    the edge to replace
+     * @param   newEdge    Adds the edge to this node
+	 */
+	public void repEdge(String oldEdgeId, LotEdge newEdge){
+		if(!this.hasEdge(oldEdgeId)){
+			this.addEdge(newEdge);
+		}else{
+			this.remEdge(oldEdgeId);
+			this.addEdge(newEdge);
+		}
+	}//repEdge
+	
 	/** remEdge(LotEdge edgeToRem)
      * 
      * Removes the specified edge
      *
+	 * @param	edgeToRem		The the edge to remove
 	 */
 	public void remEdge(LotEdge edgeToRem){
 		this.edges.remove(edgeToRem);
 	}//remEdge
+	
+	/** remEdge(String edgeIdToRem)
+     * 
+     * Removes the specified edge
+	 * <p>
+	 *	TODO: check for nonexistent edge?
+     *
+	 * @param	edgeIdToRem		The id of the edge to remove
+	 */
+	public void remEdge(String edgeIdToRem){
+		this.remEdge(this.getEdge(edgeIdToRem));
+	}//remEdge
+	
+	/** setEdges(LotEdge newEdge)
+     * 
+     * Sets a new set of edges
+     *
+     * @param   edgesIn    The edges to set this node to
+	 */
+	public void setEdges(ArrayList<LotEdge> edgesIn){
+		this.edges = edgesIn;
+	}//addEdge
 	
 	/** clearEdges()
      * 
@@ -195,7 +277,7 @@ public class LotNode{
      * 
      * Returns an edge of this node based on its id.
      * 
-	 * @return			The edge with the specified ID. Returns null if no edge exists.
+	 * @return			The edge with the specified Id. Returns null if no edge exists.
 	 */
 	public LotEdge getEdge(String edgeId){
 		for(int i = 0;i < this.edges.size();i++){
@@ -209,7 +291,6 @@ public class LotNode{
 	/** getEdgeByAtt(String,String,bool)
      * 
      * Returns an edge of this node based on a key/value pair
-	 * TODO:: review for correctness
      * 
 	 * @return			The edge with the specified key/value pair. Returns null if no edge exists.
 	 */
@@ -233,6 +314,33 @@ public class LotNode{
 	public int getNumEdges(){
 		return this.edges.size();
 	}//getNumEdges
+	
+	/** hasEdge(LotEdge)
+     * 
+     * Returns if the node has the given edge
+     * 
+	 * @param	edgeIn	The edge to test on
+	 * @return		If this node has this edge
+	 */
+	public boolean hasEdge(LotEdge edgeIn){
+		return this.edges.contains(edgeIn);
+	}//hasEdge
+	
+	/** hasEdge(String)
+     * 
+     * Returns if the node has the given edge
+     * 
+	 * @param	edgeIdIn	The edgeId to test on
+	 * @return		If this node has this edge
+	 */
+	public boolean hasEdge(String edgeIdIn){
+		for(int i = 0;i < edges.size();i++){
+			if(this.edges.get(i).getId() == edgeIdIn){
+				return true;
+			}
+		}
+		return false;
+	}//hasEdge
 	
 	//endregion
     

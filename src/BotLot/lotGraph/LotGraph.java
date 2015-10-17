@@ -6,7 +6,7 @@ Class LotGraph
 Started: 10/7/15
 Last Edit: 10/15/15
 
-
+@version	1.0
 
 **/
 

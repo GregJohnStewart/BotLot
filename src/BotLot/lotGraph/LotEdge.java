@@ -6,9 +6,9 @@ Sets up the Edge object for the BotLot graph structure.
 @author Greg Stewart
 
 Started: 10/7/15
-Last Edit: 10/15/15
+Last Edit: 10/17/15
 
-@version 0.1
+@version 1.0
 
 **/
 
@@ -16,26 +16,44 @@ Last Edit: 10/15/15
 import java.util.HashMap;//for attributes
 
 public class LotEdge{
-    public String id;//the ID of the node, required
+    public String id;//the Id of the node, required
     public long metric;//the metric for the node, defaults to 0
     private HashMap<String,String> attributes;//user defined attributes of the node, defaults to empty
-    public LotNode nodeOne;//one of the nodes this is attatched to
-    public LotNode nodeTwo;//the other node this is attatched to    
+    public LotNode nodeOne;//one of the nodes this is attached to
+    public LotNode nodeTwo;//the other node this is attached to    
     
     //=========================================================================
     //    Constructors
     //region Constructors
     //=========================================================================
     
+    /** LotEdge(String idIn, long metricIn, HashMap<String,String> attsIn, LotNode nodeOneIn, LotNode nodeTwoIn)
+     *
+     * Constructor to initialize all the variables.
+     * 
+     * @param   idIn    the Id to give the edge
+     * @param   metricIn    the metric to give the node
+     * @param   attsIn    the attributes to give the node
+     * @param   nodeOneIn    the nodeOne to give the node
+     * @param   nodeTwoIn    the nodeTwo to give the node
+     */
+    public void LotEdge(String idIn, long metricIn, HashMap<String,String> attsIn, LotNode nodeOneIn, LotNode nodeTwoIn){
+        this.LotEdge(idIn);
+		this.setMetric(metricIn);
+		this.setAtts(attsIn);
+		this.setNodeOne(nodeOneIn);
+		this.setNodeTwo(nodeTwoIn);
+    }//LotEdge(String idIn, long metricIn, HashMap<String,String> attsIn, LotNode nodeOneIn, LotNode nodeTwoIn)
+	
     /** LotEdge(String idIn)
      *
-     * Constructor to initialize the ID.
+     * Constructor to initialize the Id.
      * 
-     * @param   idIn    the ID to give the edge
+     * @param   idIn    the Id to give the edge
      */
     public void LotEdge(String idIn){
         this.LotEdge();
-        this.setID(idIn);
+        this.setId(idIn);
     }//LotEdge(String idIn)
 
     /** LotEdge(String idIn)
@@ -56,18 +74,18 @@ public class LotEdge{
     //region Setters
     //=========================================================================
     
-    /** setID(String idIn)
+    /** setId(String idIn)
      * 
      * Sets the edge's id.
      * <p>
-     * Trusts that the ID being given is valid, and does not conflict with other ID's
+     * Trusts that the Id being given is valid, and does not conflict with other Id's
      * TODO: error check for this by going through all edges currently in contact with?
      *
-     * @param   idIn    The new ID to set to.
+     * @param   idIn    The new Id to set to.
      */
-    public void setID(String idIn){
+    public void setId(String idIn){
         this.id = idIn;
-    }//setID
+    }//setId
     
     /** setMetric(long metricIn)
      * 
@@ -90,6 +108,16 @@ public class LotEdge{
      */
     public void setAtt(String attKeyIn, String attValIn){
         this.attributes.put(attKeyIn, attValIn);
+    }//setAtt
+
+    /** setAtts(HashMap<String,String> attsIn)
+     * 
+     * Sets a new set attributes.
+     *
+     * @param   attsIn    The attributes to set this Edge's to
+     */
+    public void setAtts(HashMap<String,String> attsIn){
+        this.attributes = attsIn;
     }//setAtt
 	
 	/** remAtt(String attKeyIn, String attValIn)
@@ -147,6 +175,56 @@ public class LotEdge{
         this.nodeTwo = null;
     }//setNodeTwo
     
+    /** setOtherNode
+     * 
+     * @param	curNode	The node we are currently at
+	 * @param	newNode	The node we are replacing the other node with
+     */
+    public void setOtherNode(LotNode curNode, LotNode newNode){
+        if(this.getNodeOne() == curNode){
+			this.setNodeTwo(newNode);
+		}else if(this.getNodeTwo() == curNode){
+			this.setNodeOne(newNode);
+		}
+    }//setOtherNode
+    
+    /** setOtherNode
+     * 
+     * @param	curNodeId	The node Id of the node we are currently at
+	 * @param	newNode	 	The node we are replacing the other node with
+     */
+    public void setOtherNode(String curNodeId, LotNode newNode){
+        if(this.getNodeOne().getId() == curNodeId){
+			this.setNodeTwo(newNode);
+		}else if(this.getNodeTwo().getId() == curNodeId){
+			this.setNodeOne(newNode);
+		}
+    }//setOtherNode
+    
+    /** clearOtherNode
+     * 
+     * @param	curNode	The node we are currently at
+     */
+    public void clearOtherNode(LotNode curNode){
+        if(this.getNodeOne() == curNode){
+			this.clearNodeTwo();
+		}else if(this.getNodeTwo() == curNode){
+			this.clearNodeOne();
+		}
+    }//clearOtherNode
+    
+    /** clearOtherNode
+     * 
+     * @param	curNodeId	The node Id of the node we are currently at
+     */
+    public void clearOtherNode(String curNodeId){
+        if(this.getNodeOne().getId() == curNodeId){
+			this.clearNodeTwo();
+		}else if(this.getNodeTwo().getId() == curNodeId){
+			this.clearNodeOne();
+		}
+    }//clearOtherNode
+    
     //endregion
 	
 	
@@ -156,7 +234,7 @@ public class LotEdge{
     //=========================================================================
     
 	/**
-	 * gets this edge's ID
+	 * gets this edge's Id
 	 *
 	 * @return		The id of this edge
 	 */
@@ -210,9 +288,25 @@ public class LotEdge{
 	 * @return		The node on the other side of the edge
 	 */
 	 public LotNode getOtherNode(LotNode nodeAt){
-		 if(this.nodeOne == nodeAt){
+		 if(this.getNodeOne() == nodeAt){
 			 return this.getNodeTwo;
-		 }else if(this.nodeTwo == nodeAt){
+		 }else if(this.getNodeTwo() == nodeAt){
+			 return this.getNodeOne;
+		 }else{
+			 return null;
+		 }
+	 }//getOtherNode
+	
+	/**
+	 *gets the node on the other side of the edge
+	 *
+	 * @param	nodeAt	The id of the node we are currently at
+	 * @return		The node on the other side of the edge
+	 */
+	 public LotNode getOtherNode(String nodeAtId){
+		 if(this.getNodeOne().getId() == nodeAtId){
+			 return this.getNodeTwo;
+		 }else if(this.getNodeTwo().getId() == nodeAtId){
 			 return this.getNodeOne;
 		 }else{
 			 return null;
