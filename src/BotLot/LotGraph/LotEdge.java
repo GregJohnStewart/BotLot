@@ -313,7 +313,63 @@ public class LotEdge{
 			 return null;
 		 }
 	 }//getOtherNode
-	
+
+	@Override
+	public String toString() {
+		return "LotEdge [id=" + id + ", metric=" + metric + ", attributes=" + attributes + ", nodeOne=" + nodeOne
+				+ ", nodeTwo=" + nodeTwo + "]";
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((attributes == null) ? 0 : attributes.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + (int) (metric ^ (metric >>> 32));
+		result = prime * result + ((nodeOne == null) ? 0 : nodeOne.hashCode());
+		result = prime * result + ((nodeTwo == null) ? 0 : nodeTwo.hashCode());
+		return result;
+	}
     //endregion
-	
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		LotEdge other = (LotEdge) obj;
+		if (attributes == null) {
+			if (other.attributes != null)
+				return false;
+		} else if (!attributes.equals(other.attributes))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (metric != other.metric)
+			return false;
+		if (nodeOne == null) {
+			if (other.nodeOne != null)
+				return false;
+		} else if (!nodeOne.equals(other.nodeOne))
+			return false;
+		if (nodeTwo == null) {
+			if (other.nodeTwo != null)
+				return false;
+		} else if (!nodeTwo.equals(other.nodeTwo))
+			return false;
+		return true;
+	}
 }//class LotEdge

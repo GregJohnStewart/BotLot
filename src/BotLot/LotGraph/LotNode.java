@@ -1,6 +1,16 @@
 package BotLot.LotGraph;
 /**
 LotNode.java
+
+Sets up the node object for the BotLot graph structure.
+
+@author Greg Stewart
+
+Started: 10/7/15
+Last Edit: 10/17/15
+
+@version 1.0
+
 /* imports*/
 import java.util.ArrayList;//for the edges
 import java.util.HashMap;//for attributes
@@ -330,8 +340,58 @@ public class LotNode{
 		}
 		return false;
 	}//hasEdge
+
+	@Override
+	public String toString() {
+		return "LotNode [id=" + id + ", metric=" + metric + ", attributes=" + attributes + ", edges=" + edges + "]";
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((attributes == null) ? 0 : attributes.hashCode());
+		result = prime * result + ((edges == null) ? 0 : edges.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + (int) (metric ^ (metric >>> 32));
+		return result;
+	}
 	
 	//endregion
     
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		LotNode other = (LotNode) obj;
+		if (attributes == null) {
+			if (other.attributes != null)
+				return false;
+		} else if (!attributes.equals(other.attributes))
+			return false;
+		if (edges == null) {
+			if (other.edges != null)
+				return false;
+		} else if (!edges.equals(other.edges))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (metric != other.metric)
+			return false;
+		return true;
+	}
     
 }//class LotNode
