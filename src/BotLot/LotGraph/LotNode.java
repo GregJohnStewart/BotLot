@@ -7,7 +7,7 @@ Sets up the node object for the BotLot graph structure.
 @author Greg Stewart
 
 Started: 10/7/15
-Last Edit: 10/17/15
+Last Edit: 10/18/15
 
 @version 1.0
 
@@ -26,17 +26,17 @@ public class LotNode{
     //region Constructors
     //=========================================================================
     
-	/** LotNode(String idIn)
+	/** LotNode(String idIn, long metricIn, HashMap<String,String> attsIn, ArrayList<LotEdge> edgesIn)
      *
-     * Constructor to initialize the Id.
+     * Constructor to initialize everything
      * 
      * @param   idIn    		the Id to give the node
      * @param   metricIn    the metric to give the node
      * @param   attsIn    	the attributes to give the node
      * @param   edges	    	the edges to give the node
      */
-    public void LotNode(String idIn, long metricIn, HashMap<String,String> attsIn, ArrayList<LotEdge> edgesIn){
-        this.LotNode(idIn);
+    public LotNode(String idIn, long metricIn, HashMap<String,String> attsIn, ArrayList<LotEdge> edgesIn){
+        this(idIn);
 		this.setMetric(metricIn);
 		this.setAtts(attsIn);
 		this.setEdges(edgesIn);
@@ -48,8 +48,8 @@ public class LotNode{
      * 
      * @param   idIn    the Id to give the node
      */
-    public void LotNode(String idIn){
-        this.LotNode();
+    public LotNode(String idIn){
+        this();
         this.setId(idIn);
     }//LotNode(String idIn)
 
@@ -59,7 +59,7 @@ public class LotNode{
      * <p>
      * Will need an id set before adding any edges
      */
-    public void LotNode(){
+    public LotNode(){
         this.attributes = new HashMap<String,String>();
         this.metric = 0;
         this.edges = new ArrayList<LotEdge>();
@@ -287,11 +287,26 @@ public class LotNode{
 		return null;
 	}//getEdge
 	
-	/** getEdgeByAtt(String,String,bool)
+	/** getEdge(LotEdge)
+     * 
+     * Returns an edge of this node based on the edge given.
+     * 
+	 * @return		The edge with the specified Id. Returns null if no edge exists.
+	 */
+	public LotEdge getEdge(LotEdge edgeId){
+		for(int i = 0;i < this.edges.size();i++){
+			if(this.edges.get(i) == edgeId){
+				return this.edges.get(i);
+			}
+		}
+		return null;
+	}//getEdge(LotEdge)
+	
+	/** getEdgeByAtt(String,String,boolean)
      * 
      * Returns an edge of this node based on a key/value pair
      * 
-	 * @return			The edge with the specified key/value pair. Returns null if no edge exists.
+	 * @return		The edge with the specified key/value pair. Returns null if no edge exists.
 	 */
 	public LotEdge getEdgeByAtt(String attKey, String attVal, boolean hasValue){
 		for(int i = 0;i < this.edges.size();i++){
@@ -308,11 +323,11 @@ public class LotNode{
      * 
      * Returns the number edges of this node
      * 
-	 * @return			The number of edges on this node
+	 * @return	The number of edges on this node
 	 */
 	public int getNumEdges(){
 		return this.edges.size();
-	}//getNumEdges
+	}//getNumEdges()
 	
 	/** hasEdge(LotEdge)
      * 

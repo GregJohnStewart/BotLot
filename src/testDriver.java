@@ -6,7 +6,7 @@ public class testDriver {
 		// TODO Auto-generated method stub
 		System.out.println("Begin test run");
 		
-		BotLot navigator;
+		BotLot navigator = new BotLot();
 	}
 
 }

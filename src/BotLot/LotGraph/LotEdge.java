@@ -7,7 +7,7 @@ Sets up the Edge object for the BotLot graph structure.
 @author Greg Stewart
 
 Started: 10/7/15
-Last Edit: 10/17/15
+Last Edit: 10/18/15
 
 @version 1.0
 
@@ -38,8 +38,8 @@ public class LotEdge{
      * @param   nodeOneIn    the nodeOne to give the node
      * @param   nodeTwoIn    the nodeTwo to give the node
      */
-    public void LotEdge(String idIn, long metricIn, HashMap<String,String> attsIn, LotNode nodeOneIn, LotNode nodeTwoIn){
-        this.LotEdge(idIn);
+    public LotEdge(String idIn, long metricIn, HashMap<String,String> attsIn, LotNode nodeOneIn, LotNode nodeTwoIn){
+        this(idIn);
 		this.setMetric(metricIn);
 		this.setAtts(attsIn);
 		this.setNodeOne(nodeOneIn);
@@ -52,8 +52,8 @@ public class LotEdge{
      * 
      * @param   idIn    the Id to give the edge
      */
-    public void LotEdge(String idIn){
-        this.LotEdge();
+    public LotEdge(String idIn){
+        this();
         this.setId(idIn);
     }//LotEdge(String idIn)
 
@@ -61,7 +61,7 @@ public class LotEdge{
      *
      * empty constructor to initialize the node
      */
-    public void LotEdge(){
+    public LotEdge(){
         this.attributes = new HashMap<String,String>();
         this.metric = 0;
         this.nodeOne = null;
@@ -225,6 +225,18 @@ public class LotEdge{
 			this.clearNodeOne();
 		}
     }//clearOtherNode
+    
+    /**
+     * Clears the node that is given from the edge
+     * @param curNode	The node to clear
+     */
+    public void clearNode(LotNode curNode){
+        if(this.getNodeOne() == curNode){
+			this.clearNodeOne();
+		}else if(this.getNodeTwo() == curNode){
+			this.clearNodeTwo();
+		}
+    }
     
     //endregion
 	
