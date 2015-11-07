@@ -19,9 +19,7 @@ import java.util.HashMap;//for attributes
 public class LotEdge{
     private String id;//the Id of the node, required
     private long metric;//the metric for the node, defaults to 0
-    protected HashMap<String,String> attributes;//user defined attributes of the node, defaults to empty
-    private LotNode nodeOne;//one of the nodes this is attached to
-    private LotNode nodeTwo;//the other node this is attached to    
+    protected HashMap<String,String> attributes;//user defined attributes of the node, defaults to empty  
     
     //=========================================================================
     //    Constructors
@@ -35,15 +33,11 @@ public class LotEdge{
      * @param   idIn    the Id to give the edge
      * @param   metricIn    the metric to give the node
      * @param   attsIn    the attributes to give the node
-     * @param   nodeOneIn    the nodeOne to give the node
-     * @param   nodeTwoIn    the nodeTwo to give the node
      */
-    public LotEdge(String idIn, long metricIn, HashMap<String,String> attsIn, LotNode nodeOneIn, LotNode nodeTwoIn){
+    public LotEdge(String idIn, long metricIn, HashMap<String,String> attsIn){
         this(idIn);
 		this.setMetric(metricIn);
 		this.setAtts(attsIn);
-		this.setNodeOne(nodeOneIn);
-		this.setNodeTwo(nodeTwoIn);
     }//LotEdge(String idIn, long metricIn, HashMap<String,String> attsIn, LotNode nodeOneIn, LotNode nodeTwoIn)
 	
     /** LotEdge(String idIn)
@@ -64,8 +58,6 @@ public class LotEdge{
     public LotEdge(){
         this.attributes = new HashMap<String,String>();
         this.metric = 0;
-        this.nodeOne = null;
-        this.nodeTwo = null;
     }//LotEdge()
     
     //endregion
@@ -140,104 +132,6 @@ public class LotEdge{
 		this.attributes = new HashMap<String,String>();
 	}//clearAtts
     
-    /** setNodeOne
-     * 
-     * Sets nodeOne to the input node
-     *
-     * @param   nodeIn  The node to set nodeOne to
-     */
-    public void setNodeOne(LotNode nodeIn){
-        this.nodeOne = nodeIn;
-    }//setNodeOne
-    
-    /** clearNodeOne
-     * 
-     * clears nodeOne
-     */
-    public void clearNodeOne(){
-        this.nodeOne = null;
-    }//setNodeOne
-    
-    /** setNodeTwo
-     * 
-     * Sets nodeTwo to the input node
-	 * 
-	 * @param	nodeIn	The node to set nodeTwo to
-     */
-    public void setNodeTwo(LotNode nodeIn){
-        this.nodeTwo = nodeIn;
-    }//setNodeTwo
-    
-    /** clearNodeTwo
-     * 
-     * clears nodeTwo
-     */
-    public void clearNodeTwo(){
-        this.nodeTwo = null;
-    }//setNodeTwo
-    
-    /** setOtherNode
-     * 
-     * @param	curNode	The node we are currently at
-	 * @param	newNode	The node we are replacing the other node with
-     */
-    public void setOtherNode(LotNode curNode, LotNode newNode){
-        if(this.getNodeOne() == curNode){
-			this.setNodeTwo(newNode);
-		}else if(this.getNodeTwo() == curNode){
-			this.setNodeOne(newNode);
-		}
-    }//setOtherNode
-    
-    /** setOtherNode
-     * 
-     * @param	curNodeId	The node Id of the node we are currently at
-	 * @param	newNode	 	The node we are replacing the other node with
-     */
-    public void setOtherNode(String curNodeId, LotNode newNode){
-        if(this.getNodeOne().getId() == curNodeId){
-			this.setNodeTwo(newNode);
-		}else if(this.getNodeTwo().getId() == curNodeId){
-			this.setNodeOne(newNode);
-		}
-    }//setOtherNode
-    
-    /** clearOtherNode
-     * 
-     * @param	curNode	The node we are currently at
-     */
-    public void clearOtherNode(LotNode curNode){
-        if(this.getNodeOne() == curNode){
-			this.clearNodeTwo();
-		}else if(this.getNodeTwo() == curNode){
-			this.clearNodeOne();
-		}
-    }//clearOtherNode
-    
-    /** clearOtherNode
-     * 
-     * @param	curNodeId	The node Id of the node we are currently at
-     */
-    public void clearOtherNode(String curNodeId){
-        if(this.getNodeOne().getId() == curNodeId){
-			this.clearNodeTwo();
-		}else if(this.getNodeTwo().getId() == curNodeId){
-			this.clearNodeOne();
-		}
-    }//clearOtherNode
-    
-    /**
-     * Clears the node that is given from the edge
-     * @param curNode	The node to clear
-     */
-    public void clearNode(LotNode curNode){
-        if(this.getNodeOne() == curNode){
-			this.clearNodeOne();
-		}else if(this.getNodeTwo() == curNode){
-			this.clearNodeTwo();
-		}
-    }
-    
     //endregion
 	
 	
@@ -275,61 +169,10 @@ public class LotEdge{
 	public String getAtt(String attKey){
 		return this.attributes.get(attKey);
 	}//getAtt
-	
-	/**
-	 * gets this edge's nodeOne
-	 *
-	 * @return		The nodeOne of this edge
-	 */
-	public LotNode getNodeOne(){
-		return this.nodeOne;
-	}//getNodeOne
-	
-	/**
-	 * gets this edge's nodeTwo
-	 *
-	 * @return		The nodeTwo of this edge
-	 */
-	public LotNode getNodeTwo(){
-		return this.nodeTwo;
-	}//getNodeTwo
-	
-	/**
-	 *gets the node on the other side of the edge
-	 *
-	 * @param	nodeAt	The node we are currently at
-	 * @return		The node on the other side of the edge
-	 */
-	 public LotNode getOtherNode(LotNode nodeAt){
-		 if(this.getNodeOne() == nodeAt){
-			 return this.getNodeTwo();
-		 }else if(this.getNodeTwo() == nodeAt){
-			 return this.getNodeOne();
-		 }else{
-			 return null;
-		 }
-	 }//getOtherNode
-	
-	/**
-	 *gets the node on the other side of the edge
-	 *
-	 * @param	nodeAt	The id of the node we are currently at
-	 * @return		The node on the other side of the edge
-	 */
-	 public LotNode getOtherNode(String nodeAtId){
-		 if(this.getNodeOne().getId() == nodeAtId){
-			 return this.getNodeTwo();
-		 }else if(this.getNodeTwo().getId() == nodeAtId){
-			 return this.getNodeOne();
-		 }else{
-			 return null;
-		 }
-	 }//getOtherNode
 
 	@Override
 	public String toString() {
-		return "LotEdge [id=" + id + ", metric=" + metric + ", attributes=" + attributes + ", nodeOne=" + nodeOne
-				+ ", nodeTwo=" + nodeTwo + "]";
+		return "LotEdge [id=" + id + ", metric=" + metric + ", attributes=" + attributes + "]";
 	}
 
 	/* (non-Javadoc)
@@ -342,8 +185,6 @@ public class LotEdge{
 		result = prime * result + ((attributes == null) ? 0 : attributes.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + (int) (metric ^ (metric >>> 32));
-		result = prime * result + ((nodeOne == null) ? 0 : nodeOne.hashCode());
-		result = prime * result + ((nodeTwo == null) ? 0 : nodeTwo.hashCode());
 		return result;
 	}
     //endregion
@@ -371,16 +212,6 @@ public class LotEdge{
 		} else if (!id.equals(other.id))
 			return false;
 		if (metric != other.metric)
-			return false;
-		if (nodeOne == null) {
-			if (other.nodeOne != null)
-				return false;
-		} else if (!nodeOne.equals(other.nodeOne))
-			return false;
-		if (nodeTwo == null) {
-			if (other.nodeTwo != null)
-				return false;
-		} else if (!nodeTwo.equals(other.nodeTwo))
 			return false;
 		return true;
 	}
