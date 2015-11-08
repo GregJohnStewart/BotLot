@@ -20,21 +20,27 @@ public class LotGraph{
     private ArrayList<ArrayList<LotEdge>> nodeEdges;//the edges for the nodes
     private Random rand;//random number generator for making new id's
     
-    
     //stuff for semantics
 	private final String edgeIdPred = "BOTLOTEDGE";//the predicate of new edge id's
 	private final String nodeIdPred = "BOTLOTNODE";//the predicate of new node id's
 	private final int idSaltRange = Integer.MAX_VALUE;//the max value of new ids' salts
-	private boolean checkEdgeListSizeOnAddNodes = true;//flag to care edge array sizes 
 	
     //=========================================================================
     //    Constructors
     //region Constructors
     //=========================================================================
 
-	/** LotGraph(LotNode)
-     * 
-     * Basic constructor, sets the initial node.
+	/**
+	 * Essentially copies the info from the input graph.
+	 * 
+	 * @param graphIn	THe graph to get info from.
+	 */
+	public LotGraph(LotGraph graphIn){
+		this(graphIn.getNodes(), graphIn.getNodeEdges());
+	}//LotGraph(LotGraph)
+	
+	/**
+     * Sets the initial node list and edges.
      * 
      * @param	nodesIn	The nodes to set the initial nodes to.
      * @param	nodeEdgesIn	The edges to initially set.
@@ -42,15 +48,13 @@ public class LotGraph{
     public LotGraph(ArrayList<LotNode> nodesIn, ArrayList<ArrayList<LotEdge>> nodeEdgesIn){
     	this();
     	if(nodesIn.size() == nodeEdgesIn.size() && this.nodeEdgesAreSquare(nodeEdgesIn)){
-    		this.checkEdgeListSizeOnAddNodes = false;
     		this.setNodes(nodesIn);
     		this.setNodeEdges(nodeEdgesIn);
     	}
     }//LotGraph(LotNode)
     
-	/** LotGraph()
-     * 
-     * Basic constructor
+	/**
+     * Basic constructor, initializes everything to empty lists, initializes random number generator with empty parameters.
      */
     public LotGraph(){
     	this.nodes = new ArrayList<LotNode>();
@@ -66,46 +70,49 @@ public class LotGraph{
     //region Setters
     //=========================================================================
     
+    /**
+     * Sets the nodes to the list given, then sets up the edges accordingly. Used with constructor.
+     * 
+     * @param nodesIn	The node list in.
+     */
     private void setNodes(ArrayList<LotNode> nodesIn){
-    	if(checkEdgeListSizeOnAddNodes){
-    		this.nodes = nodesIn;
-    		this.setupEdges();
-    	}
-    }//setNodes
+    	this.nodes = nodesIn;
+    	this.setupEdges();
+    }//setNodes(ArrayList<LotNode>
     
     /**
-     * Sets the node edges to the edges given
+     * Sets the node edges to the edges given. Used with the constructor.
+     * <p>
+     * Truncates number of edges to size of the node list 
      * 
      * @param nodeEdgesIn	The edges given
      */
     private void setNodeEdges(ArrayList<ArrayList<LotEdge>> nodeEdgesIn){
     	//loop through each node
-    	for(int i = 0; i < this.getNodeEdges().size(); i++){
+    	for(int i = 0; i < this.getNodeListSize() && i < nodeEdgesIn.size(); i++){
     		//loop through all connections that node has, setting the edges as it goes
-    		for(int j = 0; j < this.getNodeEdges().get(i).size(); j++){
+    		for(int j = 0; j < this.getNodeListSize() && j < nodeEdgesIn.size(); j++){
     			try{
     				this.setEdge(nodeEdgesIn.get(i).get(j), i, j);
-    			}catch(IndexOutOfBoundsException err){
-    				try{
-    					this.setEdge( null, i, j);
-    				}catch(LotGraphException err2){
-    					System.out.println("FATAL-ERR- tried to access outside the size of the held info. This should not happen. Error:\n\t" + err.getMessage());
-        				System.exit(1);
-    				}
     			}catch(LotGraphException err){
+    				//the i or j variables were out of bounds of the internal node list size.
     				System.out.println("FATAL-ERR- tried to access outside the size of the held info. This should not happen. Error:\n\t" + err.getMessage());
     				System.exit(1);
     			}
-    		}//inner for loop
-    	}//outer for loop
-    }//setNodeEdges(ArrayList<ArrayList<LotEdge>> nodeEdgesIn)
+    		}//innerLoop
+    	}//outerLoop
+    }//setNodeEdges(ArrayList<ArrayList<LotEdge>>)
 
+    //TODO:: setEdges that takes in nodeList and corresponding nodeEdgesIn to add the edges to this object
+    
+    
     /**
-     * Sets a node's edge based on the given variables
+     * Sets a node's edge based on the given variables.
      * 
-     * @param edgeIn	The edge to set to
-     * @param fromNode	The node we are dealing with
-     * @param toNode	The node to attach the thing to
+     * @param edgeIn	The edge to set to.
+     * @param fromNode	The node we are dealing with.
+     * @param toNode	The node to attach the thing to.
+     * @throws	LotGraphException	If either node does not exist.
      */
     public void setEdge(LotEdge edgeIn, LotNode fromNode, LotNode toNode) throws LotGraphException{
     	if(this.hasNode(fromNode) && this.hasNode(toNode)){
@@ -119,8 +126,16 @@ public class LotGraph{
     			throw new LotGraphException("Node Two is not inside the stored data.");
     		}
     	}
-    }//setEdge(LotEdge edgeIn, int nodeOne, int nodeTwo)
+    }//setEdge(LotEdge, LotNode, LotNode)
     
+    /**
+     * Sets a node's edge based on the given variables.
+     * 
+     * @param edgeIn	The edge to set to.
+     * @param fromNodeId	The first node's ID.
+     * @param toNodeId	The second node's ID.
+     * @throws LotGraphException	If either node does not exist.
+     */
     public void setEdge(LotEdge edgeIn, String fromNodeId, String toNodeId) throws LotGraphException{
     	if(this.hasNode(fromNodeId) && this.hasNode(toNodeId)){
     		this.getNodeEdges().get(this.getNodeIndex(fromNodeId)).set(this.getNodeIndex(toNodeId), edgeIn);
@@ -133,14 +148,15 @@ public class LotGraph{
     			throw new LotGraphException("Node Two is not inside the stored data.");
     		}
     	}
-    }
+    }//setEdge(LotEdge,String,String)
     
     /**
-     * Sets a node's edge based on the given variables
+     * Sets a node's edge based on the given variables.
      * 
-     * @param edgeIn	The edge to set to
-     * @param fromNodeIndex	The node we are dealing with
-     * @param toNodeIndex	The node to attach the thing to
+     * @param edgeIn	The edge to set to.
+     * @param fromNodeIndex	The node we are dealing with.
+     * @param toNodeIndex	The node to attach the thing to.
+     * @throws	LotGraphException	If either node does not exist.
      */
     public void setEdge(LotEdge edgeIn, int fromNodeIndex, int toNodeIndex) throws LotGraphException{
     	if(this.getNodeListSize() <=  fromNodeIndex || this.getNodeListSize() <=  toNodeIndex){
@@ -156,9 +172,26 @@ public class LotGraph{
     	}
     }//setEdge(LotEdge edgeIn, int nodeOne, int nodeTwo)
     
-    public LotEdge createEdge(LotNode fromNode, LotNode toNode){
+    /**
+     * A simple method to return a new edge with a unique ID, used to give the other createEdge() functions a standard new edge.
+     * 
+     * @return	A new edge
+     */
+    private LotEdge createEdge(){
     	LotEdge newEdge = new LotEdge();
     	newEdge.setId(this.getNewUniqueId('e'));
+    	return newEdge;
+    }//createEdge()
+    
+    /**
+     * Creates a new edge, adds it between two nodes, and returns the new edge.
+     * 
+     * @param fromNode	The first node.
+     * @param toNode	The second node.
+     * @return	The new edge.
+     */
+    public LotEdge createEdge(LotNode fromNode, LotNode toNode){
+    	LotEdge newEdge = this.createEdge();
     	try{
     		this.setEdge(newEdge, fromNode, toNode);
     	}catch(LotGraphException err){
@@ -166,15 +199,28 @@ public class LotGraph{
     		System.exit(1);
     	}
     	return newEdge;
-    }
+    }//createEdge(LotNode, LotNode)
     
-    public String createEdgeGiveString(LotNode fromNode, LotNode toNode){
+    /**
+     * Creates a new edge, adds it between two nodes, and returns the new edge's Id.
+     * 
+     * @param fromNode	The first node.
+     * @param toNode	The second node.
+     * @return	The ID of the new edge.
+     */
+    public String createEdgeGiveId(LotNode fromNode, LotNode toNode){
     	return this.createEdge(fromNode, toNode).getId();
-    }
+    }//createEdgeGiveId(LotNode, LotNode)
     
+    /**
+     * Creates a new edge, adds it between two nodes, and returns the new edge.
+     * 
+     * @param fromNodeId	The Id of the first node.
+     * @param toNodeId	The Id of the second node.
+     * @return	The new edge.
+     */
     public LotEdge createEdge(String fromNodeId, String toNodeId){
-    	LotEdge newEdge = new LotEdge();
-    	newEdge.setId(this.getNewUniqueId('e'));
+    	LotEdge newEdge = this.createEdge();
     	try{
     		this.setEdge(newEdge, fromNodeId, toNodeId);
     	}catch(LotGraphException err){
@@ -182,15 +228,28 @@ public class LotGraph{
     		System.exit(1);
     	}
     	return newEdge;
-    }
+    }//createEdge(String, String)
     
-    public String createEdgeGiveString(String fromNodeId, String toNodeId){
+    /**
+     * Creates an edge, puts it between two nodes, and returns the new edge ID.
+     * 
+     * @param fromNodeId	The ID of the first node.
+     * @param toNodeId	The ID of the second node.
+     * @return	The Id of the new node.
+     */
+    public String createEdgeGiveId(String fromNodeId, String toNodeId){
     	return this.createEdge(fromNodeId, toNodeId).getId();
-    }
+    }//createEdgeGiveId(String,String)
     
+    /**
+     * Creates an edge, puts it between two nodes, and returns the new edge.
+     * 
+     * @param fromNodeIndex	The index of the first node.
+     * @param toNodeIndex	The index of the second node.
+     * @return	The edge that was created.
+     */
     public LotEdge createEdge(int fromNodeIndex, int toNodeIndex){
-    	LotEdge newEdge = new LotEdge();
-    	newEdge.setId(this.getNewUniqueId('e'));
+    	LotEdge newEdge = this.createEdge();
     	try{
     		this.setEdge(newEdge, fromNodeIndex, toNodeIndex);
     	}catch(LotGraphException err){
@@ -198,12 +257,36 @@ public class LotGraph{
     		System.exit(1);
     	}
     	return newEdge;
-    }
+    }//createEdge(int,int)
     
-    public String createEdgeGiveString(int fromNodeIndex, int toNodeIndex){
+    /**
+     * Creates an edge, puts it between two nodes, and returns the ID.
+     * 
+     * @param fromNodeIndex	The index of the first node.
+     * @param toNodeIndex	The index of the second node.
+     * @return	The ID of the new edge.
+     */
+    public String createEdgeGiveId(int fromNodeIndex, int toNodeIndex){
     	return this.createEdge(fromNodeIndex, toNodeIndex).getId();
+    }//createEdgeGiveId(int,int)
+    
+    public void removeEdge(LotEdge edgeIn){
+    	weqwreq3e3e
+    }
+    public void removeEdge(String edgeIdIn){
+    	e324efwefsfsf
+    }
+    public void removeEdge(int edgeIndexIn){
+    	seq3eqw23r2
     }
     
+    /**
+     * Removes an edge between two nodes.
+     * 
+     * @param fromNode	The first node.
+     * @param toNode	The second node.
+     * @throws LotGraphException	If either node is not found.
+     */
     public void removeEdge(LotNode fromNode, LotNode toNode) throws LotGraphException{
     	if(this.hasNode(fromNode) && this.hasNode(toNode)){
     		this.getNodeEdges().get(this.getNodeIndex(fromNode)).set(this.getNodeIndex(toNode), null);
@@ -216,7 +299,15 @@ public class LotGraph{
     			throw new LotGraphException("toNode is not within the stored data.");
     		}
     	}
-    }
+    }//removeEdge(LotNode, LotNode)
+    
+    /**
+     * Removes an edge between two nodes.
+     * 
+     * @param fromNodeId	The id of node one.
+     * @param toNodeId	The id of node two.
+     * @throws LotGraphException	If either node cannot be found.
+     */
     public void removeEdge(String fromNodeId, String toNodeId) throws LotGraphException{
     	if(this.hasNode(fromNodeId) && this.hasNode(toNodeId)){
     		this.getNodeEdges().get(this.getNodeIndex(fromNodeId)).set(this.getNodeIndex(toNodeId), null);
@@ -229,7 +320,15 @@ public class LotGraph{
     			throw new LotGraphException("toNodeId is not within the stored data.");
     		}
     	}
-    }
+    }//removeEdge(String, String)
+    
+    /**
+     * Removes an edge based on two node indexes.
+     * 
+     * @param fromNodeIndex	The index of the first index.
+     * @param toNodeIndex	The index of the second node.
+     * @throws LotGraphException	If either node cannot be found.
+     */
     public void removeEdge(int fromNodeIndex, int toNodeIndex) throws LotGraphException{
     	if(this.hasNode(fromNodeIndex) && this.hasNode(toNodeIndex)){
     		this.getNodeEdges().get(fromNodeIndex).set(toNodeIndex, null);
@@ -242,7 +341,7 @@ public class LotGraph{
     			throw new LotGraphException("toNodeIndex is not within the stored data.");
     		}
     	}
-    }
+    }//removeNode(int,int)
     
     
     /**
@@ -266,7 +365,11 @@ public class LotGraph{
     	}
     }//addNode(LotNode newNode)
     
-    
+    /**
+     * Creates a new node, adds it to the list, and returns it.
+     * 
+     * @return	The new node.
+     */
     public LotNode createNode(){
     	LotNode newNode = new LotNode();
     	newNode.setId(this.getNewUniqueId('n'));
@@ -277,12 +380,23 @@ public class LotGraph{
     		System.exit(1);
     	}
     	return newNode;
-    }
+    }//createNode()
     
-    public String createNodeGiveString(){
+    /**
+     * Creates a node, adds it to the list, and returns it's ID.
+     * 
+     * @return	The ID of the new node.
+     */
+    public String createNodeGiveId(){
     	return this.createNode().getId();
-    }
+    }//createNodeGiveString()
     
+    /**
+     * Removes the given node
+     * 
+     * @param nodeToRemove	The node to remove from the list
+     * @throws LotGraphException	If the node cannot be found
+     */
     public void removeNode(LotNode nodeToRemove) throws LotGraphException{
     	if(this.hasNode(nodeToRemove)){
     		int nodeIndex = this.getNodeIndex(nodeToRemove);
@@ -294,7 +408,14 @@ public class LotGraph{
     	}else{
     		throw new LotGraphException("The node given is not within sotred data.");
     	}
-    }
+    }//removeNode(LotNode)
+    
+    /**
+     * Removes the node with the given Id.
+     * 
+     * @param nodeToRemoveId	The id of the node to remove.
+     * @throws LotGraphException	If the node cannot be found.
+     */
     public void removeNode(String nodeToRemoveId) throws LotGraphException{
     	if(this.hasNode(nodeToRemoveId)){
     		int nodeIndex = this.getNodeIndex(nodeToRemoveId);
@@ -306,7 +427,14 @@ public class LotGraph{
     	}else{
     		throw new LotGraphException("The node given is not within sotred data.");
     	}
-    }
+    }//removeNode(String)
+    
+    /**
+     * Removes the node at the specified index.
+     * 
+     * @param nodeToRemoveId	The index of the node to remove.
+     * @throws LotGraphException	If the node index is not within the node list.
+     */
     public void removeNode(int nodeToRemoveId) throws LotGraphException{
     	if(this.hasNode(nodeToRemoveId)){
     		this.getNodes().remove(nodeToRemoveId);
@@ -317,7 +445,7 @@ public class LotGraph{
     	}else{
     		throw new LotGraphException("The node given is not within sotred data.");
     	}
-    }
+    }//removeNode(int)
     
     //=========================================================================
     //    Getters
@@ -821,8 +949,9 @@ public class LotGraph{
     
     
     /**
-     * checks to see if we have a current node
+     * Checks to see if the node list is empty
      * 
+     * @return If the node list is empty
      */
     public boolean isEmpty(){
     	if(this.getNodeListSize() != 0){
@@ -833,8 +962,9 @@ public class LotGraph{
     }//isEmpty
     
     /**
-     * checks to see if we don't have a current node
+     * Checks to see if the node list is not empty
      * 
+     * @return If the node list is not empty
      */
     public boolean isNotEmpty(){
     	return !this.isEmpty();
@@ -850,7 +980,7 @@ public class LotGraph{
       //=========================================================================
     
     /**
-     * Checks if the given nodeEdgesIn is square or not
+     * Checks if the given nodeEdgesIn is square or not (vital for the system to work)
      * 
      * @param nodeEdgesIn	The nodeEdges arrayList
      * @return	If the nodeEdges arrayList is square
@@ -918,14 +1048,27 @@ public class LotGraph{
     	return output;
     }//getNewId()
     
+    /**
+     * Gets a guaranteed unique id.
+     * 
+     * @param idType	The type of ID to get ('n'=node, 'e'=edge)
+     * @return	A new, unique ID
+     */
     private String getNewUniqueId(char idType){
     	String newId = getNewId(idType);
     	while(!this.idIsUnique(idType, newId)){
     		newId = getNewId(idType);
     	}
     	return newId;
-    }
+    }//getNewUniqueId(char)
     
+    /**
+     * Determines if the id given is unique in the data set(s).
+     * 
+     * @param idType	The type of ID ('n'=node, 'e'=edge)
+     * @param idIn	Theid to check
+     * @return	If the given ID is unique
+     */
     public boolean idIsUnique(char idType, String idIn){
     	switch(idType){
     	case 'n':
@@ -950,5 +1093,5 @@ public class LotGraph{
     		break;
     	}
     	return false;
-    }
+    }//idIdUnique(char, String)
 }//class LotGraph
