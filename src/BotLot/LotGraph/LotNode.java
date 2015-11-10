@@ -1,4 +1,3 @@
-package BotLot.LotGraph;
 /**
 LotNode.java
 
@@ -7,16 +6,18 @@ Sets up the node object for the BotLot graph structure.
 @author Greg Stewart
 
 Started: 10/7/15
-Last Edit: 10/18/15
+Last Edit: 11/9/15
 
 @version 1.0
+*/
+package BotLot.LotGraph;
 
 /* imports*/
 import java.util.HashMap;//for attributes
 
 public class LotNode{
     private String id;//the Id of the node, required before setting edges
-    private long metric;//the metric for the node, defaults to 0
+    private double metric;//the metric for the node, defaults to 0
     protected HashMap<String,String> attributes;//user defined attributes of the node, defaults to empty
     
     //=========================================================================
@@ -24,14 +25,13 @@ public class LotNode{
     //region Constructors
     //=========================================================================
     
-	/** LotNode(String idIn, long metricIn, HashMap<String,String> attsIn, ArrayList<LotEdge> edgesIn)
-     *
+	/**
      * Constructor to initialize everything
      * 
-     * @param   idIn    		the Id to give the node
-     * @param   metricIn    the metric to give the node
-     * @param   attsIn    	the attributes to give the node
-     * @param   edges	    	the edges to give the node
+     * @param   idIn    		the Id to give the node.
+     * @param   metricIn    the metric to give the node.
+     * @param   attsIn    	the attributes to give the node.
+     * @param   edges	    	the edges to give the node.
      */
     public LotNode(String idIn, long metricIn, HashMap<String,String> attsIn){
         this(idIn);
@@ -39,8 +39,7 @@ public class LotNode{
 		this.setAtts(attsIn);
     }//LotNode(String idIn)
 	
-    /** LotNode(String idIn)
-     *
+    /**
      * Constructor to initialize the Id.
      * 
      * @param   idIn    the Id to give the node
@@ -50,9 +49,8 @@ public class LotNode{
         this.setId(idIn);
     }//LotNode(String idIn)
 
-    /** LotNode()
-     *
-     * empty constructor to initialize the node
+    /**
+     * Empty constructor to initialize the node
      * <p>
      * Will need an id set before adding any edges
      */
@@ -68,8 +66,7 @@ public class LotNode{
     //region Setters
     //=========================================================================
     
-    /** setId(String idIn)
-     * 
+    /**
      * Sets the node's id.
      * <p>
      * Trusts that the Id being given is valid, and does not conflict with other Id's
@@ -81,8 +78,7 @@ public class LotNode{
         this.id = idIn;
     }//setId
     
-    /** setMetric(long metricIn)
-     * 
+    /**
      * Sets the node's metric.
      *
      * @param   metricIn    The new metric of the node
@@ -91,8 +87,7 @@ public class LotNode{
         this.metric = metricIn;
     }//setMetric
 
-    /** setAtt(String attKeyIn, String attValIn)
-     * 
+    /**
      * Sets a new value of the attribute in. Adds new attribute if not there
      * <p>
      * Use this to add or edit attributes
@@ -104,8 +99,7 @@ public class LotNode{
         this.attributes.put(attKeyIn, attValIn);
     }//setAtt
 
-    /** setAtts(HashMap<String, String> attsIn)
-     * 
+    /**
      * Sets a new value of the attribute in. Adds new attribute if not there
 	 *
      * @param   attsIn    The attributes to set this Node's attributes to
@@ -114,8 +108,7 @@ public class LotNode{
         this.attributes = attsIn;
     }//setAtts
 	
-	/** remAtt(String attKeyIn, String attValIn)
-     * 
+	/** 
      * Removes an attribute from the attributes
      *
      * @param   attKeyIn    The attribute to remove
@@ -131,29 +124,26 @@ public class LotNode{
     //region Getters
     //=========================================================================
 	
-	/** getId()
+	/**
+     * Returns the id of this node.
      * 
-     * Returns the id of this node
-     * 
-	 * @return			The id of this node.
+	 * @return	The id of this node.
 	 */
 	public String getId(){
 		return this.id;
 	}//getId
 	
-	/** getMetric()
+	/**
+     * Returns the metric of this node.
      * 
-     * Returns the metric of this node
-     * 
-	 * @return			The metric of this node.
+	 * @return	The metric of this node.
 	 */
-	public long getMetric(){
+	public double getMetric(){
 		return this.metric;
 	}//getMetric
 	
-	/** getAtt(String)
-     * 
-     * Returns the metric of this node
+	/**
+     * Returns the metric of this node.
      * 
 	 * @param	attKey	The key of the attribute being retrieved.
 	 * @return			The metric of this node.
@@ -167,6 +157,8 @@ public class LotNode{
 		return "LotNode [id=" + id + ", metric=" + metric + ", attributes=" + attributes + "]";
 	}
 
+	//endregion
+    
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
@@ -176,12 +168,12 @@ public class LotNode{
 		int result = 1;
 		result = prime * result + ((attributes == null) ? 0 : attributes.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + (int) (metric ^ (metric >>> 32));
+		long temp;
+		temp = Double.doubleToLongBits(metric);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
 		return result;
 	}
-	
-	//endregion
-    
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
@@ -204,7 +196,7 @@ public class LotNode{
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
-		if (metric != other.metric)
+		if (Double.doubleToLongBits(metric) != Double.doubleToLongBits(other.metric))
 			return false;
 		return true;
 	}

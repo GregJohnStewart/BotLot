@@ -1,14 +1,15 @@
 package BotLot.LotGraph;
 
-
-public class LotGraphException extends Exception {
+class LotGraphException extends Exception {
 	//unsure why exactly we need this
 	private static final long serialVersionUID = -8102564033843522901L;
 
 	/**
 	 * Empty exception (just in case).
 	 */
-    public LotGraphException() {}
+    public LotGraphException() {
+    	super();
+    }//LotGraphException()
 
     /**
      * General exception, used for all exceptions made by the LotGraph object 
@@ -17,5 +18,5 @@ public class LotGraphException extends Exception {
      */
     public LotGraphException(String message){
        super(message);
-    }
+    }//LotGraphException(String)
 }//class LotGraphException

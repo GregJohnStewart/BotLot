@@ -1,0 +1,22 @@
+package BotLot;
+
+class BotLotException extends Exception{
+	//unsure why exactly we need this
+	private static final long serialVersionUID = -8102564033843522901L;
+
+	/**
+	 * Empty exception (just in case).
+	 */
+	public BotLotException() {
+		super();
+	}
+ 
+	/**
+	 * General exception, used for all exceptions made by the LotGraph object 
+	 * 
+	 * @param message	The message of what happened in the LotGraph Code
+	 */
+	 public BotLotException(String message){
+		 super(message);
+	 }
+}//class BotLotException

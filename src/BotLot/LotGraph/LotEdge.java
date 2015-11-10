@@ -1,4 +1,3 @@
-package BotLot.LotGraph;
 /**
 LotEdge.java
 
@@ -7,11 +6,11 @@ Sets up the Edge object for the BotLot graph structure.
 @author Greg Stewart
 
 Started: 10/7/15
-Last Edit: 10/18/15
+Last Edit: 11/9/15
 
 @version 1.0
-
 **/
+package BotLot.LotGraph;
 
 /* imports*/
 import java.util.HashMap;//for attributes
@@ -26,13 +25,12 @@ public class LotEdge{
     //region Constructors
     //=========================================================================
     
-    /** LotEdge(String idIn, long metricIn, HashMap<String,String> attsIn, LotNode nodeOneIn, LotNode nodeTwoIn)
-     *
+    /**
      * Constructor to initialize all the variables.
      * 
-     * @param   idIn    the Id to give the edge
-     * @param   metricIn    the metric to give the node
-     * @param   attsIn    the attributes to give the node
+     * @param   idIn    the Id to give the edge.
+     * @param   metricIn    the metric to give the node.
+     * @param   attsIn    the attributes to give the node.
      */
     public LotEdge(String idIn, long metricIn, HashMap<String,String> attsIn){
         this(idIn);
@@ -40,20 +38,18 @@ public class LotEdge{
 		this.setAtts(attsIn);
     }//LotEdge(String idIn, long metricIn, HashMap<String,String> attsIn, LotNode nodeOneIn, LotNode nodeTwoIn)
 	
-    /** LotEdge(String idIn)
-     *
+    /**
      * Constructor to initialize the Id.
      * 
-     * @param   idIn    the Id to give the edge
+     * @param   idIn    the Id to give the edge.
      */
     public LotEdge(String idIn){
         this();
         this.setId(idIn);
     }//LotEdge(String idIn)
 
-    /** LotEdge(String idIn)
-     *
-     * empty constructor to initialize the node
+    /**
+     * Empty constructor to initialize the node.
      */
     public LotEdge(){
         this.attributes = new HashMap<String,String>();
@@ -67,8 +63,7 @@ public class LotEdge{
     //region Setters
     //=========================================================================
     
-    /** setId(String idIn)
-     * 
+    /**
      * Sets the edge's id.
      * <p>
      * Trusts that the Id being given is valid, and does not conflict with other Id's
@@ -80,53 +75,47 @@ public class LotEdge{
         this.id = idIn;
     }//setId
     
-    /** setMetric(long metricIn)
-     * 
+    /**
      * Sets the edge's metric.
      *
-     * @param   metricIn    The new metric of the edge
+     * @param	metricIn	The new metric of the edge
      */
     public void setMetric(long metricIn){
         this.metric = metricIn;
     }//setMetric
 
-    /** setAtt(String attKeyIn, String attValIn)
-     * 
-     * Sets a new value of the attribute. Adds new attribute if not there
+    /**
+     * Sets a new value of the attribute. Adds new attribute if not there.
      * <p>
-     * Use this to add or edit attributes
+     * Use this to add or edit attributes.
      *
-     * @param   attKeyIn    The attribute to add or edit
-     * @param   attValIn    The attribute's value
+     * @param	attKeyIn	The attribute to add or edit.
+     * @param	attValIn	The attribute's value.
      */
     public void setAtt(String attKeyIn, String attValIn){
         this.attributes.put(attKeyIn, attValIn);
     }//setAtt
 
-    /** setAtts(HashMap<String,String> attsIn)
-     * 
+    /**
      * Sets a new set attributes.
      *
-     * @param   attsIn    The attributes to set this Edge's to
+     * @param	attsIn	The attributes to set this Edge's to.
      */
     public void setAtts(HashMap<String,String> attsIn){
         this.attributes = attsIn;
     }//setAtt
 	
-	/** remAtt(String attKeyIn, String attValIn)
-     * 
-     * Removes an attribute from the attributes
+	/**
+     * Removes an attribute from the attributes.
      *
-     * @param   attKeyIn    The attribute to remove
+     * @param   attKeyIn    The attribute to remove.
      */
     public void remAtt(String attKeyIn){
         this.attributes.remove(attKeyIn);
     }//remAtt
     
-	/** clearAtts()
-     * 
-     * Clears all attributes from this edge
-     * 
+	/**
+     * Clears all attributes from this edge.
 	 */
 	public void clearAtts(){
 		this.attributes = new HashMap<String,String>();
@@ -141,27 +130,26 @@ public class LotEdge{
     //=========================================================================
     
 	/**
-	 * gets this edge's Id
+	 * Gets this edge's Id.
 	 *
-	 * @return		The id of this edge
+	 * @return	The id of this edge.
 	 */
 	public String getId(){
 		return this.id;
 	}//getId
 	
 	/**
-	 * gets this edge's metric
+	 * Gets this edge's metric.
 	 *
-	 * @return		The metric of this edge
+	 * @return	The metric of this edge.
 	 */
 	public long getMetric(){
 		return this.metric;
 	}//getMetric
 	
 	
-	/** getAtt(String)
-     * 
-     * Returns the metric of this node
+	/**
+     * Returns the metric of this node.
      * 
 	 * @param	attKey	The key of the attribute being retrieved.
 	 * @return			The metric of this node.
