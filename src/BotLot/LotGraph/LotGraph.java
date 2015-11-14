@@ -75,6 +75,8 @@ public class LotGraph{
     //region Setters
     //=========================================================================
     
+    //TODO:: id checks on adding/setting nodes
+    
     /**
      * Sets the nodes to the list given, then sets up the edges accordingly. Used with constructor.
      * 
@@ -602,6 +604,24 @@ public class LotGraph{
     	return -1;
     }//getNodeIndex(String)
     
+    public LotNode getOtherNode(LotNode nodeToIn, LotEdge edgeIn) throws LotGraphException{
+    	if(this.hasNode(nodeToIn) && this.hasEdge(edgeIn)){
+    		if(this.getNodeEdges().get(this.getNodeIndex(nodeToIn)).contains(edgeIn)){
+    			return this.getNode(this.getNodeEdges().get(this.getNodeIndex(nodeToIn)).indexOf(edgeIn));
+    		}else{
+    			throw new LotGraphException("Unable to get other node, edge not attatched to the node given.");
+    		}
+    	}else{
+    		if(!this.hasNode(nodeToIn) && !this.hasEdge(edgeIn)){
+    			throw new LotGraphException("Unable to get other node. Neither node nor edge present in data.");
+    		}else if(!this.hasNode(nodeToIn)){
+    			throw new LotGraphException("Unable to get other node. The node in was not in data.");
+    		}else{
+    			throw new LotGraphException("Unable to get other node. The edge in was not in data.");
+    		}
+    	}
+    }
+    
     /**
      * Determines if the node given is present.
      * 
@@ -642,6 +662,17 @@ public class LotGraph{
     	}
     	return true;
     }//hasNode(int)
+    
+    public boolean hasOtherNode(LotNode nodeFromIn, LotEdge edgeIn){
+    	try{
+    		if(this.getOtherNode(nodeFromIn, edgeIn) != null){
+    			return true;
+    		}
+    	}catch(LotGraphException err){
+    		
+    	}
+    	return false;
+    }
     
     /**
      * Gets the two dimensional array of edges.
