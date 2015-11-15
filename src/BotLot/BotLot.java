@@ -69,7 +69,7 @@ public class BotLot{
 		this.setGraph(new LotGraph());
 		this.clearCurPath();
 		try{
-			this.setCurNode(null);
+			this.setCurNode((LotNode)null);
 		}catch(BotLotException err){
 			System.out.println("FATAL ERROR- BotLot()- Unable to do empty constructor. You should not get this. Error: " + err.getMessage());
 			System.exit(1);
@@ -104,9 +104,33 @@ public class BotLot{
 		}
 	}
 	
+	public void setCurNode(String nodeIdIn) throws BotLotException{
+		if(nodeIdIn != null && this.mainGraph.hasNode(nodeIdIn)){
+			this.curNode = this.mainGraph.getNode(nodeIdIn);
+		}else{
+			if(nodeIdIn == null){
+				this.curNode = null;
+			}else{
+				throw new BotLotException("Node not found withing ");
+			}
+		}
+	}
+
+	public void setCurNode(int nodeIndexIn) throws BotLotException{
+		if(this.mainGraph.hasNode(nodeIndexIn)){
+			try{
+				this.curNode = this.mainGraph.getNode(nodeIndexIn);
+			}catch(LotGraphException err){
+				System.out.println("FATAL ERROR- setCurNode(). This should not happen.");
+				System.exit(1);
+			}
+		}else{
+			throw new BotLotException("Node not found withing ");
+		}
+	}
 	public void clearCurNode(){
 		try{
-			this.setCurNode(null);
+			this.setCurNode((LotNode)null);
 		}catch(BotLotException err){
 			System.out.println("FATAL ERROR- clearCurNode()- Unable to do clear current node. You should not get this. Error: " + err.getMessage());
 			System.exit(1);
@@ -275,7 +299,7 @@ public class BotLot{
 	
 	public void movedToEndOfPath() throws BotLotException{
 		try{
-			this.movedThroughPath(this.getCurPath().size());
+			this.movedThroughPath(this.getCurPath().size() - 1);
 		}catch(BotLotException err){
 			System.out.println("FATAL ERR- movedToEndOfPath(). This should not happen. Error: " + err.getMessage());
 			System.exit(1);
@@ -406,6 +430,55 @@ public class BotLot{
 			System.out.println("FATAL ERR- calcNewPath(). This should not happen. Error: " + err.getMessage());
 			System.exit(1);
 		}
+	}
+
+	public void calcNewPath(String destNodeId){
+		this.calcNewPath(this.mainGraph.getNode(destNodeId));
+	}
+	public void calcNewPath(int destNodeIndex) throws LotGraphException{
+		this.calcNewPath(this.mainGraph.getNode(destNodeIndex));
+	}
+
+	@Override
+	public String toString() {
+		return "BotLot [mainGraph=" + mainGraph + ", curNode=" + curNode + ", curPath=" + curPath + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((curNode == null) ? 0 : curNode.hashCode());
+		result = prime * result + ((curPath == null) ? 0 : curPath.hashCode());
+		result = prime * result + ((mainGraph == null) ? 0 : mainGraph.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		BotLot other = (BotLot) obj;
+		if (curNode == null) {
+			if (other.curNode != null)
+				return false;
+		} else if (!curNode.equals(other.curNode))
+			return false;
+		if (curPath == null) {
+			if (other.curPath != null)
+				return false;
+		} else if (!curPath.equals(other.curPath))
+			return false;
+		if (mainGraph == null) {
+			if (other.mainGraph != null)
+				return false;
+		} else if (!mainGraph.equals(other.mainGraph))
+			return false;
+		return true;
 	}
 	
 	//endregion

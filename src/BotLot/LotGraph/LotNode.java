@@ -19,6 +19,7 @@ public class LotNode{
     private String id;//the Id of the node, required before setting edges
     private double metric;//the metric for the node, defaults to 0
     protected HashMap<String,String> attributes;//user defined attributes of the node, defaults to empty
+    private int numEdges;//the number of edges this node actually has
     
     //=========================================================================
     //    Constructors
@@ -33,10 +34,11 @@ public class LotNode{
      * @param   attsIn    	the attributes to give the node.
      * @param   edges	    	the edges to give the node.
      */
-    public LotNode(String idIn, long metricIn, HashMap<String,String> attsIn){
+    public LotNode(String idIn, long metricIn, HashMap<String,String> attsIn, int numEdgesIn){
         this(idIn);
 		this.setMetric(metricIn);
 		this.setAtts(attsIn);
+		this.setNumEdges(numEdgesIn);
     }//LotNode(String idIn)
 	
     /**
@@ -57,6 +59,7 @@ public class LotNode{
     public LotNode(){
         this.attributes = new HashMap<String,String>();
         this.metric = 0;
+        this.numEdges = -1;
     }//LotNode()
     
     //endregion
@@ -117,6 +120,9 @@ public class LotNode{
         this.attributes.remove(attKeyIn);
     }//setId
 	
+    public void setNumEdges(int numEdgesIn){
+    	this.numEdges = numEdgesIn;
+    }
     //endregion
 	
 	//=========================================================================
@@ -152,16 +158,16 @@ public class LotNode{
 		return this.attributes.get(attKey);
 	}//getAtt
 	
-	@Override
-	public String toString() {
-		return "LotNode [id=" + id + ", metric=" + metric + ", attributes=" + attributes + "]";
+	public int getNumEdges(){
+		return this.numEdges;
 	}
 
-	//endregion
-    
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
+	@Override
+	public String toString() {
+		return "LotNode [id=" + id + ", metric=" + metric + ", attributes=" + attributes + ", numEdges=" + numEdges
+				+ "]";
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -171,12 +177,10 @@ public class LotNode{
 		long temp;
 		temp = Double.doubleToLongBits(metric);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + numEdges;
 		return result;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -198,7 +202,11 @@ public class LotNode{
 			return false;
 		if (Double.doubleToLongBits(metric) != Double.doubleToLongBits(other.metric))
 			return false;
+		if (numEdges != other.numEdges)
+			return false;
 		return true;
 	}
+	
+	//endregion
     
 }//class LotNode

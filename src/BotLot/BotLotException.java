@@ -1,6 +1,6 @@
 package BotLot;
 
-class BotLotException extends Exception{
+public class BotLotException extends Exception{
 	//unsure why exactly we need this
 	private static final long serialVersionUID = -8102564033843522901L;
 
