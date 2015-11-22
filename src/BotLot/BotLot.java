@@ -14,7 +14,7 @@ import BotLot.LotGraph.*;
 public class BotLot{
 	public LotGraph mainGraph;//the main graph
 	private LotNode curNode;//the node we are currently at in the graph
-	private LinkedList<LotEdge> curPath;//TODO:: change current system of deleting as we go along to simply keeping an index placeholder?
+	private LotPath curPath;//TODO:: change current system of deleting as we go along to simply keeping an index placeholder?
 	
 
     //=========================================================================
@@ -245,12 +245,20 @@ public class BotLot{
 	 * @throws LotGraphException	If something went wrong with edge checking.
 	 */
 	public void setCurPath(LinkedList<LotEdge> pathIn) throws BotLotException{
-		this.curPath = pathIn;
+		this.curPath.path = pathIn;
 		if(!this.curPathIsValid()){
 			this.clearCurPath();
 			throw new BotLotException("Path given is not valid; is not continuous for this data.");
 		}
 	}//setCurPath(LinkedList<LotEdge>)
+	
+	public void setCurPath(LotPath pathIn) throws BotLotException{
+		this.curPath = pathIn;
+		if(!this.curPathIsValid()){
+			this.clearCurPath();
+			throw new BotLotException("Path given is not valid; is not continuous for this data.");
+		}
+	}//setCurPath(LotPath)
 	
 	/**
 	 * Adds an edge to the edge path.
@@ -260,9 +268,9 @@ public class BotLot{
 	 */
 	public void addToPath(LotEdge edgeIn) throws BotLotException{
 		if(this.mainGraph.hasEdge(edgeIn)){
-			this.curPath.addLast(edgeIn);
+			this.curPath.path.addLast(edgeIn);
 			if(!curPathIsValid()){
-				this.curPath.removeLast();
+				this.curPath.path.removeLast();
 				throw new BotLotException("Edge given does not make for a contiuous path.");
 			}
 		}else{
@@ -271,9 +279,9 @@ public class BotLot{
 	}//addToPath(edgeIn)
 	
 	public void movedThroughPath() throws BotLotException{
-		if(!this.getCurPath().isEmpty()){
+		if(!this.getCurPath().path.isEmpty()){
 			try{
-				this.setCurNode(this.mainGraph.getOtherNode(this.getCurNode(), this.getCurPath().removeFirst()));
+				this.setCurNode(this.mainGraph.getOtherNode(this.getCurNode(), this.getCurPath().path.removeFirst()));
 			}catch(LotGraphException err){
 				System.out.println("FATAL ERR- movedThroughPath(). This should not happen. Error: " + err.getMessage());
 				System.exit(1);
@@ -284,7 +292,7 @@ public class BotLot{
 	}
 	
 	public void movedThroughPath(int numSteps) throws BotLotException{
-		if(!this.getCurPath().isEmpty()){
+		if(!this.getCurPath().path.isEmpty()){
 			for(int i = 1; i <= numSteps; i++){
 				try{
 					this.movedThroughPath();
@@ -299,7 +307,7 @@ public class BotLot{
 	
 	public void movedToEndOfPath() throws BotLotException{
 		try{
-			this.movedThroughPath(this.getCurPath().size() - 1);
+			this.movedThroughPath(this.getCurPath().path.size());
 		}catch(BotLotException err){
 			System.out.println("FATAL ERR- movedToEndOfPath(). This should not happen. Error: " + err.getMessage());
 			System.exit(1);
@@ -307,7 +315,7 @@ public class BotLot{
 	}
 	
 	public void clearCurPath(){
-		this.curPath = new LinkedList<LotEdge>();
+		this.curPath = new LotPath();
 	}
 	
 	//endregion
@@ -396,7 +404,7 @@ public class BotLot{
 	 * 
 	 * @return	The path currently set.
 	 */
-	public LinkedList<LotEdge> getCurPath(){
+	public LotPath getCurPath(){
 		return this.curPath;
 	}//getCurPath()
 	
@@ -409,7 +417,7 @@ public class BotLot{
 	 */
 	public boolean curPathIsValid(){
 		LotNode tempNode = this.getCurNode();
-		for(LotEdge tempEdge : this.getCurPath()){
+		for(LotEdge tempEdge : this.getCurPath().path){
 			if(this.mainGraph.hasOtherNode(tempNode, tempEdge)){
 				try{
 					tempNode = this.mainGraph.getOtherNode(tempNode, tempEdge);
@@ -421,11 +429,15 @@ public class BotLot{
 			}
 		}//for each
 		return true;//if the path is continuous
-	}
+	}//curPathIsValid()
 	
 	public void calcNewPath(LotNode destNode){
 		try{
-			this.setCurPath(BotLotWorkers.getShortestPath(this,destNode));
+			LinkedList<LotEdge> newPath = BotLotWorkers.getShortestPath(this,destNode);
+			this.setCurPath(newPath);
+			if(!this.curPathIsValid()){
+				throw new BotLotException("Path generated is not valid.");
+			}
 		}catch(BotLotException err){
 			System.out.println("FATAL ERR- calcNewPath(). This should not happen. Error: " + err.getMessage());
 			System.exit(1);

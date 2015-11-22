@@ -2,7 +2,6 @@
 
 import java.util.ArrayList;
 import BotLot.*;
-import BotLot.LotGraph.LotEdge;
 
 public class testDriver {
 
@@ -26,14 +25,14 @@ public class testDriver {
 		navigator.mainGraph.getNode(nodeIds.get(2)).setNumEdges(1);
 		navigator.mainGraph.getNode(nodeIds.get(3)).setNumEdges(1);
 		
-		System.out.println("Nodes: \n");
+		System.out.println("Nodes:");
 		
 		for(int i = 0; i < 4; i++){
 			System.out.println("\t" + navigator.mainGraph.getNodes().get(i));
 		}
 		
 		
-		System.out.println("Setting current node.");
+		System.out.println("Setting current node...");
 		try{
 			navigator.setCurNode(nodeIds.get(0));
 		}catch(BotLotException err){
@@ -51,8 +50,8 @@ public class testDriver {
 		edgeIds.add(navigator.mainGraph.createEdge(nodeIds.get(3), nodeIds.get(0)).getId());
 		
 		System.out.println("Edges:");
-		for(LotEdge curEdge : navigator.mainGraph.getEdgeList()){
-			System.out.println("\t" + curEdge.toString());
+		for(int i = 0; i < navigator.mainGraph.getEdgeList().size(); i++){
+			System.out.println("\t" + navigator.mainGraph.getEdgeList().get(i).toString());
 		}
 		
 		if(navigator.mainGraph.graphIsComplete()){
@@ -60,11 +59,17 @@ public class testDriver {
 		}else{
 			System.out.println("Graph is NOT complete.");
 		}
+		if(navigator.mainGraph.graphIsSquare()){
+			System.out.println("Graph is square.");
+		}else{
+			System.out.println("Graph is NOT square.");
+		}
+		
 		
 		System.out.println("# Nodes: " + navigator.mainGraph.getNodeListSize() + "\n# Edges: " + navigator.mainGraph.getNumEdges());
-		System.out.println(navigator.mainGraph.getGraph());
-		System.out.println("Calculating path...");
+		System.out.println(navigator.mainGraph.getASCIIGraph());
 		
+		System.out.println("Calculating path...");
 		navigator.calcNewPath(nodeIds.get(3));
 		
 		System.out.println("Path found: " + navigator.getCurPath().toString());
@@ -73,6 +78,6 @@ public class testDriver {
 		navigator.movedToEndOfPath();
 		System.out.println("Ended up at: " + navigator.getCurNode().toString());
 		System.out.println("Program complete.");
-	}
+	}//main()
 
 }

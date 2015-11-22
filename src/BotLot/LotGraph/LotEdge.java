@@ -188,19 +188,9 @@ public class LotEdge{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		LotEdge other = (LotEdge) obj;
-		if (attributes == null) {
-			if (other.attributes != null)
-				return false;
-		} else if (!attributes.equals(other.attributes))
+		if(obj.hashCode() != this.hashCode()){
 			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		if (metric != other.metric)
-			return false;
+		}
 		return true;
 	}
 }//class LotEdge

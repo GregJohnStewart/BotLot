@@ -86,6 +86,10 @@ public class LotGraph{
     private void setNodes(ArrayList<LotNode> nodesIn){
     	this.nodes = nodesIn;
     	this.setupEdges();
+    	if(!this.graphIsSquare()){
+    		System.out.println("FATAL ERROR- setNodes()- structure ended up with is not square.");
+    		System.exit(1);
+    	}
     }//setNodes(ArrayList<LotNode>
     
     /**
@@ -432,14 +436,23 @@ public class LotGraph{
     	if(this.idIsUnique('n', newNode.getId())){
     		this.getNodes().add(newNode);    		
     		this.getNodeEdges().add(new ArrayList<LotEdge>());//add to the list
-    		int nodeEdgeSize = this.getNodeListSize();
+    		int nodeListSize = this.getNodeListSize();
     		//increase the graph size
-    		for(int i = 0; i < nodeEdgeSize; i++){
-    			this.getNodeEdges().get(nodeEdgeSize - 1).add(null);//null out the new row
-    			this.getNodeEdges().get(i).add(null);//add a null edge to the rest of the rows
+    		if(nodeListSize == 1){
+    			this.getNodeEdges().get(0).add(null);
+    		}else{
+    			for(int i = 0; i < (nodeListSize - 1); i++){
+    				this.getNodeEdges().get(nodeListSize - 1).add(null);//null out the new row
+    				this.getNodeEdges().get(i).add(null);//add a null edge to the rest of the rows
+    			}
+    			this.getNodeEdges().get(nodeListSize - 1).add(null);
     		}
     	}else{
     		throw new LotGraphException("Node entered has duplicate ID("+newNode.getId()+").");
+    	}
+    	if(!this.nodeEdgesAreSquare()){
+    		System.out.println("FATAL ERROR- addNode()- You should not get this. Structure ended up with is not square.");
+    		System.exit(1);
     	}
     }//addNode(LotNode newNode)
     
@@ -638,15 +651,15 @@ public class LotGraph{
     		if(this.getNodeEdges().get(this.getNodeIndex(nodeFromIn)).contains(edgeIn)){
     			return this.getNode(this.getNodeEdges().get(this.getNodeIndex(nodeFromIn)).indexOf(edgeIn));
     		}else{
-    			throw new LotGraphException("Unable to get other node, edge not attatched to the node given.");
+    			throw new LotGraphException("getOtherNode(LotNode, LotEdge)- Unable to get other node, edge not attatched to the node given.");
     		}
     	}else{
     		if(!this.hasNode(nodeFromIn) && !this.hasEdge(edgeIn)){
-    			throw new LotGraphException("Unable to get other node. Neither node nor edge present in data.");
+    			throw new LotGraphException("getOtherNode(LotNode, LotEdge)- Unable to get other node. Neither node nor edge present in data.");
     		}else if(!this.hasNode(nodeFromIn)){
-    			throw new LotGraphException("Unable to get other node. The node in was not in data.");
+    			throw new LotGraphException("getOtherNode(LotNode, LotEdge)- Unable to get other node. The node in was not in data.");
     		}else{
-    			throw new LotGraphException("Unable to get other node. The edge in was not in data.");
+    			throw new LotGraphException("getOtherNode(LotNode, LotEdge)- Unable to get other node. The edge in was not in data.");
     		}
     	}
     }
@@ -744,10 +757,14 @@ public class LotGraph{
 
     public ArrayList<LotEdge> getEdgeListWithoutNulls(LotNode nodeIn) throws LotGraphException{
     	if(this.hasNode(nodeIn)){
-    		ArrayList<LotEdge> tempEdges = this.getEdgeList(nodeIn);
-    		for(int i = 0;i < tempEdges.size(); i++){
-    			if(tempEdges.get(i) == null){
-    				tempEdges.remove(i);
+    		ArrayList<LotEdge> tempEdges = new ArrayList<LotEdge>(this.getEdgeList(nodeIn));
+    		//System.out.println("DEBUG- Edges: " + tempEdges.toString() + " Size: " + tempEdges.size());
+    		int curPos = 0;
+    		while(tempEdges.contains(null)){
+    			if(tempEdges.get(curPos) == null){
+    				tempEdges.remove(curPos);
+    			}else{
+    				curPos++;
     			}
     		}
     		return tempEdges;
@@ -806,7 +823,7 @@ public class LotGraph{
      * 
      * @return	The number of edges currently set.
      */
-    public long getNumEdges(){
+    public int getNumEdges(){
     	return this.getEdgeList().size();
     }//getNumEdges()
 
@@ -819,7 +836,7 @@ public class LotGraph{
     public LotEdge getEdge(LotEdge edgeIn){
     	ArrayList<LotEdge> tempEdgeList = this.getEdgeList();
     	for(int i = 0; i < tempEdgeList.size(); i++){
-    		if(tempEdgeList.get(i) == edgeIn){
+    		if(tempEdgeList.get(i).equals(edgeIn)){
     			return tempEdgeList.get(i);
     		}
     	}
@@ -1006,19 +1023,36 @@ public class LotGraph{
      * @throws LotGraphException	If either node cannot be found.
      */
     public LotEdge getEdgeFromTo(int fromNodeIndex, int toNodeIndex) throws LotGraphException{
-    	if(this.getNodeListSize() <= fromNodeIndex || this.getNodeListSize() <= fromNodeIndex){
-    		return this.getNodeEdges().get(fromNodeIndex).get(toNodeIndex);
+    	//System.out.println("DEBUG- getEdgeFromTo("+fromNodeIndex+", "+toNodeIndex+"), " + this.getNodeListSize());
+    	if(this.getNodeListSize() > fromNodeIndex && this.getNodeListSize() > toNodeIndex && fromNodeIndex > -1 &&  toNodeIndex > -1 ){
+    		//System.out.println("\tDEBUG- within bounds");
+    		try{
+    			this.getNodeEdges().get(fromNodeIndex);
+    			this.getNodeEdges().get(fromNodeIndex).get(toNodeIndex);
+    			
+    			//System.out.println("\tDEBUG- " + this.getNodeEdges().get(fromNodeIndex).get(toNodeIndex).toString());
+    			
+    			return this.getNodeEdges().get(fromNodeIndex).get(toNodeIndex);
+    		}catch(NullPointerException err){
+    			//System.out.println("\tDEBUG- NULLPOINTER EXCEPTION");
+    			return null;
+    		}catch(IndexOutOfBoundsException err){
+    			System.out.println("FATAL ERROR- getEdgeFromTo("+fromNodeIndex+", "+toNodeIndex+")- you should not get this. INDEXOUTOFBOUNDSEXCEPTION EXCEPTION- " + err.getMessage() + "\n" + err.getStackTrace());
+    			System.exit(1);
+    		}
     	}else{
-    		if(!(this.getNodeListSize() <=  fromNodeIndex) && !(this.getNodeListSize() <=  toNodeIndex)){
+    		//System.out.println("\tDEBUG- not within bounds");
+    		if(!(this.getNodeListSize() <=  fromNodeIndex) && !(this.getNodeListSize() <=  toNodeIndex && fromNodeIndex <= -1 && toNodeIndex <= -1 )){
     			throw new LotGraphException("Neither fromNodeIndex("+fromNodeIndex+")'s nor toNodeIndex("+toNodeIndex+")'s indexes entered point inside the stored data (max: "+this.getNodeListSize()+").");
-    		}else if(!(this.getNodeListSize() <= fromNodeIndex)){
+    		}else if(!(this.getNodeListSize() <= fromNodeIndex) && fromNodeIndex <= -1 ){
     			throw new LotGraphException("fromNodeIndex("+fromNodeIndex+") does not point inside the stored data (max: "+this.getNodeListSize()+").");
-    		}else if(!(this.getNodeListSize() <= toNodeIndex)){
+    		}else if(!(this.getNodeListSize() <= toNodeIndex) && toNodeIndex <= -1){
     			throw new LotGraphException("toNodeIndex("+toNodeIndex+") does not point inside the stored data (max: "+this.getNodeListSize()+").");
     		}else{
     			throw new LotGraphException("WARNING-- Unexpected error occured in getEdge(). You should not get this error.");
     		}
     	}
+    	return null;
     }//getEdgeFromTo(int,int)
     
     /**
@@ -1243,14 +1277,17 @@ public class LotGraph{
      * @return	If the nodeEdges arrayList is square
      */
     private boolean nodeEdgesAreSquare(ArrayList<ArrayList<LotEdge>> nodeEdgesIn){
-    	int sideOne = nodeEdgesIn.size();
-    	
-    	for(int i = 0;i < sideOne;i++){
-    		if(nodeEdgesIn.get(i).size() != sideOne){
+    	int sizeToBe = this.getNodeListSize();
+    	if(this.getNodeEdges().size() != sizeToBe){
+    		//System.out.println("\tDEBUG- # of nodes in NodeEdges ("+this.getNodeEdges().size()+") not the same as the actual number of edges ("+sizeToBe+").");
+    		return false;
+    	}
+    	for(int i = 0; i < sizeToBe; i++){
+    		if(this.getNodeEdges().get(i).size() != sizeToBe){
+        		//System.out.println("\tDEBUG- # of edges at " + i + " not the same as the actual number of possible edges("+this.getNodeEdges().get(i).size()+").");
     			return false;
     		}
     	}
-    	
     	return true;
     }//nodeEdgesAreSquare
     
@@ -1263,20 +1300,27 @@ public class LotGraph{
     	return nodeEdgesAreSquare(this.getNodeEdges());
     }//nodeEdgesAreSquare
     
-    /**
-     * Sets up a square, empty nodeEdges based on the size of the node array
+    public boolean graphIsSquare(){
+		return nodeEdgesAreSquare();
+	}
+
+	/**
+     * Sets up a square, empty nodeEdges based on the size of the node array.
+     * <p>
+     * Nulls all edges, to ensure initialization, and all array sizes are where they need to be
      */
     private void setupEdges(){
     	int nodeNum = this.getNodeListSize();
-    	
     	this.nodeEdges = new ArrayList<ArrayList<LotEdge>>();
     	this.nodeEdges.ensureCapacity(nodeNum);
-    	
-    	//null all nodes
     	for(int i = 0; i < nodeNum; i++){
     		for(int j = 0; j < nodeNum; i++){
     			this.nodeEdges.get(i).add(null);
-    		}
+    		}//null each node they are connected to
+    	}//for each node
+    	if(!this.graphIsSquare()){
+    		System.out.println("FATAL ERROR- setupEdges()- structure ended up with is not square.");
+    		System.exit(1);
     	}
     }//setupEdges
     
@@ -1284,6 +1328,8 @@ public class LotGraph{
      * Generates a new ID for new nodes or edges.
      * <p>
      * Does this by combining two random integers (ideally never getting the same one twice).
+     * <p>
+     * Not guaranteed unique, use {@link #getUniqueId(char)} for that.
      * 
      * @param idType	The type of id to generate (node='n', edge='e').
      * @return	The new ID.
@@ -1300,7 +1346,7 @@ public class LotGraph{
     		default:
     			return null;
     	}
-    	output += (new Integer(rand.nextInt(idSaltRange)).toString()) + (new Integer(rand.nextInt(idSaltRange)).toString());
+    	output += String.format("%010d", (new Integer(rand.nextInt(idSaltRange)))) + String.format("%010d", (new Integer(rand.nextInt(idSaltRange))));
     	return output;
     }//getNewId()
     
@@ -1310,10 +1356,9 @@ public class LotGraph{
      * @param idType	The type of ID to get ('n'=node, 'e'=edge)
      * @return	A new, unique ID
      */
-    private String getNewUniqueId(char idType){
+    public String getNewUniqueId(char idType){
     	String newId = getNewId(idType);
     	while(!this.idIsUnique(idType, newId)){
-    		//System.out.println("ID Generated is not unique");
     		newId = getNewId(idType);
     	}
     	return newId;
@@ -1373,7 +1418,7 @@ public class LotGraph{
 				+ idSaltRange + "]";
 	}
 	
-	public String getGraph(){
+	public String getASCIIGraph(){
 		int numNodes = this.getNodeListSize();
 		String output = "  ";
 		for(int i = 0; i < numNodes; i++){
@@ -1396,7 +1441,7 @@ public class LotGraph{
 		}
 		
 		return output;
-	}
+	}//getASCIIGraph()
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()

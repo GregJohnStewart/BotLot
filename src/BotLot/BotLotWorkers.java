@@ -33,23 +33,39 @@ public class BotLotWorkers {
 		return new LinkedList<LotEdge>();
 	}
 	
+	/**
+	 * Finds a path by randomly selecting edges on each node.
+	 * <p>
+	 * Obviously not a great way to do this.
+	 * 
+	 * @param lotIn
+	 * @param destNode
+	 * @return
+	 */
 	public static LinkedList<LotEdge> findRandomPath(BotLot lotIn, LotNode destNode){
 		LinkedList<LotEdge> tempPath = new LinkedList<LotEdge>();
 		LotNode tempNode = lotIn.getCurNode();
 		ArrayList<LotEdge> tempEdgeList = new ArrayList<LotEdge>();
 		Random rand = new Random();
-		System.out.println("Calculating new path...");
+		//System.out.println("Calculating new path...");
 		try{
 			tempEdgeList = lotIn.mainGraph.getEdgeListWithoutNulls(tempNode);
-			System.out.println("start loop...");
+			//System.out.println("start loop...");
+			int edgeIndexInTempListToGoDown = 0;
 			while(tempNode != destNode && tempEdgeList.size() > 0){
-				System.out.println("\tGetting random edge...");
-				int pathToGoOn = rand.nextInt(tempEdgeList.size());
-				System.out.println("\tAdding to new path...");
-				tempPath.add(tempEdgeList.get(pathToGoOn));
-				System.out.println("\tUpdating temp node...");
-				tempNode = lotIn.mainGraph.getOtherNode(tempNode, tempEdgeList.get(pathToGoOn));
-				System.out.println("\tUpdating temp edge list...");
+				//System.out.println("\tEdges: " + tempEdgeList.toString() + " Size: "+ tempEdgeList.size() +"\n\ttempNode: " + tempNode.toString());
+				//System.out.println("\tGetting random edge...");
+				if(tempEdgeList.size() == 1){
+					edgeIndexInTempListToGoDown = 0;
+				}else{
+					edgeIndexInTempListToGoDown = (rand.nextInt((tempEdgeList.size() - 1)));
+				}
+				//System.out.println("\t\tEdge going down: " + edgeIndexInTempListToGoDown);
+				//System.out.println("\tAdding to new path...");
+				tempPath.add(tempEdgeList.get(edgeIndexInTempListToGoDown));
+				//System.out.println("\tUpdating temp node...");
+				tempNode = lotIn.mainGraph.getOtherNode(tempNode, tempEdgeList.get(edgeIndexInTempListToGoDown));
+				//System.out.println("\tUpdating temp edge list...");
 				tempEdgeList = lotIn.mainGraph.getEdgeListWithoutNulls(tempNode);
 			}
 		}catch(LotGraphException err){
@@ -58,7 +74,7 @@ public class BotLotWorkers {
 		}
 		
 		return tempPath;
-	}
+	}//findRandomPath(BotLot, destNode)
 	
 	
 	
