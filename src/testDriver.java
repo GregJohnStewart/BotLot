@@ -78,6 +78,7 @@ public class testDriver {
 		navigator.movedToEndOfPath();
 		System.out.println("Ended up at: " + navigator.getCurNode().toString());
 		System.out.println("Program complete.");
+		
 	}//main()
 
 }
