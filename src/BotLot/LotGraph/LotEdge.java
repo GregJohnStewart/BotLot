@@ -7,7 +7,7 @@ import java.util.HashMap;//for attributes
  * Started: 10/7/15
  * 
  * @author Greg Stewart
- * @version 1.0 11/22/15
+ * @version 1.0 11/28/15
  */
 public class LotEdge{
 	/** The id of the node, required for normal graph operation. When used with BotLot, this is automatically set. */
@@ -152,6 +152,15 @@ public class LotEdge{
 	public String getAtt(String attKey){
 		return this.attributes.get(attKey);
 	}//getAtt(String)
+	
+	/**
+	 * Returns the attribute HashMap<String, String> {@link #attributes} for this Edge.
+	 * 
+	 * @return {@link #attributes}
+	 */
+	public HashMap<String, String> getAtts(){
+		return this.attributes;
+	}//getAtts()
 	
 	/**
 	 * Tests if there is a key in {@link #attributes}.

@@ -8,7 +8,7 @@ import java.util.HashMap;//for attributes
  * Started: 10/7/15
  * 
  * @author Greg Stewart 
- * @version 1.0 11/22/15
+ * @version 1.0 11/28/15
  */
 public class LotNode{
 	/** The Id of the node, required before setting edges */
@@ -150,6 +150,15 @@ public class LotNode{
 	public String getAtt(String attKey){
 		return this.attributes.get(attKey);
 	}//getAtt
+	
+	/**
+	 * Returns the attribute HashMap<String, String> {@link #attributes} for this Node.
+	 * 
+	 * @return {@link #attributes}
+	 */
+	public HashMap<String, String> getAtts(){
+		return attributes;
+	}//getAtts()
 	
 	/**
 	 * Tests if there is a key in {@link #attributes}.

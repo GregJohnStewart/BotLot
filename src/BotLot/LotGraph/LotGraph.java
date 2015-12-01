@@ -1384,6 +1384,9 @@ public class LotGraph{
      * @return	If all the nodes are complete (have all the edges they are supposed to have) or not.
      */
     public boolean graphIsComplete(){
+    	if(this.getNumNodes() < 1){
+    		return false;
+    	}
     	for(LotNode curNode : this.getNodeList()){
     		try{
     			if(!this.nodeIsFull(curNode)){

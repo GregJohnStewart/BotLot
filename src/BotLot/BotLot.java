@@ -10,7 +10,7 @@ import java.util.LinkedList;//for dealing with the LinkedList of the path.
  * Started: 10/7/15
  * 
  * @author Greg Stewart
- * @version	1.0 11/24/15
+ * @version	1.0 11/26/15
  */
 public class BotLot{
 	/** The main graph. Where all data is held. */
@@ -595,20 +595,37 @@ public class BotLot{
 	 * @return	If {@link #curPath} is valid or not.
 	 */
 	public boolean curPathIsValid(){
-		LotNode tempNode = this.getCurNode();
-		for(LotEdge tempEdge : this.getCurPath().path){
-			if(this.mainGraph.hasOtherNode(tempNode, tempEdge)){
-				try{
-					tempNode = this.mainGraph.getOtherNode(tempNode, tempEdge);
-				}catch(LotGraphException err){
-					System.out.println("FATAL ERR- curPathIsValid(). You should not get this. Error: " + err.getMessage());
+		if(this.curPath != null && this.curPath.path != null){
+			LotNode tempNode = this.getCurNode();
+			for(LotEdge tempEdge : this.getCurPath().path){
+				if(this.mainGraph.hasOtherNode(tempNode, tempEdge)){
+					try{
+						tempNode = this.mainGraph.getOtherNode(tempNode, tempEdge);
+					}catch(LotGraphException err){
+						System.out.println("FATAL ERR- curPathIsValid(). You should not get this. Error: " + err.getMessage());
+					}
+				}else{
+					return false;//if the path is not continuous
 				}
-			}else{
-				return false;//if the path is not continuous
-			}
-		}//for each
-		return true;//if the path is continuous
+			}//for each
+			return true;//if the path is continuous
+		}
+		return false;
 	}//curPathIsValid()
+	
+	/**
+	 * Determines if we have a path or not.
+	 * <p>
+	 * We assume that any path that we have is valid (checks happen on the setters).
+	 * 
+	 * @return	If we have a path.
+	 */
+	public boolean hasPath(){
+		if(!(this.getCurPath() == new LotPath())){
+			return false;
+		}
+		return true;
+	}//hasPath()
 	
 	/**
 	 * Calculates a new path based on {@link #curNode} and {@link #destNode}.
@@ -695,7 +712,39 @@ public class BotLot{
 			throw new BotLotException("calcNewPath(int)- " + err.getMessage());
 		}
 	}//calcNewPath(int)
-
+	
+	/**
+	 * Determines if the graph is 'ready', meaning that it is populated enough to work.
+	 * <p>
+	 * Essentially, if the object is ready to do things.
+	 * 
+	 * @param checkPath	If you want to check if we have a path.
+	 * @return	If the object is set up.
+	 */
+	public boolean ready(boolean checkPath){
+		if(!this.mainGraph.graphIsComplete()){
+			return false;
+		}
+		if(!this.hasCurNode()){
+			return false;
+		}
+		if(!this.hasDestNode()){
+			return false;
+		}
+		if(checkPath & !this.hasPath()){
+			return false;
+		}
+		return true;
+	}//ready(boolean)
+	
+	/**
+	 * TODO:: finish this. move to workers?
+	 * @return
+	 */
+	public LotNode getClosestNotCompleteNode(){
+		return null;
+	}
+	
 	@Override
 	public String toString() {
 		return "BotLot [mainGraph=" + mainGraph + ", curNode=" + curNode + ", curPath=" + curPath + "]";
