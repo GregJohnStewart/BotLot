@@ -20,10 +20,10 @@ public class testDriver {
 			nodeIds.add(navigator.mainGraph.createNodeGiveId());
 			//System.out.println("\tNode added. Id: " + nodeIds.get(i));
 		}
-		navigator.mainGraph.getNode(nodeIds.get(0)).setNumEdges(1);
-		navigator.mainGraph.getNode(nodeIds.get(1)).setNumEdges(1);
-		navigator.mainGraph.getNode(nodeIds.get(2)).setNumEdges(1);
-		navigator.mainGraph.getNode(nodeIds.get(3)).setNumEdges(1);
+		navigator.mainGraph.getNode(nodeIds.get(0)).setActNumEdges(1);
+		navigator.mainGraph.getNode(nodeIds.get(1)).setActNumEdges(1);
+		navigator.mainGraph.getNode(nodeIds.get(2)).setActNumEdges(1);
+		navigator.mainGraph.getNode(nodeIds.get(3)).setActNumEdges(1);
 		
 		System.out.println("Nodes:");
 		
@@ -59,14 +59,9 @@ public class testDriver {
 		}else{
 			System.out.println("Graph is NOT complete.");
 		}
-		if(navigator.mainGraph.graphIsSquare()){
-			System.out.println("Graph is square.");
-		}else{
-			System.out.println("Graph is NOT square.");
-		}
 		
 		
-		System.out.println("# Nodes: " + navigator.mainGraph.getNodeListSize() + "\n# Edges: " + navigator.mainGraph.getNumEdges());
+		System.out.println("# Nodes: " + navigator.mainGraph.getNumNodes() + "\n# Edges: " + navigator.mainGraph.getNumEdges());
 		System.out.println(navigator.mainGraph.getASCIIGraph());
 		
 		System.out.println("Calculating path...");

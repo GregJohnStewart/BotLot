@@ -46,7 +46,7 @@ import java.io.Writer;
  * Started: 10/26/15
  * 
  * @author Greg Stewart
- * @version	1.0 10/28/15
+ * @version	1.0 12/10/15
  */
 class BotLotDataSource {
 	/** The kind of data source this is */
@@ -232,7 +232,7 @@ class BotLotDataSource {
 				//get ID
 				newNode.setId(curNode.getAttribute("id"));
 				//get numEdges
-				newNode.setNumEdges(Integer.parseInt(curNode.getAttribute("numEdges")));
+				newNode.setActNumEdges(Integer.parseInt(curNode.getAttribute("numEdges")));
 				//get rest of attributes
 				NamedNodeMap attList = curNode.getAttributes();
 				for(int i = 0; i < attList.getLength(); i++){
@@ -264,7 +264,7 @@ class BotLotDataSource {
 							newEdge.setAtt(attrName, attr.getNodeValue());
 						}
 					}
-					graphOut.setEdge(newEdge, curNode.getAttribute("id"), curEdge.getAttribute("endNode"));
+					graphOut.setEdge(newEdge, curNode.getAttribute("id"));
 					curEdge = (Element) curEdge.getNextSibling();
 	        	}
 	        }
@@ -347,7 +347,7 @@ class BotLotDataSource {
 			    }
 				rootElement.appendChild(newNode);
 				//add edges
-				ArrayList<LotEdge> curEdgeList = lotIn.getEdgeListWithoutNulls(curNode);
+				ArrayList<LotEdge> curEdgeList = lotIn.getNode(curNode).getEdges();
 				for(int j = 0; j < curEdgeList.size(); j++){
 					Element newEdge = doc.createElement("edge");
 					LotEdge curEdge = curEdgeList.get(j);

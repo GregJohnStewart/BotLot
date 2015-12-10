@@ -7,11 +7,13 @@ import java.util.HashMap;//for attributes
  * Started: 10/7/15
  * 
  * @author Greg Stewart
- * @version 1.0 11/28/15
+ * @version 1.0 12/6/15
  */
 public class LotEdge{
 	/** The id of the node, required for normal graph operation. When used with BotLot, this is automatically set. */
     private String id;
+    /** The node this edge goes to. */
+    private LotNode endNode;
     /** The metric for the node, defaults to 0 */
     private double metric;
     /** User defined attributes of the node, defaults to empty */
@@ -23,17 +25,27 @@ public class LotEdge{
     //=========================================================================
     
     /**
+     * Creates a new LotEdge.
+     * 
+     * @param edgeIn	The edge to copy off of.
+     */
+    public LotEdge(LotEdge edgeIn){
+    	this(edgeIn.getId(), edgeIn.getEndNode(), edgeIn.getMetric(), edgeIn.getAtts());
+    }//LotEdge(LotEdge)
+    
+    /**
      * Constructor to initialize all the variables.
      * 
      * @param   idIn	The Id to set {@link #id}.
      * @param   metricIn	The metric to give {@link #metric}.
      * @param   attsIn	The attributes to give {@link #attributes}.
      */
-    public LotEdge(String idIn, long metricIn, HashMap<String,String> attsIn){
+    public LotEdge(String idIn, LotNode nodeIn, double metricIn, HashMap<String,String> attsIn){
         this(idIn);
+        this.setEndNode(nodeIn);
 		this.setMetric(metricIn);
 		this.setAtts(attsIn);
-    }//LotEdge(String, long, HashMap<String,String>, LotNode, LotNode)
+    }//LotEdge(String, LotNode, double, HashMap<String,String>, LotNode, LotNode)
 	
     /**
      * Constructor to initialize {@link #id}.
@@ -49,8 +61,9 @@ public class LotEdge{
      * Empty constructor to initialize the node.
      */
     public LotEdge(){
-        this.attributes = new HashMap<String,String>();
+    	this.endNode = null;
         this.metric = 0;
+        this.attributes = new HashMap<String,String>();
     }//LotEdge()
     
     //endregion
@@ -70,6 +83,15 @@ public class LotEdge{
     public void setId(String idIn){
         this.id = idIn;
     }//setId(String)
+    
+    /**
+     * Sets the Edges' end node ({@link #endNode}). Trusts that the node is valid.
+     * 
+     * @param nodeIn	The new node.
+     */
+    public void setEndNode(LotNode nodeIn){
+    	this.endNode = nodeIn;
+    }//setEndNode(LotNode)
     
     /**
      * Sets the edge's {@link #metric}.
@@ -133,6 +155,27 @@ public class LotEdge{
 	public String getId(){
 		return this.id;
 	}//getId()
+	
+	/**
+	 * Returns {@link #endNode}.
+	 * 
+	 * @return	{@link #endNode}.
+	 */
+	public LotNode getEndNode(){
+		return this.endNode;
+	}
+	
+	/**
+	 * Checks if the edge's end is set.
+	 * 
+	 * @return	If the edge's end is set.
+	 */
+	public boolean endSet(){
+		if(this.getEndNode() != null){
+			return true;
+		}
+		return false;
+	}//endSet()
 	
 	/**
 	 * Gets this edge's metric ({@link #metric}).
