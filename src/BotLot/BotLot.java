@@ -463,8 +463,9 @@ public class BotLot{
 				System.exit(1);
 			}
 			this.clearCurPath();
+		}else{
+			throw new BotLotException("Current node does not have the given edge.");
 		}
-		throw new BotLotException("Current node does not have the given edge.");
 	}//movedDownEdge(LotEdge)
 	
 	/**
@@ -486,8 +487,9 @@ public class BotLot{
 				System.exit(1);
 			}
 			this.clearCurPath();
+		}else{
+			throw new BotLotException("Current node does not have the given edge.");
 		}
-		throw new BotLotException("Current node does not have the given edge.");
 	}//movedDownEdge(String)
 	
 	/**
@@ -509,10 +511,10 @@ public class BotLot{
 				System.exit(1);
 			}
 			this.clearCurPath();
+		}else{
+			throw new BotLotException("Current node does not have the given edge.");
 		}
-		throw new BotLotException("Current node does not have the given edge.");
 	}//movedDownEdge(String)
-	
 	
 	/**
 	 * Moves {@link #curNode} through one edge.
@@ -523,7 +525,7 @@ public class BotLot{
 		if(!this.getCurPath().path.isEmpty()){
 			try{
 				LotPath tempPath = new LotPath(this.getCurPath());
-				this.movedDownEdge(tempPath.path.getFirst());
+				this.movedDownEdge(tempPath.path.removeFirst());
 				System.out.println("Moved down edge fine");
 				this.setCurPath(tempPath);
 			}catch(BotLotException e){
@@ -565,7 +567,7 @@ public class BotLot{
 	public void movedToEndOfPath() throws BotLotException{
 		//TODO:: better error handling
 		try{
-			this.movedThroughPath(this.getCurPath().path.size());
+			this.movedThroughPath(this.getCurPath().size());
 			this.clearDestNode();
 		}catch(BotLotException e){
 			if(e.getMessage().equals("Reached end of path early.")){

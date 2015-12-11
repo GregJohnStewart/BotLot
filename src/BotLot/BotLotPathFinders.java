@@ -124,22 +124,21 @@ public class BotLotPathFinders {
 	 * 
 	 * @param lotIn	The BotLot that we are dealing with.
 	 * @return	If there is a path from the curNode to the destNode of the BotLot given.
-	 * @throws BotLotException 
+	 * @throws BotLotException If the BotLot object given isn't ready for path generation.
 	 */
 	public static boolean hasPath(BotLot lotIn) throws BotLotException{
 		if(lotIn.ready(false)){
+			//check if curNode is directly connected to destNode
 			if(lotIn.getCurNode().getConnectedNodes().contains(lotIn.getDestNode())){
 				return true;
 			}
-			ArrayList<LotNode> tempList = new ArrayList<LotNode>();;
+			//else have to go find it, following edges
 			ArrayList<LotNode> nodesConnected = lotIn.getCurNode().getConnectedNodes();
+			ArrayList<LotNode> tempList = new ArrayList<LotNode>();
 			ArrayList<LotNode> nodesFinished = new ArrayList<LotNode>();
 			nodesFinished.add(lotIn.getCurNode());
+			nodesConnected.removeAll(nodesFinished);//ensure none of the edges pointed back to curNode
 			while(true){
-				//see if the dest node is in there
-				if(nodesConnected.contains(lotIn.getDestNode())){
-					return true;
-				}
 				//for each in nodes connected, get nodes connected to them (if not one already searched)
 				while(nodesConnected.size() != 0){
 					//check if dest node is in this node's connected set
@@ -152,10 +151,8 @@ public class BotLotPathFinders {
 							tempList.add(curNode);
 						}
 					}
-					//put node in nodesFinished
-					nodesFinished.add(nodesConnected.get(0));
-					//remove the thing from the list
-					nodesConnected.remove(0);
+					//put node in nodesFinished and remove it from nodesConnected
+					nodesFinished.add(nodesConnected.remove(0));
 				}
 				//if we got this far and no nodes are in the temp list, there is nothing else we can do, so there is no path
 				if(tempList.size() == 0){
