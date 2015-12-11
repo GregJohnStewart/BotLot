@@ -1,7 +1,9 @@
-package BotLot;
-import BotLot.LotGraph.*;//for dealing with all the LotGraph stuff
+package botLot;
 import java.util.ArrayList;//for dealing with the ArrayLists in the graph.
 import java.util.LinkedList;//for dealing with the LinkedList of the path.
+
+import botLot.BotLotException;
+import botLot.lotGraph.*;
 /**
  * BotLot.java
  * <p>
@@ -10,7 +12,7 @@ import java.util.LinkedList;//for dealing with the LinkedList of the path.
  * Started: 10/7/15
  * 
  * @author Greg Stewart
- * @version	1.0 11/26/15
+ * @version	1.0 12/11/15
  */
 public class BotLot{
 	/** The main graph. Where all data is held. */
@@ -262,6 +264,12 @@ public class BotLot{
 		}
 	}//addEdge()
 	
+	/**
+	 * Creates an edge off of the current node.
+	 * 
+	 * @return	The edge created.
+	 * @throws BotLotException	If the current node isn't set.
+	 */
 	public LotEdge createEdge() throws BotLotException{
 		if(this.graphHasCurNode()){
 			try {
@@ -273,10 +281,23 @@ public class BotLot{
 		}
 		throw new BotLotException("Cur node not set.");
 	}//createEdge()
+	/**
+	 * Creates an edge off of the current node, and returns it's id.
+	 * 
+	 * @return	The id of the new edge.
+	 * @throws BotLotException	If the current node isn't set.
+	 */
 	public String createEdgeGiveId() throws BotLotException{
 		return this.createEdge().getId();
-	}
+	}//createEdgeGiveId()
 	
+	/**
+	 * Creates an edge to the given node.
+	 * 
+	 * @param toNodeIndex	The given node.
+	 * @return	The edge created.
+	 * @throws BotLotException	If the node given is not set.
+	 */
 	public LotEdge createEdgeTo(LotNode toNode) throws BotLotException{
 		if(this.graphHasCurNode() && this.mainGraph.hasNode(toNode)){
 			try {
@@ -290,11 +311,28 @@ public class BotLot{
 			throw new BotLotException("Cur node not set.");
 		}
 		throw new BotLotException("toNode was not found in data.");
-	}
+	}//createEdgeTo(LotNode)
+	
+	/**
+	 * Creates an edge to the given node and returns it's ID.
+	 * <p>
+	 * Wrapper for {@link #createEdgeTo(LotNode)}
+	 * 
+	 * @param toNodeIndex	The given node.
+	 * @return	The edge created.
+	 * @throws BotLotException	If the node given is not set.
+	 */
 	public String createEdgeToGiveId(LotNode toNode) throws BotLotException{
 		return this.createEdgeTo(toNode).getId();
-	}
-	
+	}//createEdgeToGiveId(LotNode)
+
+	/**
+	 * Creates an edge to the given node.
+	 * 
+	 * @param toNodeIndex	The id of the given node.
+	 * @return	The edge created.
+	 * @throws BotLotException	If the node given is not set.
+	 */
 	public LotEdge createEdgeTo(String toNodeId) throws BotLotException{
 		if(this.graphHasCurNode() && this.mainGraph.hasNode(toNodeId)){
 			try {
@@ -308,11 +346,28 @@ public class BotLot{
 			throw new BotLotException("Cur node not set.");
 		}
 		throw new BotLotException("toNode was not found in data.");
-	}
+	}//createEdgeTo(String)
+	
+	/**
+	 * Creates an edge to the given node, and returns it's id.
+	 * <p>
+	 * Wrapper for {@link #createEdgeTo(String)}
+	 * 
+	 * @param toNodeIndex	The id of the given node.
+	 * @return	The id of the edge created.
+	 * @throws BotLotException	If the node given is not set.
+	 */
 	public String createEdgeToGiveId(String toNodeId) throws BotLotException{
 		return this.createEdgeTo(toNodeId).getId();
-	}
+	}//createEdgeToGiveId(String)
 	
+	/**
+	 * Creates an edge to the given node.
+	 * 
+	 * @param toNodeIndex	The index of the given node.
+	 * @return	The edge created.
+	 * @throws BotLotException	If the node given is not set.
+	 */
 	public LotEdge createEdgeTo(int toNodeIndex) throws BotLotException{
 		if(this.graphHasCurNode() && this.mainGraph.hasNode(toNodeIndex)){
 			try {
@@ -326,12 +381,19 @@ public class BotLot{
 			throw new BotLotException("Cur node not set.");
 		}
 		throw new BotLotException("toNode was not found in data.");
-	}
+	}//createEdgeTo(int)
+	/**
+	 * Creates an edge to the given node and returns its ID.
+	 * <p>
+	 * Wrapper for {@link #createEdgeTo(int)}
+	 * 
+	 * @param toNodeIndex	The index of the given node.
+	 * @return
+	 * @throws BotLotException
+	 */
 	public String createEdgeToGiveId(int toNodeIndex) throws BotLotException{
 		return this.createEdgeTo(toNodeIndex).getId();
-	}
-	
-	
+	}//createEdgeToGiveId(int)
 	
 	/**
 	 * Removes an edge from {@link #curNode}.
@@ -398,8 +460,6 @@ public class BotLot{
 	
 	/**
 	 * Sets the {@link #curPath} we have for the one using this object to go through. 
-	 * <p>
-	 * TODO:: performance is going to be an issue here. Also need to check for node continuity.
 	 * 
 	 * @param pathIn	The path we are trying to set to.
 	 * @throws LotGraphException	If something went wrong with edge checking.
@@ -447,9 +507,7 @@ public class BotLot{
 	/**
 	 * Acknowledges that we have moved down a specified edge.
 	 * <p>
-	 * CLEARS THE CURRENT PATH
-	 * <p>
-	 * TODO:: do something better than clearing current path?
+	 * CLEARS THE CURRENT PATH because the path would no longer be valid.
 	 * 
 	 * @param edgeMovedDown	The edge moved down,
 	 * @throws BotLotException If the current node does not have the given edge.
@@ -471,9 +529,7 @@ public class BotLot{
 	/**
 	 * Acknowledges that we have moved down a specified edge.
 	 * <p>
-	 * CLEARS THE CURRENT PATH
-	 * <p>
-	 * TODO:: do something better than clearing current path?
+	 * CLEARS THE CURRENT PATH because the path would no longer be valid.
 	 * 
 	 * @param edgeMovedDownId	The edge moved down,
 	 * @throws BotLotException If the current node does not have the given edge.
@@ -495,9 +551,7 @@ public class BotLot{
 	/**
 	 * Acknowledges that we have moved down a specified edge.
 	 * <p>
-	 * CLEARS THE CURRENT PATH
-	 * <p>
-	 * TODO:: do something better than clearing current path?
+	 * CLEARS THE CURRENT PATH because the path would no longer be valid.
 	 * 
 	 * @param edgeMovedDownIndex	The edge moved down,
 	 * @throws BotLotException If the current node does not have the given edge.
@@ -524,10 +578,11 @@ public class BotLot{
 	public void movedThroughPath() throws BotLotException{
 		if(!this.getCurPath().path.isEmpty()){
 			try{
+				//hold the current path, to have it for use after we move
 				LotPath tempPath = new LotPath(this.getCurPath());
 				this.movedDownEdge(tempPath.path.removeFirst());
-				System.out.println("Moved down edge fine");
-				this.setCurPath(tempPath);
+				//System.out.println("Moved down edge fine");
+				this.curPath = tempPath;
 			}catch(BotLotException e){
 				System.out.println("FATAL ERR- movedThroughPath(). This should not happen. Error: " + e.getMessage());
 				System.exit(1);
@@ -546,7 +601,7 @@ public class BotLot{
 	public void movedThroughPath(int numSteps) throws BotLotException{
 		if(!this.getCurPath().path.isEmpty()){
 			for(int i = 1; i <= numSteps; i++){
-				System.out.println("Moving down path, " + i);
+				//System.out.println("Moving down path, " + i);
 				try{
 					this.movedThroughPath();
 				}catch(BotLotException e){
@@ -565,16 +620,19 @@ public class BotLot{
 	 * @throws BotLotException If something went wrong. I.E., if the current path is empty. 
 	 */
 	public void movedToEndOfPath() throws BotLotException{
-		//TODO:: better error handling
-		try{
-			this.movedThroughPath(this.getCurPath().size());
-			this.clearDestNode();
-		}catch(BotLotException e){
-			if(e.getMessage().equals("Reached end of path early.")){
-				throw e;
+		if(this.hasPath()){
+			try{
+				this.movedThroughPath(this.getCurPath().size());
+				this.clearDestNode();
+			}catch(BotLotException e){
+				if(e.getMessage().equals("Reached end of path early.")){
+					throw e;
+				}
+				System.out.println("FATAL ERR- movedToEndOfPath(). This should not happen. Error: " + e.getMessage());
+				System.exit(1);
 			}
-			System.out.println("FATAL ERR- movedToEndOfPath(). This should not happen. Error: " + e.getMessage());
-			System.exit(1);
+		}else{
+			throw new BotLotException("The object does not have a path set.");
 		}
 	}//movedToEndOfPath()
 	
@@ -981,12 +1039,4 @@ public class BotLot{
 	}
 	
 	//endregion
-	
-	
-	
-	
-	
-	
-	
-	
 }//class BotLot

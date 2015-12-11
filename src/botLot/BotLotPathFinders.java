@@ -1,7 +1,8 @@
-package BotLot;
-import BotLot.LotGraph.*;//for dealing with everything LotGraph.
+package botLot;
 import java.util.ArrayList;//for dealing with the graph structure itself.
 import java.util.Random;//for the random path gen.
+
+import botLot.lotGraph.*;
 /**
  * BotLotWorkers.java
  * <p>

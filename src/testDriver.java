@@ -1,7 +1,8 @@
 
 
 import java.util.ArrayList;
-import BotLot.*;
+
+import botLot.*;
 
 public class testDriver {
 

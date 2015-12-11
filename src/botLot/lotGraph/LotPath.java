@@ -1,4 +1,4 @@
-package BotLot.LotGraph;
+package botLot.lotGraph;
 import java.util.Collection;
 import java.util.LinkedList;//for the actual path
 /**

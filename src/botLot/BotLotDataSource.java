@@ -1,4 +1,4 @@
-package BotLot;
+package botLot;
 //import java.sql.*;//for SQL connections
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,7 +27,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import BotLot.LotGraph.*;
+import botLot.lotGraph.*;
 
 import java.io.File;
 import java.io.IOException;

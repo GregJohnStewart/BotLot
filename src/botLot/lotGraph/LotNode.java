@@ -1,4 +1,4 @@
-package BotLot.LotGraph;
+package botLot.lotGraph;
 import java.util.ArrayList;//for edges
 import java.util.HashMap;//for attributes
 import java.util.Collection;//for toString

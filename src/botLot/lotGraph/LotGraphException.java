@@ -1,4 +1,4 @@
-package BotLot.LotGraph;
+package botLot.lotGraph;
 /**
  * LotGraphException.java
  * <p>
