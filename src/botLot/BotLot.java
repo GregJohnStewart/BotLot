@@ -12,7 +12,7 @@ import botLot.lotGraph.*;
  * Started: 10/7/15
  * 
  * @author Greg Stewart
- * @version	1.0 12/11/15
+ * @version	1.0 12/12/15
  */
 public class BotLot{
 	/** The main graph. Where all data is held. */
@@ -836,7 +836,7 @@ public class BotLot{
 	 * @return	If we have a path.
 	 */
 	public boolean hasPath(){
-		if(!(this.getCurPath() == new LotPath())){
+		if(!(this.getCurPath() == new LotPath()) && !(this.getCurPath() != null)){
 			return false;
 		}
 		return true;
@@ -851,7 +851,7 @@ public class BotLot{
 					throw new BotLotException("Path generated is not valid.");
 				}
 				return newPath;
-			}catch(BotLotException e){
+			}catch(BotLotPathFindingException e){
 				System.out.println("FATAL ERR- calcNewPath(). This should not happen. Error: " + e.getMessage());
 				System.exit(1);
 			}

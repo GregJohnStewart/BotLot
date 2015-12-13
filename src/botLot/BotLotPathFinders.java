@@ -7,9 +7,11 @@ import botLot.lotGraph.*;
  * BotLotWorkers.java
  * <p>
  * Handles the heavy lifting, easier to separate out the code for cleanliness and such.
+ * <p>
+ * Started: 11/7/15
  * 
  * @author Greg Stewart
- * @version	1.0 12/10/15
+ * @version	1.0 12/12/15
  */
 public class BotLotPathFinders {
 	private static boolean readyPathChecked = false;
@@ -20,18 +22,21 @@ public class BotLotPathFinders {
 	 * 
 	 * @param lotIn	The graph structure to deal with.
 	 * @return	A new path from the current node in {@link lotIn} to the destination node in that structure.
-	 * @throws BotLotException 
+	 * @throws BotLotPathFindingException
 	 */
-	public static LotPath getShortestPath(BotLot lotIn) throws BotLotException{
+	public static LotPath getShortestPath(BotLot lotIn) throws BotLotPathFindingException{
 		if(!readyPathCheck(lotIn)){
-			throw new BotLotException(notReadyString);
+			throw new BotLotPathFindingException(notReadyString);
 		}
 		readyPathChecked = true;
 		LotPath pathFound = null;
 		
 		//determine what algorithm to use.....
 		if(lotIn.mainGraph.getNodeEdgeRatio() >= ratioThreshHold){
-			//if about the same amount of nodes to edges, get best of 5 random path gen's
+			/*If about the same amount of nodes to edges, get best of 5 random path gens
+			 * 
+			 * Idea being that the paths throughout the data set are fairly linear, therefore this algorithm should run with O(# edges between curNode and destNode).
+			 */
 			double curBest = Double.POSITIVE_INFINITY;
 			LotPath tempPath;
 			for(int i = 0; i < 5; i++){
@@ -57,12 +62,12 @@ public class BotLotPathFinders {
 	 * 
 	 * @param lotIn	The LotGraph structure to deal with.
 	 * @return A new shortest path from the current node in {@link lotIn} to the destination node in that structure.
-	 * @throws BotLotException 
+	 * @throws BotLotPathFindingException 
 	 */
-	public static LotPath doDijkstra(BotLot lotIn) throws BotLotException{
+	public static LotPath doDijkstra(BotLot lotIn) throws BotLotPathFindingException{
 		if(!readyPathChecked){
 			if(!readyPathCheck(lotIn)){
-				throw new BotLotException(notReadyString);
+				throw new BotLotPathFindingException(notReadyString);
 			}
 		}
 			
@@ -78,12 +83,12 @@ public class BotLotPathFinders {
 	 * TODO:: stop finding paths if it is obvious that one cannot be found
 	 * @param lotIn The LotGraph structure to deal with.
 	 * @return	A new random path from the current node in {@link lotIn} to the destination node in that structure.
-	 * @throws BotLotException 
+	 * @throws BotLotPathFindingException 
 	 */
-	public static LotPath findRandomPath(BotLot lotIn) throws BotLotException{
+	public static LotPath findRandomPath(BotLot lotIn) throws BotLotPathFindingException{
 		if(!readyPathChecked){
 			if(!readyPathCheck(lotIn)){
-				throw new BotLotException(notReadyString);
+				throw new BotLotPathFindingException(notReadyString);
 			}
 		}
 		LotPath tempPath = new LotPath();
@@ -125,9 +130,9 @@ public class BotLotPathFinders {
 	 * 
 	 * @param lotIn	The BotLot that we are dealing with.
 	 * @return	If there is a path from the curNode to the destNode of the BotLot given.
-	 * @throws BotLotException If the BotLot object given isn't ready for path generation.
+	 * @throws BotLotPathFindingException If the BotLot object given isn't ready for path generation.
 	 */
-	public static boolean hasPath(BotLot lotIn) throws BotLotException{
+	public static boolean hasPath(BotLot lotIn) throws BotLotPathFindingException{
 		if(lotIn.ready(false)){
 			//check if curNode is directly connected to destNode
 			if(lotIn.getCurNode().getConnectedNodes().contains(lotIn.getDestNode())){
@@ -164,7 +169,7 @@ public class BotLotPathFinders {
 				}
 			}//running loop
 		}//if got valid stuff
-		throw new BotLotException("LotGraph not ready to determine path.");
+		throw new BotLotPathFindingException("LotGraph not ready to determine path.");
 	}//hasPath(BotLot)
 	
 	/**
@@ -181,11 +186,63 @@ public class BotLotPathFinders {
 			if(!hasPath(lotIn)){
 				return false;
 			}
-		} catch (BotLotException e) {
+		} catch (BotLotPathFindingException e) {
 			return false;
 		}
 		return true;
 	}//readyPathCheck(BotLot)
+	
+	/**
+	 * Figures out which not complete node is closest to the curNode in the BotLot object. 
+	 * 
+	 * @param lotIn	The BotLot object to deal with.
+	 * @return	The closest incomplete node. Null if the graph is complete.
+	 */
+	public static LotNode getClosestNotCompleteNode(BotLot lotIn){
+		LotNode destNodeHold = lotIn.getDestNode();
+		LotNode closestNotCompleteNode = null;
+		if(!lotIn.mainGraph.graphIsComplete()){
+			ArrayList<LotNode> nodesNotComplete = lotIn.mainGraph.getIncompleteNodes();
+			double curBestMetric = Double.POSITIVE_INFINITY;
+			LotPath tempPath = null; 
+			for(LotNode curNode : nodesNotComplete){
+				try {
+					lotIn.setDestNode(curNode);
+					tempPath = getShortestPath(lotIn);
+					if(tempPath.getPathMetric() < curBestMetric){
+						closestNotCompleteNode = curNode;
+						curBestMetric = tempPath.getPathMetric();
+					}
+				} catch (BotLotException e) {
+					System.out.println("FATAL ERR- getClosestNotCompleteNode(BotLot)- This should not happen. Error: " + e.getMessage());
+					System.exit(1);
+				} catch (BotLotPathFindingException e) {
+					//ignore if no path exists
+				}
+			}
+		}
+		try {
+			lotIn.setDestNode(destNodeHold);
+		} catch (BotLotException e) {
+			System.out.println("FATAL ERR- setClosestNotCompleteNode(BotLot)- This should not happen. Error: " + e.getMessage());
+			System.exit(1);
+		}
+		return  closestNotCompleteNode;
+	}//getClosestNotCompleteNode(BotLot)
+
+	/**
+	 * Wrapper for {@link #getClosestNotCompleteNode(BotLot)} to just set that closest node to the destNode of the BotLot object.
+	 * 
+	 * @param lotIn	The BotLot object to deal with.
+	 */
+	public static void setClosestNotCompleteNode(BotLot lotIn){
+		try {
+			lotIn.setDestNode(getClosestNotCompleteNode(lotIn));
+		} catch (BotLotException e) {
+			System.out.println("FATAL ERR- setClosestNotCompleteNode(BotLot)- This should not happen. Error: " + e.getMessage());
+			System.exit(1);
+		}
+	}//setClosestNotCompleteNode(BotLot)
 	
 	
 }//class BotLotWorkers
