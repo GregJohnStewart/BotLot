@@ -1362,10 +1362,10 @@ public class LotGraph {
 	 * @return If the node list is empty
 	 */
 	public boolean isEmpty() {
-		if (this.getNumNodes() >= 0) {
-			return true;
-		} else {
+		if (this.getNumNodes() > 0) {
 			return false;
+		} else {
+			return true;
 		}
 	}// isEmpty
 

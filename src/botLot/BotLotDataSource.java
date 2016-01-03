@@ -48,7 +48,7 @@ import java.io.Writer;
  * @author Greg Stewart
  * @version	1.0 12/10/15
  */
-class BotLotDataSource {
+public class BotLotDataSource {
 	/** The kind of data source this is */
 	private String type;
 	/** The path or login information */

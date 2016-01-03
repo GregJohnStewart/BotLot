@@ -14,8 +14,11 @@ import botLot.lotGraph.*;
  * @version	1.0 12/12/15
  */
 public class BotLotPathFinders {
+	/** Used to see if we already checked the BotLot object for correctness */
 	private static boolean readyPathChecked = false;
+	/** The string passed to the BotLotPathFindingException when the BotLot object given is not ready. */
 	private static final String notReadyString = "The BotLot Object is either not ready, or has no path between current location and destination.";
+	/** The minimum ratio value to do random path generation in {@link #getShortestPath(BotLot)} */
 	private static final double ratioThreshHold = 0.75;
 	/**
 	 * Determines which path taking algorithm is probably best to use.

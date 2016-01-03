@@ -21,7 +21,7 @@ public class BotLot{
 	private LotNode curNode;
 	/** The node we are currently trying to get to. Required to be set for any path finding operations. */
 	private LotNode destNode;
-	/** The current path to the node we are trying to get to.<p>TODO:: change current system of deleting as we go along to simply keeping an index placeholder?*/
+	/** The current path to the node we are trying to get to.*/
 	private LotPath curPath;
 	
 	
