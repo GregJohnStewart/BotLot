@@ -1,3 +1,8 @@
 /.project
 *.java~
 /bin/
+
+*.classpath
+.metadata\*
+BotLot/.project
+BotLot/.settings/
