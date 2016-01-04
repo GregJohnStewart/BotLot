@@ -3,6 +3,6 @@
 /bin/
 
 *.classpath
-.metadata\*
+.metadata/*
 BotLot/.project
 BotLot/.settings/
