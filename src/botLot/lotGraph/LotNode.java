@@ -285,6 +285,8 @@ public class LotNode{
 	/**
 	 * Gets the number of edges in the set {@link #edges}.
 	 * 
+	 * TODO:: deal with edges not connected to actual nodes
+	 * 
 	 * @return	The number of edges in the set {@link #edges}.
 	 */
 	public int getNumEdges(){

@@ -784,6 +784,26 @@ public class LotGraph {
 			throw new LotGraphException("The given index is out of bounds of the stored data.");
 		}
 	}// getNode(int)
+	
+	/**
+	 * Gets the node that is at the beginning of the given edge.
+	 * 
+	 * @param edgeIn The edge we are dealing with.
+	 * @return The node we find.
+	 * @throws LotGraphException
+	 */
+	public LotNode getNode(LotEdge edgeIn) throws LotGraphException{
+		if(this.hasEdge(edgeIn)){
+			for(LotNode curNode : this.getNodes()){
+				if(curNode.hasEdge(edgeIn)){
+					return curNode;
+				}
+			}
+		}else{
+			throw new LotGraphException("The edge given is not in the dataset.");
+		}
+		return null;//shouldn't ever do this
+	}//getNode(LotEdge)
 
 	/**
 	 * Determines if the node given is present in {@link #nodes}.
@@ -830,6 +850,21 @@ public class LotGraph {
 		}
 		return true;
 	}// hasNode(int)
+	
+	/**
+	 * Determines if there is a node that is the start of a given edge.
+	 * 
+	 * @param edgeIn The edge we are testing on.
+	 * @return If there is a node that is the start of a given edge.
+	 */
+	public boolean hasNode(LotEdge edgeIn){
+		try{
+			this.getNode(edgeIn);
+		}catch (LotGraphException err) {
+			return false;
+		}
+		return true;
+	}//hasNode(LotEdge)
 
 	/**
 	 * Gets the index of the specified node in the list in {@link #nodes}.
