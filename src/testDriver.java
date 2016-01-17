@@ -7,6 +7,7 @@ import botLot.*;
 public class testDriver {
 	
 	public static void main(String[] args) throws Exception {
+		int numNodes = 8;
 		// TODO Auto-generated method stub
 		System.out.println("Begin test run");
 		
@@ -16,19 +17,21 @@ public class testDriver {
 		//create 4 nodes
 		ArrayList<String> nodeIds = new ArrayList<String>();
 		
-		for(int i = 0; i < 4; i++){
+		for(int i = 0; i < numNodes; i++){
 			//System.out.println("...");
 			nodeIds.add(navigator.mainGraph.createNodeGiveId());
+			navigator.mainGraph.getNode(nodeIds.get(i)).setActNumEdges(1);
 			//System.out.println("\tNode added. Id: " + nodeIds.get(i));
 		}
-		navigator.mainGraph.getNode(nodeIds.get(0)).setActNumEdges(1);
-		navigator.mainGraph.getNode(nodeIds.get(1)).setActNumEdges(1);
-		navigator.mainGraph.getNode(nodeIds.get(2)).setActNumEdges(1);
-		navigator.mainGraph.getNode(nodeIds.get(3)).setActNumEdges(1);
+		
+		navigator.mainGraph.getNode(nodeIds.get(1)).setActNumEdges(2);
+		navigator.mainGraph.getNode(nodeIds.get(2)).setActNumEdges(3);
+		navigator.mainGraph.getNode(nodeIds.get(3)).setActNumEdges(2);
+		navigator.mainGraph.getNode(nodeIds.get(5)).setActNumEdges(0);
 		
 		System.out.println("Nodes:");
 		
-		for(int i = 0; i < 4; i++){
+		for(int i = 0; i < numNodes; i++){
 			System.out.println("\t" + navigator.mainGraph.getNodes().get(i));
 		}
 		
@@ -49,6 +52,14 @@ public class testDriver {
 		edgeIds.add(navigator.mainGraph.createEdge(nodeIds.get(1), nodeIds.get(2)).getId());
 		edgeIds.add(navigator.mainGraph.createEdge(nodeIds.get(2), nodeIds.get(3)).getId());
 		edgeIds.add(navigator.mainGraph.createEdge(nodeIds.get(3), nodeIds.get(0)).getId());
+		
+		edgeIds.add(navigator.mainGraph.createEdge(nodeIds.get(1), nodeIds.get(1)).getId());
+		edgeIds.add(navigator.mainGraph.createEdge(nodeIds.get(2), nodeIds.get(1)).getId());
+		edgeIds.add(navigator.mainGraph.createEdge(nodeIds.get(3), nodeIds.get(4)).getId());
+		edgeIds.add(navigator.mainGraph.createEdge(nodeIds.get(4), nodeIds.get(5)).getId());
+		edgeIds.add(navigator.mainGraph.createEdge(nodeIds.get(2), nodeIds.get(6)).getId());
+		edgeIds.add(navigator.mainGraph.createEdge(nodeIds.get(6), nodeIds.get(7)).getId());
+		edgeIds.add(navigator.mainGraph.createEdge(nodeIds.get(7), nodeIds.get(3)).getId());
 		
 		System.out.println("Edges:");
 		for(int i = 0; i < navigator.mainGraph.getEdgeList().size(); i++){

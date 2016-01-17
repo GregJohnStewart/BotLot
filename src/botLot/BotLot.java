@@ -929,9 +929,10 @@ public class BotLot{
 	 * @return	If the object is set up.
 	 */
 	public boolean ready(boolean checkPath){
+		/*
 		if(!this.mainGraph.graphIsComplete()){
 			return false;
-		}
+		}*/
 		if(!this.hasCurNode()){
 			return false;
 		}
