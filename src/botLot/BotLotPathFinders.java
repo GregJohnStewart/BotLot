@@ -11,7 +11,7 @@ import botLot.lotGraph.*;
  * Started: 11/7/15
  * 
  * @author Greg Stewart
- * @version	1.0 12/12/15
+ * @version	1.0 1/20/16
  */
 public class BotLotPathFinders {
 	/** Used to see if we already checked the BotLot object for correctness */
@@ -37,9 +37,9 @@ public class BotLotPathFinders {
 		LotPath pathFound = null;
 		
 		//determine what algorithm to use.....
-		System.out.println("node/edge ratio: " + lotIn.mainGraph.getNodeEdgeRatio());
+		//System.out.println("node/edge ratio: " + lotIn.mainGraph.getNodeEdgeRatio());
 		if(lotIn.mainGraph.getNodeEdgeRatio() >= ratioThreshHold){
-			System.out.println("Ratio within bounds. Doing random path gen.");
+			//System.out.println("Ratio within bounds. Doing random path gen.");
 			/*If about the same amount of nodes to edges, get best of a few random path gens
 			 * 
 			 * Idea being that the paths throughout the data set are fairly linear, therefore this algorithm should run with O(# edges between curNode and destNode).
@@ -54,7 +54,7 @@ public class BotLotPathFinders {
 				}
 			}
 		}else{
-			System.out.println("Too complicated of a graph. Getting specific shortest path.");
+			//System.out.println("Too complicated of a graph. Getting specific shortest path.");
 			//TODO:: implement something better
 			pathFound = findRandomPath(lotIn);
 		}
@@ -94,7 +94,7 @@ public class BotLotPathFinders {
 	 * @throws BotLotPathFindingException 
 	 */
 	public static LotPath findRandomPath(BotLot lotIn) throws BotLotPathFindingException{
-		System.out.println("entered findRandomPath(BotLot)");
+		//System.out.println("entered findRandomPath(BotLot)");
 		if(!readyPathChecked){
 			if(!readyPathCheck(lotIn)){
 				throw new BotLotPathFindingException(notReadyString);
@@ -104,10 +104,10 @@ public class BotLotPathFinders {
 		LotNode tempNode = lotIn.getCurNode();
 		LotNode lastNode = null;
 		Random rand = new Random();
-		System.out.println("Calculating new path...");
+		//System.out.println("Calculating new path...");
 		//TODO:: test
 		try{
-			System.out.println("start loop...");
+			//System.out.println("start loop...");
 			int edgeIndexInTempListToGoDown = 0;
 			lastNode = tempNode;
 			while(tempNode != lotIn.getDestNode() && tempNode.getNumEdges() > 0){

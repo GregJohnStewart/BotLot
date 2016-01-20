@@ -11,7 +11,7 @@ import java.util.LinkedList;//for the actual path
  * Started: 11/18/15
  * 
  * @author Greg Stewart
- * @version	1.0 12/9/15
+ * @version	1.0 1/20/16
  */
 public class LotPath {
 	/** the path of edges held by this object */
@@ -36,16 +36,6 @@ public class LotPath {
 		this();
 		this.setPath(collectionIn);
 	}//LotPath(Collection<LotEdge>)
-	
-	/**
-	 * Constructor that takes in a linked list of LotEdges.
-	 * 
-	 * @param pathEdgesIn
-	 */
-	public LotPath(LinkedList<LotEdge> pathEdgesIn){
-		this();
-		this.path = pathEdgesIn;
-	}//LotPath(LinkedList<LotEdge>)
 	
 	/**
 	 * Basic constructor. Initializes a new linked list for the edges.
@@ -100,5 +90,34 @@ public class LotPath {
 			}
 		}
 	}//removeLoops
-	
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((path == null) ? 0 : path.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		LotPath other = (LotPath) obj;
+		if (path == null) {
+			if (other.path != null)
+				return false;
+		} else if (!path.equals(other.path))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "LotPath [path=" + path + "]";
+	}
 }//class LotPath
