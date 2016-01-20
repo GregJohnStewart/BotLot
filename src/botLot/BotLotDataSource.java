@@ -255,6 +255,8 @@ public class BotLotDataSource {
 					newEdge.setId(curEdge.getAttribute("id"));
 					//get numEdges
 					newEdge.setMetric(Double.parseDouble(curEdge.getAttribute("metric")));
+					//get end node
+					newEdge.setEndNode(graphOut.getNode(curEdge.getAttribute("endNode")));
 					//get rest of attributes
 					NamedNodeMap attList = curEdge.getAttributes();
 					for(int i = 0; i < attList.getLength(); i++){
@@ -351,9 +353,11 @@ public class BotLotDataSource {
 				for(int j = 0; j < curEdgeList.size(); j++){
 					Element newEdge = doc.createElement("edge");
 					LotEdge curEdge = curEdgeList.get(j);
-					//add id, metric
+					//add id, metric, end node id
 					newEdge.setAttribute("id", curEdge.getId());
 					newEdge.setAttribute("numEdges", "" + curEdge.getMetric());
+					newEdge.setAttribute("endNode", curEdge.getEndNode().getId());
+					
 					//add other attributes
 					Iterator<Entry<String, String>> edgeAttIterator = curEdge.getAtts().entrySet().iterator();
 				    while (edgeAttIterator.hasNext()) {
