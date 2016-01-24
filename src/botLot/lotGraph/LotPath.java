@@ -67,6 +67,17 @@ public class LotPath {
 	}//getPathMetric()
 	
 	/**
+	 * Gets the metric for traveling the whole path, factoring in the complexity (number of edges).
+	 * 
+	 * @return	The metric of the entire path, .
+	 */
+	public double getPathMetricFactComp(){
+		double metricSum = this.getPathMetric();
+		double endMetric = metricSum;
+		return endMetric;
+	}//getPathMetric()
+	
+	/**
 	 * Gets the number of 'hops' in the path.
 	 * <p>
 	 * Essentially a wrapper for path.size()
