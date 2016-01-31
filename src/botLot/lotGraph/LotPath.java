@@ -67,13 +67,27 @@ public class LotPath {
 	}//getPathMetric()
 	
 	/**
-	 * Gets the metric for traveling the whole path, factoring in the complexity (number of edges).
+	 * Gets the ratio of the number of individual edges to the total path metric.
+	 * <p>
+	 * returns: (# of edges) / (total path metric) 
 	 * 
-	 * @return	The metric of the entire path, .
+	 * @return	The 
 	 */
-	public double getPathMetricFactComp(){
+	public double getEdgesMetricRatio(){
+		return this.path.size() / this.getPathMetric();
+	}
+	
+	/**
+	 * Gets the metric for traveling the whole path.
+	 * <p>
+	 * TODO:: do I want to do this this way? Figure that out.
+	 * 
+	 * @return	The metric of the entire path.
+	 */
+	public double getNormalizedPathMetric(){
 		double metricSum = this.getPathMetric();
-		double endMetric = metricSum;
+		double ratio = this.getEdgesMetricRatio();
+		double endMetric = metricSum / ratio;
 		return endMetric;
 	}//getPathMetric()
 	
@@ -101,7 +115,9 @@ public class LotPath {
 			}
 		}
 	}//removeLoops
-
+	
+	//TODO:: make an operator for comparing to another path, comparing metrics and such
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
