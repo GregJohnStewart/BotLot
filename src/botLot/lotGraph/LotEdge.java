@@ -37,6 +37,7 @@ public class LotEdge{
      * Constructor to initialize all the variables.
      * 
      * @param   idIn	The Id to set {@link #id}.
+     * @param	nodeIn	The end node for the edge. Sets {@link #endNode}.
      * @param   metricIn	The metric to give {@link #metric}.
      * @param   attsIn	The attributes to give {@link #attributes}.
      */
@@ -197,7 +198,7 @@ public class LotEdge{
 	}//getAtt(String)
 	
 	/**
-	 * Returns the attribute HashMap<String, String> {@link #attributes} for this Edge.
+	 * Returns the attributes {@link #attributes} for this Edge.
 	 * 
 	 * @return {@link #attributes}
 	 */

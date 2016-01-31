@@ -106,9 +106,16 @@ public class BotLotDS {
 	}//BotLotDataSource(String, String)
 	
 	/**
+	 * Empty constructor, for initialization when you don't want to specify things
+	 */
+	public BotLotDS(){
+		
+	}
+	
+	/**
 	 * Creates an XML string that contains the information needed to setup a database connection.
 	 * <p>
-	 * Use this to give the constructor the {@link #pathLoginIn} information.
+	 * Use this to give the constructor the pathLoginIn information.
 	 * <p>
 	 * Based on this tutorial: http://examples.javacodegeeks.com/core-java/xml/dom/create-dom-document-from-scratch/
 	 * 

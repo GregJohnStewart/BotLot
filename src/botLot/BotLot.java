@@ -71,17 +71,11 @@ public class BotLot{
 	
 	/**
 	 * Basic constructor.
-	 * @throws BotLotException Shouldn't do this.
 	 */
 	public BotLot(){
 		this.setGraph(new LotGraph());
 		this.clearCurPath();
-		try{
-			this.setCurNode((LotNode)null);
-		}catch(BotLotException err){
-			System.out.println("FATAL ERROR- BotLot()- Unable to do empty constructor. You should not get this. Error: " + err.getMessage());
-			System.exit(1);
-		}
+		this.clearCurNode();
 	}//BotLot()
 	
 	
@@ -182,8 +176,8 @@ public class BotLot{
 	
 	/**
 	 * Sets {@link #destNode}. Checks if it is there or not.
-	 * @param nodeIn
-	 * @throws BotLotException
+	 * @param nodeIn	The node to set the destination node to.
+	 * @throws BotLotException	If the node given is not part of the set.
 	 */
 	public void setDestNode(LotNode nodeIn) throws BotLotException{
 		if(nodeIn != null && this.mainGraph.hasNode(nodeIn)){
@@ -192,7 +186,7 @@ public class BotLot{
 			if(nodeIn == null){
 				this.destNode = null;
 			}else{
-				throw new BotLotException("Node not found withing ");
+				throw new BotLotException("Node not found within data.");
 			}
 		}
 	}//setDestNode(LotNode)
@@ -294,7 +288,7 @@ public class BotLot{
 	/**
 	 * Creates an edge to the given node.
 	 * 
-	 * @param toNodeIndex	The given node.
+	 * @param toNode	The given node.
 	 * @return	The edge created.
 	 * @throws BotLotException	If the node given is not set.
 	 */
@@ -318,7 +312,7 @@ public class BotLot{
 	 * <p>
 	 * Wrapper for {@link #createEdgeTo(LotNode)}
 	 * 
-	 * @param toNodeIndex	The given node.
+	 * @param toNode	The given node.
 	 * @return	The edge created.
 	 * @throws BotLotException	If the node given is not set.
 	 */
@@ -329,7 +323,7 @@ public class BotLot{
 	/**
 	 * Creates an edge to the given node.
 	 * 
-	 * @param toNodeIndex	The id of the given node.
+	 * @param toNodeId	The id of the given node.
 	 * @return	The edge created.
 	 * @throws BotLotException	If the node given is not set.
 	 */
@@ -353,7 +347,7 @@ public class BotLot{
 	 * <p>
 	 * Wrapper for {@link #createEdgeTo(String)}
 	 * 
-	 * @param toNodeIndex	The id of the given node.
+	 * @param toNodeId	The id of the given node.
 	 * @return	The id of the edge created.
 	 * @throws BotLotException	If the node given is not set.
 	 */
@@ -388,8 +382,8 @@ public class BotLot{
 	 * Wrapper for {@link #createEdgeTo(int)}
 	 * 
 	 * @param toNodeIndex	The index of the given node.
-	 * @return
-	 * @throws BotLotException
+	 * @return	The Id of the new edge.
+	 * @throws BotLotException If the node given is not set.
 	 */
 	public String createEdgeToGiveId(int toNodeIndex) throws BotLotException{
 		return this.createEdgeTo(toNodeIndex).getId();
@@ -462,7 +456,7 @@ public class BotLot{
 	 * Sets the {@link #curPath} we have for the one using this object to go through. 
 	 * 
 	 * @param pathIn	The path we are trying to set to.
-	 * @throws LotGraphException	If something went wrong with edge checking.
+	 * @throws BotLotException	If something went wrong with edge checking.
 	 */
 	public void setCurPath(LinkedList<LotEdge> pathIn) throws BotLotException{
 		this.curPath.path = pathIn;

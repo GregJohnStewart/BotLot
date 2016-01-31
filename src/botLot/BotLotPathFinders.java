@@ -26,8 +26,8 @@ public class BotLotPathFinders {
 	 * Determines which path taking algorithm is probably best to use.
 	 * 
 	 * @param lotIn	The graph structure to deal with.
-	 * @return	A new path from the current node in {@link lotIn} to the destination node in that structure.
-	 * @throws BotLotPathFindingException
+	 * @return	A new path from the current node in lotIn to the destination node in that structure.
+	 * @throws BotLotPathFindingException	If the LotGraph given is not ready for path finding.
 	 */
 	public static LotPath getShortestPath(BotLot lotIn) throws BotLotPathFindingException{
 		if(!readyPathCheck(lotIn)){
@@ -69,8 +69,8 @@ public class BotLotPathFinders {
 	 * Still needs to be implemented.
 	 * 
 	 * @param lotIn	The LotGraph structure to deal with.
-	 * @return A new shortest path from the current node in {@link lotIn} to the destination node in that structure.
-	 * @throws BotLotPathFindingException 
+	 * @return A new shortest path from the current node in lotIn to the destination node in that structure.
+	 * @throws BotLotPathFindingException If the LotGraph object isn't ready for path generation.
 	 */
 	public static LotPath doDijkstra(BotLot lotIn) throws BotLotPathFindingException{
 		if(!readyPathChecked){
@@ -90,8 +90,8 @@ public class BotLotPathFinders {
 	 * 
 	 * TODO:: stop finding paths if it is obvious that one cannot be found
 	 * @param lotIn The LotGraph structure to deal with.
-	 * @return	A new random path from the current node in {@link lotIn} to the destination node in that structure.
-	 * @throws BotLotPathFindingException 
+	 * @return	A new random path from the current node in lotIn to the destination node in that structure.
+	 * @throws BotLotPathFindingException If the BotLot object given is not ready for path generation.
 	 */
 	public static LotPath findRandomPath(BotLot lotIn) throws BotLotPathFindingException{
 		//System.out.println("entered findRandomPath(BotLot)");

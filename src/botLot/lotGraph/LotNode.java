@@ -516,7 +516,7 @@ public class LotNode{
 	}//getAtt
 	
 	/**
-	 * Returns the attribute HashMap<String, String> {@link #attributes} for this Node.
+	 * Returns the attributes ({@link #attributes}) for this Node.
 	 * 
 	 * @return {@link #attributes}
 	 */
