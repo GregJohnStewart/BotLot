@@ -33,7 +33,7 @@ public class simpleNavigator {
 		boolean running = true;
 		boolean useDataSrc = false;
 		boolean gettingInput = false;
-		BotLotDataSource dataSource = null;
+		BotLotDS dataSource = null;
 		Scanner kybd = new Scanner(System.in);
 		
 		System.out.println("Simple Navigator using the BotLot object.\n");
@@ -42,15 +42,15 @@ public class simpleNavigator {
 			System.out.println("Getting data from XML file...");
 			useDataSrc = true;
 			try {
-				dataSource = new BotLotDataSource(BotLotDataSource.XML_DATASRC, args[0]);
-			} catch (BotLotDataSourceException e) {
+				dataSource = new BotLotDS(BotLotDS.XML_DATASRC, args[0]);
+			} catch (BotLotDSException e) {
 				System.out.println("\tUnable to setup datasource with XML path given. Error: " + e.getMessage());
 				e.printStackTrace();
 				System.exit(1);
 			}
 			try {
 				navigator.setGraph(dataSource.getDataFromSource());
-			} catch (BotLotDataSourceException e) {
+			} catch (BotLotDSException e) {
 				System.out.println("\tUnable to correctly get data from source. Error: " + e.getMessage());
 				e.printStackTrace();
 				System.exit(1);
@@ -193,7 +193,7 @@ public class simpleNavigator {
 		if(useDataSrc){
 			try {
 				dataSource.saveDataToSource(navigator.mainGraph);
-			} catch (BotLotDataSourceException e) {
+			} catch (BotLotDSException e) {
 				System.out.println("Unable to save data to source. Error: " + e.getMessage());
 				e.printStackTrace();
 				System.exit(1);

@@ -12,6 +12,7 @@ public class testDriver {
 		System.out.println("Begin test run");
 		
 		BotLot navigator = new BotLot();
+		BotLotDS dataSource;
 		
 		System.out.println("Adding new nodes...");
 		//create 4 nodes

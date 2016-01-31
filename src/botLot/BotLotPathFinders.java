@@ -4,9 +4,9 @@ import java.util.Random;//for the random path gen.
 
 import botLot.lotGraph.*;
 /**
- * BotLotWorkers.java
+ * BotLotPathFinders.java
  * <p>
- * Handles the heavy lifting, easier to separate out the code for cleanliness and such.
+ * Functions needed to find paths in the BotLot class.
  * <p>
  * Started: 11/7/15
  * 

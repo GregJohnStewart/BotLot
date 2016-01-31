@@ -35,7 +35,9 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
 /**
- * Class BotLotDataSource
+ * Class BotLotDS
+ * <p>
+ * "BotLot Data Source"
  * <p>
  * Handles the retrieval and saving of LotGraphs.
  * <p>
@@ -48,7 +50,7 @@ import java.io.Writer;
  * @author Greg Stewart
  * @version	1.0 12/10/15
  */
-public class BotLotDataSource {
+public class BotLotDS {
 	/** The kind of data source this is */
 	private String type;
 	/** The path or login information */
@@ -81,28 +83,25 @@ public class BotLotDataSource {
 	 * 
 	 * @param dataSourceType	The data type. Use this class's *_DATASRC variables.
 	 * @param pathLoginIn	Either the path to the XML file, or string XML data giving the data needed for connecting to a database (Use {@link #getServerConnectionXML(String, String, String)} to generate this.).
-	 * @throws BotLotDataSourceException If something went wrong, mostly if invalid data is entered.
+	 * @throws BotLotDSException If something went wrong, mostly if invalid data is entered.
 	 */
-	public BotLotDataSource(String dataSourceType, String pathLoginIn) throws BotLotDataSourceException{
+	public BotLotDS(String dataSourceType, String pathLoginIn) throws BotLotDSException{
 		dataSourceType = dataSourceType.toLowerCase();
 		if(dataSourceType.equals(XML_DATASRC)){
 			this.type = XML_DATASRC;
 			this.pathLogin = pathLoginIn;
-			if(!this.hasValidXMLPath()){
-				throw new BotLotDataSourceException("XML file path given is invalid.");
-			}
 		}else if(this.isDatabaseSource(dataSourceType)){
 			this.type = dataSourceType;
 			if(this.isValidConnectionData(pathLoginIn)){
 				this.pathLogin = pathLoginIn;
 			}else{
-				throw new BotLotDataSourceException("XML String given is invalid.");
+				throw new BotLotDSException("XML String given is invalid.");
 			}
 		}else{
-			throw new BotLotDataSourceException("Invalid or unsupported data source type entered.");
+			throw new BotLotDSException("Invalid or unsupported data source type entered.");
 		}
 		if(!this.ready()){
-			throw new BotLotDataSourceException("Something went wrong with validation.");
+			throw new BotLotDSException("Something went wrong with validation.");
 		}
 	}//BotLotDataSource(String, String)
 	
@@ -146,8 +145,8 @@ public class BotLotDataSource {
 			Writer out = new StringWriter();
 			tf.transform(new DOMSource(doc), new StreamResult(out));
 			return out.toString();
-		}catch(Exception err){
-			throw new BotLotException("Unable to create XML string- " + err.getMessage());
+		}catch(Exception e){
+			throw new BotLotException("Unable to create XML string- " + e.getMessage());
 		}
 	}//getSreverConnectionXML(String, String, String);
 	
@@ -171,13 +170,13 @@ public class BotLotDataSource {
 		if(this.isDatabaseSource(this.type)){
 			try {
 				return this.dbConnects();
-			} catch (BotLotDataSourceException e) {
+			} catch (BotLotDSException e) {
 				return false;
 			}
 		}else{
 			try{
 				return this.hasValidXMLPath();
-			}catch(BotLotDataSourceException err){
+			}catch(BotLotDSException e){
 				return false;
 			}
 		}
@@ -187,22 +186,22 @@ public class BotLotDataSource {
 	 * Gets the data from wherever this object is set up to get it.
 	 * 
 	 * @return	The LotGraph data retrieved from the source.
-	 * @throws BotLotDataSourceException	If something went wrong.
+	 * @throws BotLotDSException	If something went wrong.
 	 */
-	public LotGraph getDataFromSource() throws BotLotDataSourceException{
+	public LotGraph getDataFromSource() throws BotLotDSException{
 		if(!this.ready()){
-			throw new BotLotDataSourceException("Cannot get data; Source not ready.");
+			throw new BotLotDSException("Cannot get data; Source not ready.");
 		}else if(this.isDatabaseSource(this.type)){
 			switch(this.type){
 				case MYSQL_DATASRC:
 					return this.getDataFromMySQL();
 					default:
-						throw new BotLotDataSourceException("Cannot get data; Unsupported database source.");
+						throw new BotLotDSException("Cannot get data; Unsupported database source.");
 			}
 		}else if(this.type.equals(XML_DATASRC)){
 			return this.getDataFromXML();
 		}else{
-			throw new BotLotDataSourceException("Cannot get data; Invalid type.");
+			throw new BotLotDSException("Cannot get data; Invalid type.");
 		}
 	}//getDataFromSource()
 	
@@ -210,9 +209,12 @@ public class BotLotDataSource {
 	 * Gets LotGraph data from an XML document.
 	 * 
 	 * @return	The LotGraph generated from this data.
-	 * @throws BotLotDataSourceException
+	 * @throws BotLotDSException
 	 */
-	private LotGraph getDataFromXML() throws BotLotDataSourceException{
+	private LotGraph getDataFromXML() throws BotLotDSException{
+		if(!this.hasValidXMLPath()){
+			throw new BotLotDSException("XML file does not exist at the given path.");
+		}
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 	    factory.setValidating(true);
 	    factory.setIgnoringElementContentWhitespace(true);
@@ -272,13 +274,13 @@ public class BotLotDataSource {
 	        }
 	        return graphOut;
 	    } catch (SAXException e) {
-	    	throw new BotLotDataSourceException("" + e.getMessage());
+	    	throw new BotLotDSException("" + e.getMessage());
 	    } catch (IOException e) {
-	    	throw new BotLotDataSourceException("Unable to open XML file (presumably). Error: " + e.getMessage());
-	    }catch(LotGraphException err){
-	    	throw new BotLotDataSourceException("Unable to process graph data retrieved from XML data. Inner error: " + err.getMessage());
+	    	throw new BotLotDSException("Unable to open XML file (presumably). Error: " + e.getMessage());
+	    }catch(LotGraphException e){
+	    	throw new BotLotDSException("Unable to process graph data retrieved from XML data. Inner error: " + e.getMessage());
 	    } catch (ParserConfigurationException e) {
-	    	throw new BotLotDataSourceException("Unable to parse XML. Error: " + e.getMessage());
+	    	throw new BotLotDSException("Unable to parse XML. Error: " + e.getMessage());
 		}
 	}//getDataFromXML()
 	
@@ -297,23 +299,23 @@ public class BotLotDataSource {
 	 * Saves the LotGraph data to wherever this object is setup to save it to.
 	 * 
 	 * @param lotIn	The graph data to save.
-	 * @throws BotLotDataSourceException	If something went wrong.
+	 * @throws BotLotDSException	If something went wrong.
 	 */
-	public void saveDataToSource(LotGraph lotIn) throws BotLotDataSourceException{
+	public void saveDataToSource(LotGraph lotIn) throws BotLotDSException{
 		if(!this.ready()){
-			throw new BotLotDataSourceException("Cannot save data; Source not ready.");
+			throw new BotLotDSException("Cannot save data; Source not ready.");
 		}else if(this.isDatabaseSource(this.type)){
 			switch(this.type){
 				case MYSQL_DATASRC:
 					this.saveDataToMySQL(lotIn);
 					break;
 					default:
-						throw new BotLotDataSourceException("Cannot save data; Unsupported database source.");
+						throw new BotLotDSException("Cannot save data; Unsupported database source.");
 			}
 		}else if(this.type.equals(XML_DATASRC)){
 			this.saveDataToXML(lotIn);
 		}else{
-			throw new BotLotDataSourceException("Cannot get data; Invalid type.");
+			throw new BotLotDSException("Cannot get data; Invalid type.");
 		}
 	}//saveToDataSource(LotGraph)
 	
@@ -321,15 +323,15 @@ public class BotLotDataSource {
 	 * Saves the data given to an XML document at the location this object holds.
 	 * 
 	 * @param lotIn	The data to store in an XML document.
-	 * @throws BotLotDataSourceException	If something went wrong.
+	 * @throws BotLotDSException	If something went wrong.
 	 */
-	private void saveDataToXML(LotGraph lotIn) throws BotLotDataSourceException{
+	private void saveDataToXML(LotGraph lotIn) throws BotLotDSException{
 		try{
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder = dbf.newDocumentBuilder();
 			Document doc = builder.newDocument();
 			//set comment detailing purpose of data
-			doc.appendChild(doc.createComment("This data builds a LotGraph, to be used with the BotLotDataSource object. https://github.com/GregJohnStewart/BotLot"));
+			doc.appendChild(doc.createComment("This data builds a LotGraph, to be used with the BotLotDS object. https://github.com/GregJohnStewart/BotLot"));
 			// create the root element node
 			Element rootElement = doc.createElement("root");
 			doc.appendChild(rootElement);
@@ -373,8 +375,8 @@ public class BotLotDataSource {
 			Result output = new StreamResult(new File(this.pathLogin));
 			Source input = new DOMSource(doc);
 			transformer.transform(input, output);
-		}catch(Exception err){
-			throw new BotLotDataSourceException("Unable to create XML file- " + err.getMessage());
+		}catch(Exception e){
+			throw new BotLotDSException("Unable to create XML file- " + e.getClass() + " - " + e.getMessage());
 		}
 	}//saveDataToXML(LotGraph)
 	
@@ -391,16 +393,16 @@ public class BotLotDataSource {
 	 * Tests if the database will connect with the current setup of the data source.
 	 * 
 	 * @return	If we can connect to the data or not.
-	 * @throws BotLotDataSourceException	If the data source type is not a database.
+	 * @throws BotLotDSException	If the data source type is not a database.
 	 */
-	public boolean dbConnects() throws BotLotDataSourceException{
+	public boolean dbConnects() throws BotLotDSException{
 		if(type.equals(MYSQL_DATASRC) || type.equals(MSSQL_DATASRC) || type.equals(POSTGRESQL_DATASRC)){
 			//String connString = 
 					this.buildDBConnectionString();
 			//TODO:: finish this
 			return false;
 		}else{
-			throw new BotLotDataSourceException("Data Source type is not a database.");
+			throw new BotLotDSException("Data Source type is not a database.");
 		}
 	}//dbConnects();
 	
@@ -419,9 +421,9 @@ public class BotLotDataSource {
 	 * Builds a valid connection string for use by the database connectors.
 	 * 
 	 * @return	A database connection string.
-	 * @throws BotLotDataSourceException	If the data source type is not database.
+	 * @throws BotLotDSException	If the data source type is not database.
 	 */
-	private String buildDBConnectionString() throws BotLotDataSourceException{
+	private String buildDBConnectionString() throws BotLotDSException{
 		if(this.isDatabaseSource(this.type)){
 			//parse XML for variables
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -435,7 +437,7 @@ public class BotLotDataSource {
 				//make sure XML has everything we need.
 				Element rootElement = doc.getDocumentElement();
 				if(!rootElement.hasChildNodes()){
-					throw new BotLotDataSourceException("No nodes found.");
+					throw new BotLotDSException("No nodes found.");
 				}
 				NodeList elementList = rootElement.getChildNodes();
 				int sum = 0;
@@ -457,14 +459,14 @@ public class BotLotDataSource {
 					}
 				}
 				if(sum != 3){
-					throw new BotLotDataSourceException("Not all nodes needed in XML are present.");
+					throw new BotLotDSException("Not all nodes needed in XML are present.");
 				}
 				return "jdbc:"+this.type+"://"+url+";DatabaseName="+DB_NAMES.get("DB_NAME")+";user="+user+";Password="+pass+"";
-		    }catch(Exception err ){
-		    	throw new BotLotDataSourceException("Unable to get needed information from XML string. Error: " + err.getMessage());
+		    }catch(Exception e ){
+		    	throw new BotLotDSException("Unable to get needed information from XML string. Error: " + e.getClass() + " - " + e.getMessage());
 		    }
 		}else{
-			throw new BotLotDataSourceException("");
+			throw new BotLotDSException("");
 		}
 	}//buildDBConnectionString()
 	
@@ -472,9 +474,9 @@ public class BotLotDataSource {
 	 * Tests if {@link #pathLogin} is a valid path to an XML file. 
 	 * 
 	 * @return	If the path to an XML document is valid.
-	 * @throws BotLotDataSourceException	If the type of datasource is not XML.
+	 * @throws BotLotDSException	If the type of datasource is not XML.
 	 */
-	public boolean hasValidXMLPath() throws BotLotDataSourceException{
+	public boolean hasValidXMLPath() throws BotLotDSException{
 		if(this.type.equals(XML_DATASRC)){
 			//TODO:: check if got a valid file path
 			File testingFile = new File(this.pathLogin);
@@ -482,7 +484,7 @@ public class BotLotDataSource {
 			    return true;
 			}
 		}else{
-			throw new BotLotDataSourceException("The type of data source is not XML.");
+			throw new BotLotDSException("The type of data source is not XML.");
 		}
 		return false;
 	}//hasValidXMLPath()

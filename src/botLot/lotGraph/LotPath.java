@@ -74,7 +74,7 @@ public class LotPath {
 	 * @return	The 
 	 */
 	public double getEdgesMetricRatio(){
-		return this.path.size() / this.getPathMetric();
+		return this.size() / this.getPathMetric();
 	}
 	
 	/**

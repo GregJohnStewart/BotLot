@@ -12,6 +12,8 @@ import java.util.Collection;
  * Includes everything needed to add, remove, and get/set nodes & edges.
  * <p>
  * Started: 10/7/15
+ * <p>
+ * TODO:: getters using two strings (hashmap key/value pairs)
  * 
  * @author Greg Stewart
  * @version 1.0 12/7/15
