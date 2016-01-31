@@ -517,7 +517,6 @@ public class BotLotDS {
 	 */
 	public boolean hasValidXMLPath() throws BotLotDSException{
 		if(XML_DATASRC.equals(this.type)){
-			//TODO:: check if got a valid file path
 			File testingFile = new File(this.pathLogin);
 			if(testingFile.exists() && !testingFile.isDirectory() && testingFile.canWrite() && testingFile.canRead()){ 
 			    return true;

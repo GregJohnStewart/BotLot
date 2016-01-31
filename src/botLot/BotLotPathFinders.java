@@ -88,7 +88,6 @@ public class BotLotPathFinders {
 	 * <p>
 	 * Obviously not a great way to do this. Done for testing simple things. Or directing something for the scenic route.
 	 * 
-	 * TODO:: stop finding paths if it is obvious that one cannot be found
 	 * @param lotIn The LotGraph structure to deal with.
 	 * @return	A new random path from the current node in lotIn to the destination node in that structure.
 	 * @throws BotLotPathFindingException If the BotLot object given is not ready for path generation.
@@ -105,7 +104,6 @@ public class BotLotPathFinders {
 		LotNode lastNode = null;
 		Random rand = new Random();
 		//System.out.println("Calculating new path...");
-		//TODO:: test
 		try{
 			//System.out.println("start loop...");
 			int edgeIndexInTempListToGoDown = 0;
@@ -135,7 +133,6 @@ public class BotLotPathFinders {
 				}else{//if the node we got was null, check to see if we are in a dead end, and account for it.
 					if(tempNode.getNumEdges() <= 1){//if the node we are at only has one edge (the one we chose)
 						if(lastNode.getNumEdges() <= 1){//if the last node only has one edge (the one we went down)
-							//TODO:: test all this
 							LotNode innerTempNode = lastNode;
 							tempPath.path.removeLast();
 							while(innerTempNode.getNumEdges() <= 1){//go backwards until we are no longer in a dead end

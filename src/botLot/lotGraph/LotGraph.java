@@ -801,6 +801,22 @@ public class LotGraph {
 	}//getNode(LotEdge)
 
 	/**
+	 * Gets the node with a particular key/value pair.
+	 * 
+	 * @param key	The key to test for.
+	 * @param value	The value to test for. Null if it doesn't matter.
+	 * @return	The node being searched for. Null if not found.
+	 */
+	public LotNode getNode(String key, String value){
+		for(LotNode curNode : this.getNodes()){
+			if(curNode.hasAtt(key, value)){
+				return curNode;
+			}
+		}
+		return null;//shouldn't ever do this
+	}//getNode(String, String)
+
+	/**
 	 * Determines if the node given is present in {@link #nodes}.
 	 * 
 	 * @param nodeIn
@@ -860,7 +876,21 @@ public class LotGraph {
 		}
 		return true;
 	}//hasNode(LotEdge)
-
+	
+	/**
+	 * Determines if there is a node with a particular key/value pair.
+	 * 
+	 * @param key	The key to test for.
+	 * @param value	The value to test for. Null if it doesn't matter.
+	 * @return	If the node exists with this key/val pair.
+	 */
+	public boolean hasNode(String key, String value){
+		if(this.getNode(key, value) == null){
+			return false;
+		}
+		return true;
+	}//hasNode(String, String)
+	
 	/**
 	 * Gets the index of the specified node in the list in {@link #nodes}.
 	 * 
@@ -1069,6 +1099,22 @@ public class LotGraph {
 			throw new LotGraphException("edgeIndex(" + edgeIndex + ") is out of bounds (max: " + tempEdges.size() + "");
 		}
 	}// getEdge(int)
+	
+	/**
+	 * Gets the Edge with a particular key/value pair.
+	 * 
+	 * @param key	The key to test for.
+	 * @param value	The value to test for. Null if it doesn't matter.
+	 * @return	The Edge being searched for. Null if not found.
+	 */
+	public LotEdge getEdge(String key, String value){
+		for(LotEdge curEdge : this.getEdgeList()){
+			if(curEdge.hasAtt(key, value)){
+				return curEdge;
+			}
+		}
+		return null;
+	}//getEdge(String, String)
 
 	/**
 	 * Gets the index of a specified edge in the generated index list.
@@ -1158,6 +1204,21 @@ public class LotGraph {
 		}
 		return false;
 	}// hasEdge(int,int)
+	
+
+	/**
+	 * Determines if there is a node with a particular key/value pair.
+	 * 
+	 * @param key	The key to test for.
+	 * @param value	The value to test for. Null if it doesn't matter.
+	 * @return	If the node exists with this key/val pair.
+	 */
+	public boolean hasEdge(String key, String value){
+		if(this.getEdge(key, value) == null){
+			return false;
+		}
+		return true;
+	}//hasEdge(String, String)
 
 	/**
 	 * Gets the edge that goes from one node to another.

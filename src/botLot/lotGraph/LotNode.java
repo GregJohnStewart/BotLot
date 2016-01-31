@@ -543,7 +543,9 @@ public class LotNode{
 	 */
 	public boolean hasAtt(String attKey, String attVal){
 		if(this.hasAtt(attKey)){
-			if(this.getAtt(attKey).equals(attVal)){
+			if(attVal == null){
+				return true;
+			}else if(this.getAtt(attKey).equals(attVal)){
 				return true;
 			}
 		}
