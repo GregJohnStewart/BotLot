@@ -776,7 +776,7 @@ public class LotGraph {
 		if (this.getNumNodes() > nodeIndexIn && nodeIndexIn > -1) {
 			return this.getNodes().get(nodeIndexIn);
 		} else {
-			throw new LotGraphException("The given index is out of bounds of the stored data.");
+			throw new LotGraphException("The given index is out of bounds of the stored data. Size of data=" + this.getNumNodes() + " Given index=" + nodeIndexIn);
 		}
 	}// getNode(int)
 	
