@@ -32,10 +32,16 @@ public class testDriver {
 		}
 
 		if (useXML) {
+			try{
 			dataSource = new BotLotDS(
 					BotLotDS.XML_DATASRC,
 					xmlPath
 					);
+				
+			}catch(BotLotDSException e){
+				System.out.println("No XML file found. Will create when saving.");
+			}
+			System.out.println("Data source:\n\t" + dataSource.getType() + "\n\t" + dataSource.getPathLogin() );
 			if(dataSource.ready()){
 				navigator.mainGraph = dataSource.getDataFromSource();
 			}else{
@@ -103,8 +109,8 @@ public class testDriver {
 			}
 		}
 		
-		//add id's?
-
+		navigator.setCurNode(navigator.mainGraph.getNode(0));
+		
 		if (navigator.mainGraph.graphIsComplete()) {
 			System.out.println("Graph is complete.");
 		} else {
@@ -116,7 +122,7 @@ public class testDriver {
 		System.out.println(navigator.mainGraph.getASCIIGraph());
 
 		System.out.println("Calculating path...");
-		navigator.calcNewPath(nodeIds.get(3));
+		navigator.calcNewPath(navigator.mainGraph.getNode(3));
 
 		System.out.println("Path found: " + navigator.getCurPath().toString());
 

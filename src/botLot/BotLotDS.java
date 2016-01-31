@@ -87,10 +87,10 @@ public class BotLotDS {
 	 */
 	public BotLotDS(String dataSourceType, String pathLoginIn) throws BotLotDSException{
 		dataSourceType = dataSourceType.toLowerCase();
-		if(dataSourceType.equals(XML_DATASRC)){
+		if(XML_DATASRC.equals(dataSourceType)){
 			this.type = XML_DATASRC;
 			this.pathLogin = pathLoginIn;
-		}else if(this.isDatabaseSource(dataSourceType)){
+		}else if(isDatabaseSource(dataSourceType)){
 			this.type = dataSourceType;
 			if(this.isValidConnectionData(pathLoginIn)){
 				this.pathLogin = pathLoginIn;
@@ -99,9 +99,6 @@ public class BotLotDS {
 			}
 		}else{
 			throw new BotLotDSException("Invalid or unsupported data source type entered.");
-		}
-		if(!this.ready()){
-			throw new BotLotDSException("Something went wrong with validation.");
 		}
 	}//BotLotDataSource(String, String)
 	
@@ -169,12 +166,28 @@ public class BotLotDS {
 	}//sanitizeStringData(String)
 	
 	/**
+	 * Gets the {@link #type}.
+	 * @return	The type of the data source.
+	 */
+	public String getType(){
+		return this.type;
+	}
+	
+	/**
+	 * Gets the {@link #pathLogin}
+	 * @return	The pathLogin of the structure;
+	 */
+	public String getPathLogin(){
+		return this.pathLogin;
+	}
+	
+	/**
 	 * Checks if the object is ready to do anything.
 	 * 
 	 * @return	If the object is ready to do anything.
 	 */
 	public boolean ready(){
-		if(this.isDatabaseSource(this.type)){
+		if(isDatabaseSource(this.type)){
 			try {
 				return this.dbConnects();
 			} catch (BotLotDSException e) {
@@ -198,7 +211,7 @@ public class BotLotDS {
 	public LotGraph getDataFromSource() throws BotLotDSException{
 		if(!this.ready()){
 			throw new BotLotDSException("Cannot get data; Source not ready.");
-		}else if(this.isDatabaseSource(this.type)){
+		}else if(isDatabaseSource(this.type)){
 			switch(this.type){
 				case MYSQL_DATASRC:
 					return this.getDataFromMySQL();
@@ -222,12 +235,15 @@ public class BotLotDS {
 		if(!this.hasValidXMLPath()){
 			throw new BotLotDSException("XML file does not exist at the given path.");
 		}
+		System.out.println("Building factory...");
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 	    factory.setValidating(true);
 	    factory.setIgnoringElementContentWhitespace(true);
+	    System.out.println("Done");
 	    try {
 	        DocumentBuilder builder = factory.newDocumentBuilder();
 	        File file = new File(this.pathLogin);
+	        //builder.setErrorHandler();
 	        Document doc = builder.parse(file);
 	        // Do something with the document here.
 	        
@@ -235,6 +251,7 @@ public class BotLotDS {
 	        Element rootElement = doc.getDocumentElement();
 	        
 	        //get in all nodes
+	        System.out.println("Getting Nodes...");
 	        Element curNode = (Element)rootElement.getFirstChild();
 	        while(curNode != null){
 	        	LotNode newNode = new LotNode();
@@ -252,13 +269,16 @@ public class BotLotDS {
 					}
 				}
 				graphOut.addNode(newNode);
+				System.out.println("\tGot Node: " + newNode.toString());
 				curNode = (Element) curNode.getNextSibling();
 	        }
 	        //get in all edges
+	        System.out.println("Getting Edges...");
 	        curNode = (Element)rootElement.getFirstChild();
 	        while(curNode != null){
-	        	Element curEdge = (Element)curNode.getFirstChild();
-	        	while(curEdge != null){
+	        	NodeList edges = curNode.getChildNodes();
+	        	for(int i = 0; i < edges.getLength(); i++){
+	        		Element curEdge = (Element)edges.item(i);
 	        		LotEdge newEdge = new LotEdge();
 					//get ID
 					newEdge.setId(curEdge.getAttribute("id"));
@@ -268,16 +288,18 @@ public class BotLotDS {
 					newEdge.setEndNode(graphOut.getNode(curEdge.getAttribute("endNode")));
 					//get rest of attributes
 					NamedNodeMap attList = curEdge.getAttributes();
-					for(int i = 0; i < attList.getLength(); i++){
-						Attr attr = (Attr) attList.item(i);
+					for(int j = 0; j < attList.getLength(); j++){
+						Attr attr = (Attr) attList.item(j);
 						String attrName = attr.getNodeName();
 						if(!attrName.equals("id") && !attrName.equals("metric") && !attrName.equals("endNode")){
 							newEdge.setAtt(attrName, attr.getNodeValue());
 						}
 					}
+					System.out.println("\tGot Edge: " + newEdge.toString());
 					graphOut.setEdge(newEdge, curNode.getAttribute("id"));
-					curEdge = (Element) curEdge.getNextSibling();
 	        	}
+	        	System.out.println("Got all edges for " + curNode.getAttribute("id"));
+	        	curNode = (Element)curNode.getNextSibling();
 	        }
 	        return graphOut;
 	    } catch (SAXException e) {
@@ -310,8 +332,18 @@ public class BotLotDS {
 	 */
 	public void saveDataToSource(LotGraph lotIn) throws BotLotDSException{
 		if(!this.ready()){
-			throw new BotLotDSException("Cannot save data; Source not ready.");
-		}else if(this.isDatabaseSource(this.type)){
+			//try to create file
+			File testingFile = new File(this.pathLogin);
+			try {
+				testingFile.createNewFile();
+			} catch (IOException e) {
+				throw new BotLotDSException("Cannot create file.");
+			}
+			if(!this.ready()){
+				throw new BotLotDSException("Cannot save data; Source not ready.");
+			}
+			this.saveDataToSource(lotIn);
+		}else if(isDatabaseSource(this.type)){
 			switch(this.type){
 				case MYSQL_DATASRC:
 					this.saveDataToMySQL(lotIn);
@@ -364,7 +396,7 @@ public class BotLotDS {
 					LotEdge curEdge = curEdgeList.get(j);
 					//add id, metric, end node id
 					newEdge.setAttribute("id", curEdge.getId());
-					newEdge.setAttribute("numEdges", "" + curEdge.getMetric());
+					newEdge.setAttribute("metric", "" + curEdge.getMetric());
 					newEdge.setAttribute("endNode", curEdge.getEndNode().getId());
 					
 					//add other attributes
@@ -431,7 +463,7 @@ public class BotLotDS {
 	 * @throws BotLotDSException	If the data source type is not database.
 	 */
 	private String buildDBConnectionString() throws BotLotDSException{
-		if(this.isDatabaseSource(this.type)){
+		if(isDatabaseSource(this.type)){
 			//parse XML for variables
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		    factory.setValidating(true);
@@ -484,7 +516,7 @@ public class BotLotDS {
 	 * @throws BotLotDSException	If the type of datasource is not XML.
 	 */
 	public boolean hasValidXMLPath() throws BotLotDSException{
-		if(this.type.equals(XML_DATASRC)){
+		if(XML_DATASRC.equals(this.type)){
 			//TODO:: check if got a valid file path
 			File testingFile = new File(this.pathLogin);
 			if(testingFile.exists() && !testingFile.isDirectory() && testingFile.canWrite() && testingFile.canRead()){ 
@@ -502,8 +534,10 @@ public class BotLotDS {
 	 * @param dataSourceType	The data source to test against.
 	 * @return	If the datasource type given is a database or not.
 	 */
-	public boolean isDatabaseSource(String dataSourceType){
-		if(type.equals(MYSQL_DATASRC) || type.equals(MSSQL_DATASRC) || type.equals(POSTGRESQL_DATASRC)){
+	public static boolean isDatabaseSource(String dataSourceType){
+		if(MYSQL_DATASRC.equals(dataSourceType) 
+				|| MSSQL_DATASRC.equals(dataSourceType) 
+				|| POSTGRESQL_DATASRC.equals(dataSourceType)){
 			return true;
 		}else{
 			return false;
