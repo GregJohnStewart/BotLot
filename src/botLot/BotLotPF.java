@@ -1,6 +1,9 @@
 package botLot;
 import java.util.ArrayList;//for dealing with the graph structure itself.
 import java.util.Random;//for the random path gen.
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import botLot.lotGraph.*;
 /**
@@ -169,12 +172,15 @@ public class BotLotPF {
 	
 	/**
 	 * Determines if there is a path from the curNode to the destNode.
+	 * <p>
+	 * Uses a multi-threaded algorithm to accomplish this quickly for very large and/or complex data sets.
 	 * 
 	 * @param lotIn	The BotLot that we are dealing with.
 	 * @return	If there is a path from the curNode to the destNode of the BotLot given.
 	 * @throws BotLotPFException If the BotLot object given isn't ready for path generation.
 	 */
 	public static boolean hasPath(BotLot lotIn) throws BotLotPFException{
+		final int minsToWait = Integer.MAX_VALUE;
 		if(lotIn.ready(false)){
 			//check if curNode is directly connected to destNode (avoid much processing)
 			if(lotIn.getCurNode().getConnectedNodes().contains(lotIn.getDestNode())){
@@ -188,10 +194,41 @@ public class BotLotPF {
 			nodesFinished.add(lotIn.getCurNode());
 			nodesConnected.removeAll(nodesFinished);//ensure none of the edges pointed back to curNode
 			while(true){
+				//*
+				//for each in nodes connected, get nodes connected to them (if not one already searched)
+				//	essentially does this by emptying the list as it goes, saving memory and an index to keep track of
+				ExecutorService es = Executors.newCachedThreadPool();
+				while(nodesConnected.size() != 0){
+					if(nodesConnected.get(0).getConnectedNodes().contains(lotIn.getDestNode())){
+						return true;
+					}
+					es.execute(new BotLotPFHasPathThread(
+							"BotLotPFHasPathThread-" + nodesConnected.get(0).getId(),
+							nodesFinished,
+							nodesConnected.get(0).getConnectedNodes(),
+							tempList,
+							nodesConnected.get(0)
+							));
+					nodesConnected.remove(0);
+				}
+				es.shutdown();
+				try {
+					es.awaitTermination(minsToWait, TimeUnit.MINUTES);
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+					System.exit(1);
+				}
+				/**/
+				//System.out.println("Finished: " + nodesFinished.toString());
+				//System.out.println("Temp: " + tempList.toString());
+				//System.out.println("connected: " + nodesConnected.toString());
+				
+				
+				/*
 				//for each in nodes connected, get nodes connected to them (if not one already searched)
 				//	essentially does this by emptying the list as it goes, saving memory and an index to keep track of
 				while(nodesConnected.size() != 0){
-					// TODO:: MULTITHREAD THIS
 					
 					//check if dest node is in this node's connected set
 					if(nodesConnected.get(0).getConnectedNodes().contains(lotIn.getDestNode())){
@@ -205,7 +242,10 @@ public class BotLotPF {
 					}
 					//put node in nodesFinished and remove it from nodesConnected
 					nodesFinished.add(nodesConnected.remove(0));
+					
 				}
+				/**/
+				
 				//if we got this far and no nodes are in the temp list, there is nothing else we can do, so there is no path
 				if(tempList.size() == 0){
 					return false;

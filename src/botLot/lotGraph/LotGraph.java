@@ -1589,6 +1589,12 @@ public class LotGraph {
 				}
 			}
 		}
+		int i = 1;
+		for(LotNode curNode : this.getNodes()){
+			output += "\n\t" + i + " - " + curNode.toString();
+			i++;
+		}
+		
 		return output;
 	}// getASCIIGraph()
 
