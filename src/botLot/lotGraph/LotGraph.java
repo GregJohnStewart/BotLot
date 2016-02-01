@@ -13,7 +13,8 @@ import java.util.Collection;
  * <p>
  * Started: 10/7/15
  * <p>
- * TODO:: getters using two strings (hashmap key/value pairs)
+ * Future plans:
+ * 		Keep a list of paths for later use, use ID's to keep track of them, etc.
  * 
  * @author Greg Stewart
  * @version 1.0 12/7/15

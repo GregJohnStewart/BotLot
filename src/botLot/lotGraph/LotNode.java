@@ -122,13 +122,9 @@ public class LotNode{
 			for(int i = 0; i < edgesIn.size(); i++){
 				if(this.hasEdge(edgesIn.get(i))){
 					throw new LotNodeException("At least one edge in the list is duplicate to one already present.");
+				}else{
+					this.addEdge(edgesIn.get(i));
 				}
-			}
-			
-			this.edges.addAll(edgesIn);
-			//TODO:: remove after testing
-			if(edgesIn.size() > this.getActNumEdges() && this.getActNumEdges() > UNDETERMINED_NUM_EDGES){
-				throw new LotNodeException("FATAL ERR- addEdges()- ended up with more edges than allowed.");
 			}
 		}
 	}//addEdges(ArrayList<LotEdges>
