@@ -4,7 +4,7 @@ import java.util.Random;//for the random path gen.
 
 import botLot.lotGraph.*;
 /**
- * BotLotPathFinders.java
+ * BotLotPF.java
  * <p>
  * Functions needed to find paths in the BotLot class.
  * <p>
@@ -13,10 +13,10 @@ import botLot.lotGraph.*;
  * @author Greg Stewart
  * @version	1.0 1/20/16
  */
-public class BotLotPathFinders {
+public class BotLotPF {
 	/** Used to see if we already checked the BotLot object for correctness */
 	private static boolean readyPathChecked = false;
-	/** The string passed to the BotLotPathFindingException when the BotLot object given is not ready. */
+	/** The string passed to the BotLotPFException when the BotLot object given is not ready. */
 	private static final String notReadyString = "The BotLot Object is either not ready, or has no path between current location and destination.";
 	/** The minimum ratio value to do random path generation in {@link #getShortestPath(BotLot)} */
 	private static final float ratioThreshHold = (float) 0.75;
@@ -27,11 +27,11 @@ public class BotLotPathFinders {
 	 * 
 	 * @param lotIn	The graph structure to deal with.
 	 * @return	A new path from the current node in lotIn to the destination node in that structure.
-	 * @throws BotLotPathFindingException	If the LotGraph given is not ready for path finding.
+	 * @throws BotLotPFException	If the LotGraph given is not ready for path finding.
 	 */
-	public static LotPath getShortestPath(BotLot lotIn) throws BotLotPathFindingException{
+	public static LotPath getShortestPath(BotLot lotIn) throws BotLotPFException{
 		if(!readyPathCheck(lotIn)){
-			throw new BotLotPathFindingException(notReadyString);
+			throw new BotLotPFException(notReadyString);
 		}
 		readyPathChecked = true;
 		LotPath pathFound = null;
@@ -70,12 +70,12 @@ public class BotLotPathFinders {
 	 * 
 	 * @param lotIn	The LotGraph structure to deal with.
 	 * @return A new shortest path from the current node in lotIn to the destination node in that structure.
-	 * @throws BotLotPathFindingException If the LotGraph object isn't ready for path generation.
+	 * @throws BotLotPFException If the LotGraph object isn't ready for path generation.
 	 */
-	public static LotPath doDijkstra(BotLot lotIn) throws BotLotPathFindingException{
+	public static LotPath doDijkstra(BotLot lotIn) throws BotLotPFException{
 		if(!readyPathChecked){
 			if(!readyPathCheck(lotIn)){
-				throw new BotLotPathFindingException(notReadyString);
+				throw new BotLotPFException(notReadyString);
 			}
 		}
 		//TODO:: use Dijkstra's algorithm to find a shortest path
@@ -90,13 +90,13 @@ public class BotLotPathFinders {
 	 * 
 	 * @param lotIn The LotGraph structure to deal with.
 	 * @return	A new random path from the current node in lotIn to the destination node in that structure.
-	 * @throws BotLotPathFindingException If the BotLot object given is not ready for path generation.
+	 * @throws BotLotPFException If the BotLot object given is not ready for path generation.
 	 */
-	public static LotPath findRandomPath(BotLot lotIn) throws BotLotPathFindingException{
+	public static LotPath findRandomPath(BotLot lotIn) throws BotLotPFException{
 		//System.out.println("entered findRandomPath(BotLot)");
 		if(!readyPathChecked){
 			if(!readyPathCheck(lotIn)){
-				throw new BotLotPathFindingException(notReadyString);
+				throw new BotLotPFException(notReadyString);
 			}
 		}
 		LotPath tempPath = new LotPath();
@@ -159,7 +159,7 @@ public class BotLotPathFinders {
 				}
 			}
 		}catch(LotGraphException err){
-			throw new BotLotPathFindingException("There was an error when trying to generate a random path. Error: " + err.getMessage());
+			throw new BotLotPFException("There was an error when trying to generate a random path. Error: " + err.getMessage());
 			//System.exit(1);
 		}
 		//remove loops; for every node, if there are duplicates and everything in between.
@@ -172,9 +172,9 @@ public class BotLotPathFinders {
 	 * 
 	 * @param lotIn	The BotLot that we are dealing with.
 	 * @return	If there is a path from the curNode to the destNode of the BotLot given.
-	 * @throws BotLotPathFindingException If the BotLot object given isn't ready for path generation.
+	 * @throws BotLotPFException If the BotLot object given isn't ready for path generation.
 	 */
-	public static boolean hasPath(BotLot lotIn) throws BotLotPathFindingException{
+	public static boolean hasPath(BotLot lotIn) throws BotLotPFException{
 		if(lotIn.ready(false)){
 			//check if curNode is directly connected to destNode (avoid much processing)
 			if(lotIn.getCurNode().getConnectedNodes().contains(lotIn.getDestNode())){
@@ -182,7 +182,7 @@ public class BotLotPathFinders {
 			}
 			//else have to go find it, following edges
 			ArrayList<LotNode> nodesConnected = lotIn.getCurNode().getConnectedNodes();//nodes that are connected to the curNode (and nodes subsequently attatched to them, and so on...)
-			ArrayList<LotNode> tempList = new ArrayList<LotNode>();
+			ArrayList<LotNode> tempList = new ArrayList<LotNode>();//temporary list of connected nodes
 			ArrayList<LotNode> nodesFinished = new ArrayList<LotNode>();//nodes we have hit in the past, to not go in circles
 			
 			nodesFinished.add(lotIn.getCurNode());
@@ -191,14 +191,16 @@ public class BotLotPathFinders {
 				//for each in nodes connected, get nodes connected to them (if not one already searched)
 				//	essentially does this by emptying the list as it goes, saving memory and an index to keep track of
 				while(nodesConnected.size() != 0){
+					// TODO:: MULTITHREAD THIS
+					
 					//check if dest node is in this node's connected set
 					if(nodesConnected.get(0).getConnectedNodes().contains(lotIn.getDestNode())){
 						return true;
 					}
-					//put nodes held by node into tempList
+					//put nodes connected to curNode into tempList
 					for(LotNode curNode : nodesConnected.get(0).getConnectedNodes()){
 						if(!nodesFinished.contains(curNode) && curNode != null){
-							tempList.add(curNode);//could get possible duplicates in finished without checking
+							tempList.add(curNode);
 						}
 					}
 					//put node in nodesFinished and remove it from nodesConnected
@@ -207,13 +209,13 @@ public class BotLotPathFinders {
 				//if we got this far and no nodes are in the temp list, there is nothing else we can do, so there is no path
 				if(tempList.size() == 0){
 					return false;
-				}else{
+				}else{//else we move nodes we have connected from tempList to nodesConnected
 					nodesConnected = new ArrayList<LotNode>(tempList);
 					tempList = new ArrayList<LotNode>();
 				}
 			}//running loop (runs indefinitely, until the algorithm finishes)
 		}//if got valid stuff
-		throw new BotLotPathFindingException("LotGraph not ready to determine path.");
+		throw new BotLotPFException("LotGraph not ready to determine path.");
 	}//hasPath(BotLot)
 	
 	/**
@@ -230,7 +232,7 @@ public class BotLotPathFinders {
 			if(!hasPath(lotIn)){
 				return false;
 			}
-		} catch (BotLotPathFindingException e) {
+		} catch (BotLotPFException e) {
 			return false;
 		}
 		return true;
@@ -260,7 +262,7 @@ public class BotLotPathFinders {
 				} catch (BotLotException e) {
 					System.out.println("FATAL ERR- getClosestNotCompleteNode(BotLot)- This should not happen. Error: " + e.getMessage());
 					System.exit(1);
-				} catch (BotLotPathFindingException e) {
+				} catch (BotLotPFException e) {
 					//ignore if no path exists
 				}
 			}

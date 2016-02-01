@@ -35,9 +35,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
 /**
- * Class BotLotDS
- * <p>
- * "BotLot Data Source"
+ * Class BotLotDS "BotLot Data Source"
  * <p>
  * Handles the retrieval and saving of LotGraphs.
  * <p>
@@ -51,31 +49,30 @@ import java.io.Writer;
  * @version	1.0 12/10/15
  */
 public class BotLotDS {
-	/** The kind of data source this is */
+	/** The kind of data source this is. Should be one of the constants. */
 	private String type;
-	/** The path or login information */
+	/** The path or login information. */
 	private String pathLogin;
 	
 	/*
-	 * Globals for different data source types
+	 * Globals for different data source types. These should be what needs to be put in for the database connection string.
 	 */
-	/* The specification for XML as a data source. */
+	/** The specification for XML as a data source. */
 	public final static String XML_DATASRC = "xml";
-	/* The specification for a POSTGRES server as a data source. */
+	/** The specification for a POSTGRES server as a data source. */
 	public final static String POSTGRESQL_DATASRC = "postgresql";
-	/* The specification for a Microsoft SQL database as a data source. */
+	/** The specification for a Microsoft SQL database as a data source. */
 	public final static String MSSQL_DATASRC = "microsoft:sqlserver";
-	/* The specification for a MySQL database as a data source. */
+	/** The specification for a MySQL database as a data source. */
 	public final static String MYSQL_DATASRC = "mysql";
 
-	/* The name of the url in the XML */
+	/** The name of the url in the DB */
 	public final static String DB_URL_NAME = "url";
-	/* The name of the user in the XML */
+	/** The name of the user in the DB */
 	public final static String DB_USER_NAME = "user";
-	/* The name of the pass in the XML */
+	/** The name of the pass in the DB */
 	public final static String DB_PASS_NAME = "pass";
-	
-	/* A hashmap of the various names used in the database ops */
+	/** A hashmap of the various names used in the database ops */
 	public final static HashMap<String, String> DB_NAMES = getDatabaseNames();
 	
 	/**
@@ -229,7 +226,7 @@ public class BotLotDS {
 	 * Gets LotGraph data from an XML document.
 	 * 
 	 * @return	The LotGraph generated from this data.
-	 * @throws BotLotDSException
+	 * @throws BotLotDSException	If something goes wrong getting the graph data from the XML
 	 */
 	private LotGraph getDataFromXML() throws BotLotDSException{
 		if(!this.hasValidXMLPath()){

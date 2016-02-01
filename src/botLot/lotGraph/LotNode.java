@@ -180,14 +180,26 @@ public class LotNode{
 		}
 	}//remEdge(String)
 	
+	/**
+	 * Removes an edge based on the index given.
+	 * 
+	 * @param edgeIndexToRemove	The index of the node to remove.
+	 * @throws LotNodeException	If there is no edge on that index.
+	 */
 	public void remEdge(int edgeIndexToRemove) throws LotNodeException{
 		if(this.hasEdge(edgeIndexToRemove)){
 			this.edges.remove(this.getEdge(edgeIndexToRemove));
 		}else{
 			throw new LotNodeException("No edge with the given ID found.");
 		}
-	}
+	}//remEdge(int)
 	
+	/**
+	 * Removes an edge that goes to the given node.
+	 * 
+	 * @param nodeIn	The ending node of the edge to remove.
+	 * @throws LotNodeException	If the node given is not present.
+	 */
 	public void remEdgeTo(LotNode nodeIn) throws LotNodeException{
 		if(this.hasEdgeTo(nodeIn)){
 			try {
@@ -199,8 +211,14 @@ public class LotNode{
 		}else{
 			throw new LotNodeException("No edges in data set point to given node.");
 		}
-	}
+	}//hasEdgeTo(LotNode)
 	
+	/**
+	 * Removes an edge that goes to the node with the given ID.
+	 * 
+	 * @param nodeIdIn	The ID of the ending node of the edge to remove.
+	 * @throws LotNodeException	If the specified node isn't an end node of any edge.
+	 */
 	public void remEdgeTo(String nodeIdIn) throws LotNodeException{
 		if(this.hasEdgeTo(nodeIdIn)){
 			try {
@@ -277,17 +295,44 @@ public class LotNode{
 	public ArrayList<LotEdge> getEdges(){
 		return this.edges;
 	}//getEdges()
+	
+	/**
+	 * Gets a list of completed edges in the set {@link #edges}.
+	 * @return	A list of completed edges in the set {@link #edges}.
+	 */
+	public ArrayList<LotEdge> getCompEdges(){
+		ArrayList<LotEdge> outputList = new ArrayList<LotEdge>();
+		for(LotEdge curEdge : this.getEdges()){
+			if(curEdge.endSet()){
+				outputList.add(curEdge);
+			}
+		}
+		return outputList;
+	}//getCompEdges()
 
 	/**
 	 * Gets the number of edges in the set {@link #edges}.
-	 * 
-	 * TODO:: deal with edges not connected to actual nodes
 	 * 
 	 * @return	The number of edges in the set {@link #edges}.
 	 */
 	public int getNumEdges(){
 		return this.getEdges().size();
 	}//getNumEdges();
+	
+	/**
+	 * Gets the number of completed edges in set {@link #edges}.
+	 * 
+	 * @return	The number of completed edges in the set {@link #edges}.
+	 */
+	public int getNumCompEdges(){
+		int compCount = 0;
+		for(LotEdge curEdge : this.getEdges()){
+			if(curEdge.endSet()){
+				compCount++;
+			}
+		}
+		return compCount;
+	}//getNumCompEdges()
 	
 	/**
 	 * Determines if the node is full. Will never be full if {@link #actNumEdges} = {@link #UNDETERMINED_NUM_EDGES}
@@ -411,6 +456,12 @@ public class LotNode{
 		return false;
 	}//hasEdge(int)
 	
+	/**
+	 * Gets the edge to a given node. Null if not found.
+	 * 
+	 * @param nodeIn	The end node we are trying to get to.
+	 * @return	The edge going to the given node. Null if not found.
+	 */
 	public LotEdge getEdgeTo(LotNode nodeIn){
 		for(int i = 0; i < this.getNumEdges(); i++){
 			if(this.getEdge(i).getEndNode() == nodeIn){
@@ -418,8 +469,14 @@ public class LotNode{
 			}
 		}
 		return null;
-	}
+	}//getEdgeTo(LotNode)
 	
+	/**
+	 * Gets the edge to a node with the given ID. Null if not found.
+	 * 
+	 * @param nodeIdIn	The ID of the node we are trying to get to.
+	 * @return	The edge going to the specified node. Null if not found.
+	 */
 	public LotEdge getEdgeTo(String nodeIdIn){
 		for(int i = 0; i < this.getNumEdges(); i++){
 			if(this.getEdge(i).getEndNode().getId().equals(nodeIdIn)){
@@ -427,15 +484,21 @@ public class LotNode{
 			}
 		}
 		return null;
-	}
+	}//getEdgeTo(String)
 	
+	/**
+	 * Determined if there is an edge to the given node.
+	 * 
+	 * @param nodeIn	The node we are trying to get to.
+	 * @return	If there is an edge to the given node or not.
+	 */
 	public boolean hasEdgeTo(LotNode nodeIn){
 		if(this.getEdgeTo(nodeIn) != null){
 			return true;
 		}else{
 			return false;
 		}
-	}
+	}//hasEdgeTo(LotNode)
 	
 	/**
 	 * Determines if one of the edges' end node's ID is the id given.

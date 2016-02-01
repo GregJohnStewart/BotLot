@@ -5,7 +5,7 @@ import java.util.LinkedList;//for dealing with the LinkedList of the path.
 import botLot.BotLotException;
 import botLot.lotGraph.*;
 /**
- * BotLot.java
+ * BotLot.java 
  * <p>
  * Holds the graph object and handles operations directly related with handling where it is in the graph, and moving around that graph.
  * <p>
@@ -839,13 +839,13 @@ public class BotLot{
 	public LotPath calcNewPathGivePath() throws BotLotException{
 		if(this.hasCurNode() && this.hasDestNode() && this.curNodeHasEdges()){
 			try{
-				LotPath newPath = BotLotPathFinders.getShortestPath(this);
+				LotPath newPath = BotLotPF.getShortestPath(this);
 				
 				if(!this.pathIsValid(newPath)){
 					throw new BotLotException("Path generated is not valid.");
 				}
 				return newPath;
-			}catch(BotLotPathFindingException e){
+			}catch(BotLotPFException e){
 				System.out.println("FATAL ERR- calcNewPath(). This should not happen. Error: " + e.getMessage());
 				System.exit(1);
 			}

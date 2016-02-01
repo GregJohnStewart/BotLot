@@ -1718,7 +1718,7 @@ public class LotGraph {
 	 * Does this by combining two random integers (ideally never getting the
 	 * same one twice).
 	 * <p>
-	 * Not guaranteed unique, use {@link #getUniqueId(char)} for that.
+	 * Not guaranteed unique, use {@link #getNewUniqueId(char)} for that.
 	 * 
 	 * @param idType
 	 *            The type of id to generate (node='n', edge='e').
