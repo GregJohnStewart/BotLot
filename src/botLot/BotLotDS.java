@@ -367,7 +367,7 @@ public class BotLotDS {
 			DocumentBuilder builder = dbf.newDocumentBuilder();
 			Document doc = builder.newDocument();
 			//set comment detailing purpose of data
-			doc.appendChild(doc.createComment("This data builds a LotGraph, to be used with the BotLotDS object. https://github.com/GregJohnStewart/BotLot"));
+			doc.appendChild(doc.createComment("This data builds a LotGraph, to be used with the BotLotDS object. https://github.com/GregJohnStewart/BotLot "));
 			// create the root element node
 			Element rootElement = doc.createElement("root");
 			doc.appendChild(rootElement);
@@ -410,6 +410,9 @@ public class BotLotDS {
 			Transformer transformer = TransformerFactory.newInstance().newTransformer();
 			Result output = new StreamResult(new File(this.pathLogin));
 			Source input = new DOMSource(doc);
+			//TODO:: figure out why this breaks reading in XML:
+			//transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+			//transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
 			transformer.transform(input, output);
 		}catch(Exception e){
 			throw new BotLotDSException("Unable to create XML file- " + e.getClass() + " - " + e.getMessage());

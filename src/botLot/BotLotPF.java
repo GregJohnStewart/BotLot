@@ -6,6 +6,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import botLot.lotGraph.*;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 /**
  * BotLotPF.java
  * <p>
@@ -20,11 +21,14 @@ public class BotLotPF {
 	/** Used to see if we already checked the BotLot object for correctness */
 	private static boolean readyPathChecked = false;
 	/** The string passed to the BotLotPFException when the BotLot object given is not ready. */
-	private static final String notReadyString = "The BotLot Object is either not ready, or has no path between current location and destination.";
+	public static final String notReadyString = "The BotLot Object is either not ready, or has no path between current location and destination.";
 	/** The minimum ratio value to do random path generation in {@link #getShortestPath(BotLot)} */
-	private static final float ratioThreshHold = (float) 0.75;
+	public static final float ratioThreshHold = (float) 0.75;
 	/** The number of times to do the random generation to attempt a shortest path */
 	private static final int numTimesToDoRand = 5;
+	/** The string passed to the BotLotPFException when the gets to the end of a line. */
+	public static final String eolString = "End of the line of nodes.";
+	
 	/**
 	 * Determines which path taking algorithm is probably best to use.
 	 * 
@@ -42,7 +46,7 @@ public class BotLotPF {
 		//determine what algorithm to use.....
 		//System.out.println("node/edge ratio: " + lotIn.mainGraph.getNodeEdgeRatio());
 		if(lotIn.mainGraph.getNodeEdgeRatio() >= ratioThreshHold){
-			//System.out.println("Ratio within bounds. Doing random path gen.");
+			System.out.println("Ratio within bounds. Doing random path gen.");
 			/*If about the same amount of nodes to edges, get best of a few random path gens
 			 * 
 			 * Idea being that the paths throughout the data set are fairly linear, therefore this algorithm should run with O(# edges between curNode and destNode).
@@ -57,9 +61,9 @@ public class BotLotPF {
 				}
 			}
 		}else{
-			//System.out.println("Too complicated of a graph. Getting specific shortest path.");
+			System.out.println("Too complicated of a graph. Getting specific shortest path.");
 			//TODO:: implement something better
-			pathFound = findRandomPath(lotIn);
+			pathFound = getExactPath(lotIn);
 		}
 		
 		readyPathChecked = false;
@@ -82,8 +86,7 @@ public class BotLotPF {
 			}
 		}
 		//TODO:: use Dijkstra's algorithm to find a shortest path
-		
-		return new LotPath();
+		throw new NotImplementedException();
 	}//doDijkstra(BotLot)
 	
 	
@@ -92,6 +95,8 @@ public class BotLotPF {
 	 * Finds a path by randomly selecting edges on each node.
 	 * <p>
 	 * Obviously not a great way to do this. Done for testing simple things. Or directing something for the scenic route.
+	 * <p>
+	 * TODO:: fix for edges that are not completed
 	 * 
 	 * @param lotIn The LotGraph structure to deal with.
 	 * @return	A new random path from the current node in lotIn to the destination node in that structure.
@@ -173,6 +178,105 @@ public class BotLotPF {
 	}//findRandomPath(BotLot)
 	
 	/**
+	 * Recursive method to find an exact shortest path.
+	 * 
+	 * @param lotIn	The BotLot we are dealing with.
+	 * @param thisCurNode	The node this iteration is on.
+	 * @param lastNode	The node whose iteration called this iteration.
+	 * @return	A shortest path leading to the end node.
+	 * @throws BotLotPFException	If there is no path to the end node.
+	 */
+	private static LotPath getExactPath(BotLot lotIn, LotNode thisCurNode, LotNode lastNode) throws BotLotPFException{
+		LotPath pathOut = new LotPath();
+		//take care of special cases
+		if(thisCurNode.getEdgeTo(lotIn.getDestNode()) != null){//if we found the destination node
+			try {
+				pathOut.append(thisCurNode.getEdgeTo(lotIn.getDestNode()));
+			} catch (LotPathException e) {
+				System.out.println("FATAL ERROR- You should not ghet this. Could not append last edge. Error: " + e.getMessage());
+				System.exit(1);
+			}
+			return pathOut;
+		}else if(thisCurNode.getNumCompEdges() == 0){
+			throw new BotLotPFException(eolString);
+		}else if(thisCurNode.getNumCompEdges() == 1){
+			if(thisCurNode.getEdge(0).getEndNode() == lastNode){
+				throw new BotLotPFException(eolString);
+			}
+		}
+		
+		//ExecutorService es = Executors.newCachedThreadPool();//thread pool for this iteration
+		ArrayList<LotPath> pathsMade = new ArrayList<LotPath>();
+		
+		//go down each path TODO:: in a different thread, and get the path..
+		//TODO:: figure out how to deal with loops in the graph/ why it already works with loops in the graph
+		LotPath tempPath;
+		for(LotEdge curEdge : thisCurNode.getConnectedEdges()){
+			if(curEdge.getEndNode() == thisCurNode || curEdge.getEndNode() == lastNode){//don't try one edge loops
+				continue;
+			}
+			
+			tempPath = new LotPath();
+			try {
+				tempPath.append(curEdge);
+			} catch (LotPathException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				System.out.println("FATAL ERROR- You should not ghet this. Could not append next edge. Error: " + e.getMessage());
+				System.exit(1);
+			}
+			try {
+				tempPath.append(getExactPath(lotIn, curEdge.getEndNode(), thisCurNode));
+				tempPath.removeLoops();
+				pathsMade.add(tempPath);
+			}catch(BotLotPFException e){
+				if(!e.getMessage().equals(eolString)){
+					e.printStackTrace();
+					System.out.println("FATAL ERROR- You should not ghet this. Error: " + e.getMessage());
+					System.exit(1);
+				}
+			} catch (LotPathException e) {
+				e.printStackTrace();
+				System.out.println("FATAL ERROR- You should not get this. Could not append paths. Error: " + e.getMessage());
+				System.exit(1);
+			}
+		}
+		//determine which path is least & return
+		pathOut = pathsMade.get(0);
+		for(LotPath curPath : pathsMade){
+			if(curPath.isShorter(pathOut)){
+				pathOut = curPath;
+			}
+		}
+		return pathOut;
+	}
+	
+	/**
+	 * Gets an exact shortest path to the destination node.
+	 * 
+	 * @param lotIn	The BotLot object to use.
+	 * @return	The shortest path to the destination node.
+	 * @throws BotLotPFException	If the object was not ready or 
+	 */
+	public static LotPath getExactPath(BotLot lotIn) throws BotLotPFException{
+		if(!readyPathChecked){
+			if(!readyPathCheck(lotIn)){
+				throw new BotLotPFException(notReadyString);
+			}
+		}
+		try{
+			return getExactPath(lotIn, lotIn.getCurNode(), lotIn.getCurNode());
+		}catch(BotLotPFException e){
+			if(e.getMessage().equals(eolString)){
+				e.printStackTrace();
+				System.out.println("FATAL ERROR- You should not ghet this. Error: " + e.getMessage());
+				System.exit(1);
+			}
+			throw e;
+		}
+	}
+	
+	/**
 	 * Determines if there is a path from the curNode to the destNode.
 	 * <p>
 	 * Uses a multi-threaded algorithm to accomplish this quickly for very large and/or complex data sets.
@@ -192,14 +296,15 @@ public class BotLotPF {
 			ArrayList<LotNode> nodesConnected = lotIn.getCurNode().getConnectedNodes();//nodes that are connected to the curNode (and nodes subsequently attatched to them, and so on...)
 			ArrayList<LotNode> tempList = new ArrayList<LotNode>();//temporary list of connected nodes
 			ArrayList<LotNode> nodesFinished = new ArrayList<LotNode>();//nodes we have hit in the past, to not go in circles
+			ExecutorService es = Executors.newCachedThreadPool();//the thread pool for multithreading
 			
-			nodesFinished.add(lotIn.getCurNode());
+			nodesFinished.add(lotIn.getCurNode());//add the current node to list of nodes we have hit
 			nodesConnected.removeAll(nodesFinished);//ensure none of the edges pointed back to curNode
 			while(true){
 				//*
 				//for each in nodes connected, get nodes connected to them (if not one already searched)
 				//	essentially does this by emptying the list as it goes, saving memory and an index to keep track of
-				ExecutorService es = Executors.newCachedThreadPool();
+				es = Executors.newCachedThreadPool();
 				while(nodesConnected.size() != 0){
 					if(nodesConnected.get(0).getConnectedNodes().contains(lotIn.getDestNode())){
 						return true;

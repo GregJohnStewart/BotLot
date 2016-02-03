@@ -249,7 +249,7 @@ public class LotEdge{
 		result = prime * result + (int) (temp ^ (temp >>> 32));
 		return result;
 	}
-
+	/*//TODO:: why no work with saving to XML?
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -278,5 +278,6 @@ public class LotEdge{
 			return false;
 		return true;
 	}
+	/**/
 
 }//class LotEdge

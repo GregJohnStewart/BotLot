@@ -530,6 +530,21 @@ public class LotNode{
 	}//getConnectedNodes()
 	
 	/**
+	 * Gets a list of edges that are connected to other nodes.
+	 * 
+	 * @return	A list of edges that are connected to other nodes.
+	 */
+	public ArrayList<LotEdge> getConnectedEdges(){
+		ArrayList<LotEdge> connectedEdges = new ArrayList<LotEdge>();
+		for(LotEdge curEdge : this.getEdges()){
+			if(curEdge.endSet()){
+				connectedEdges.add(curEdge);
+			}
+		}
+		return connectedEdges;
+	}
+	
+	/**
 	 * Gets the index of the given node. Returns '-1' if not present.
 	 * 
 	 * @param edgeIn	The node to get the index of.

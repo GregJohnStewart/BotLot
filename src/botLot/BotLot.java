@@ -791,6 +791,7 @@ public class BotLot{
 	 * @return	If {@link #curPath} is valid or not.
 	 */
 	public boolean curPathIsValid(){
+		//TODO::  check for curNode and destNode things
 		if(this.getCurPath() == null || this.getCurPath() == new LotPath()){
 			return false;
 		}

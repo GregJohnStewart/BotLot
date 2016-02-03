@@ -1,6 +1,7 @@
 package botLot.lotGraph;
 import java.util.Collection;
 import java.util.LinkedList;//for the actual path
+import java.util.NoSuchElementException;
 /**
  * LotPath.java
  * <p>
@@ -154,9 +155,11 @@ public class LotPath {
 	 * @throws LotPathException	If the given list breaks the path.
 	 */
 	public void append(Collection<LotEdge> edgeListIn) throws LotPathException{
-		LotNode endNode = this.path.getLast().getEndNode();
+		if(edgeListIn.isEmpty()){
+			return;
+		}
 		LinkedList<LotEdge> listToAppend = (LinkedList<LotEdge>)edgeListIn;
-		if(endNode.hasEdge(listToAppend.get(0))){
+		if(this.path.getLast().getEndNode().hasEdge(listToAppend.get(0))){
 			path.addAll(edgeListIn);
 			if(!this.pathIsValid()){
 				throw new LotPathException("The path we ended up with was not continuous.");
@@ -176,9 +179,38 @@ public class LotPath {
 		this.append(pathIn.path);
 	}
 	
+	/**
+	 * Appends an edge to the path.
+	 * 
+	 * @param edgeIn	The edge to add.
+	 * @throws LotPathException	If the edge given would not make a continuous path if appended.
+	 */
+	public void append(LotEdge edgeIn) throws LotPathException{
+		boolean hasPathToEdge;
+		try{
+			hasPathToEdge = this.path.getLast().getEndNode().hasEdge(edgeIn);
+		}catch(NoSuchElementException e){
+			hasPathToEdge = false;
+		}
+		if(hasPathToEdge || this.path.isEmpty()){
+			path.add(edgeIn);
+		}else{
+			throw new LotPathException("The given edge would not make a continuous path if appended.");
+		}
+	}
 	
-	
-	//TODO:: make an operator for comparing to another path, comparing metrics and such
+	/**
+	 * Determines if this path is shorter than the path given.
+	 * 
+	 * @param pathIn	The path we are testing against.
+	 * @return	If this path is shorter than the path given.
+	 */
+	public boolean isShorter(LotPath pathIn){
+		if(this.getPathMetric() < pathIn.getPathMetric()){
+			return true;
+		}
+		return false;
+	}
 	
 	@Override
 	public int hashCode() {
@@ -207,6 +239,6 @@ public class LotPath {
 
 	@Override
 	public String toString() {
-		return "LotPath [path=" + path + "]";
+		return "LotPath [metric="+this.getPathMetric()+", numEdges="+this.path.size()+" edge/metric ratio="+this.getEdgesMetricRatio()+", path=" + path + " ]";
 	}
 }//class LotPath

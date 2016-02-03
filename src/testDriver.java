@@ -46,7 +46,7 @@ public class testDriver {
 		if(needNewMap){
 			System.out.println("Adding new nodes...");
 
-			for (int i = 0; i < 8; i++) {
+			for (int i = 0; i < 9; i++) {
 				// System.out.println("...");
 				System.out.println("New Node: " + navigator.mainGraph.createNodeGiveId());
 				navigator.mainGraph.getNode(i).setActNumEdges(1);
@@ -55,8 +55,7 @@ public class testDriver {
 
 			navigator.mainGraph.getNode(1).setActNumEdges(2);
 			navigator.mainGraph.getNode(2).setActNumEdges(3);
-			navigator.mainGraph.getNode(3).setActNumEdges(2);
-			navigator.mainGraph.getNode(5).setActNumEdges(0);
+			navigator.mainGraph.getNode(3).setActNumEdges(3);
 
 			System.out.println("Nodes:");
 
@@ -66,29 +65,35 @@ public class testDriver {
 			
 			//set edges, giving each a random metric between 1 and 10
 			System.out.println("Adding edges...");
-			navigator.mainGraph.createEdge(0, 1).getId();
+			navigator.mainGraph.createEdge(0, 1);
 			navigator.mainGraph.getEdgeFromTo(0, 1).setMetric(ThreadLocalRandom.current().nextInt(1, 10 + 1));
-			navigator.mainGraph.createEdge(1, 2).getId();
+			navigator.mainGraph.createEdge(1, 2);
 			navigator.mainGraph.getEdgeFromTo(1, 2).setMetric(ThreadLocalRandom.current().nextInt(1, 10 + 1));
-			navigator.mainGraph.createEdge(2, 3).getId();
+			navigator.mainGraph.createEdge(2, 3);
 			navigator.mainGraph.getEdgeFromTo(2, 3).setMetric(ThreadLocalRandom.current().nextInt(1, 10 + 1));
-			navigator.mainGraph.createEdge(3, 0).getId();
+			navigator.mainGraph.createEdge(3, 0);
 			navigator.mainGraph.getEdgeFromTo(3, 0).setMetric(ThreadLocalRandom.current().nextInt(1, 10 + 1));
 
-			navigator.mainGraph.createEdge(1, 1).getId();
+			navigator.mainGraph.createEdge(1, 1);
 			navigator.mainGraph.getEdgeFromTo(1, 1).setMetric(ThreadLocalRandom.current().nextInt(1, 10 + 1));
-			navigator.mainGraph.createEdge(2, 1).getId();
+			navigator.mainGraph.createEdge(2, 1);
 			navigator.mainGraph.getEdgeFromTo(2, 1).setMetric(ThreadLocalRandom.current().nextInt(1, 10 + 1));
-			navigator.mainGraph.createEdge(3, 4).getId();
+			navigator.mainGraph.createEdge(3, 4);
 			navigator.mainGraph.getEdgeFromTo(3, 4).setMetric(ThreadLocalRandom.current().nextInt(1, 10 + 1));
-			navigator.mainGraph.createEdge(4, 5).getId();
+			navigator.mainGraph.createEdge(4, 5);
 			navigator.mainGraph.getEdgeFromTo(4, 5).setMetric(ThreadLocalRandom.current().nextInt(1, 10 + 1));
-			navigator.mainGraph.createEdge(2, 6).getId();
+			navigator.mainGraph.createEdge(2, 6);
 			navigator.mainGraph.getEdgeFromTo(2, 6).setMetric(ThreadLocalRandom.current().nextInt(1, 10 + 1));
-			navigator.mainGraph.createEdge(6, 7).getId();
+			navigator.mainGraph.createEdge(6, 7);
 			navigator.mainGraph.getEdgeFromTo(6, 7).setMetric(ThreadLocalRandom.current().nextInt(1, 10 + 1));
-			navigator.mainGraph.createEdge(7, 3).getId();
+			navigator.mainGraph.createEdge(7, 3);
 			navigator.mainGraph.getEdgeFromTo(7, 3).setMetric(ThreadLocalRandom.current().nextInt(1, 10 + 1));
+			navigator.mainGraph.createEdge(3, 2);
+			navigator.mainGraph.getEdgeFromTo(3, 2).setMetric(ThreadLocalRandom.current().nextInt(1, 10 + 1));
+			navigator.mainGraph.createEdge(5, 8);
+			navigator.mainGraph.getEdgeFromTo(5, 8).setMetric(ThreadLocalRandom.current().nextInt(1, 10 + 1));
+			navigator.mainGraph.createEdge(8, 5);
+			navigator.mainGraph.getEdgeFromTo(8, 5).setMetric(ThreadLocalRandom.current().nextInt(1, 10 + 1));
 
 			System.out.println("Edges:");
 			for (int i = 0; i < navigator.mainGraph.getEdgeList().size(); i++) {
@@ -116,15 +121,18 @@ public class testDriver {
 
 		System.out.println("Calculating path...");
 		navigator.calcNewPath(navigator.mainGraph.getNode(3));
-
+		System.out.println("\tDone.");
 		System.out.println("Path found: " + navigator.getCurPath().toString());
 
 		System.out.println("Following path...");
 		navigator.movedToEndOfPath();
+		System.out.println("\tDone.");
 		System.out.println("Ended up at: " + navigator.getCurNode().toString());
 		
 		if(useXML){
+			System.out.println("Saving data to XML...");
 			dataSource.saveDataToSource(navigator.mainGraph);
+			System.out.println("\tDone.");
 		}
 		
 		System.out.println("Program complete.");
