@@ -31,8 +31,9 @@ public class LotPath {
 	 * Constructor that takes in a collection of edges.
 	 * 
 	 * @param collectionIn	The collection of edges.
+	 * @throws LotPathException If the given set of edges is not continuous.
 	 */
-	public LotPath(Collection<LotEdge> collectionIn){
+	public LotPath(Collection<LotEdge> collectionIn) throws LotPathException{
 		this();
 		this.setPath(collectionIn);
 	}//LotPath(Collection<LotEdge>)
@@ -48,9 +49,13 @@ public class LotPath {
 	 * Sets the {@link #path} to a collection of edges.
 	 * 
 	 * @param collectionIn	The collection of edges.
+	 * @throws LotPathException If the given set of edges is not continuous.
 	 */
-	public void setPath(Collection<LotEdge> collectionIn){
+	public void setPath(Collection<LotEdge> collectionIn) throws LotPathException{
 		this.path = new LinkedList<LotEdge>(collectionIn);
+		if(!this.pathIsValid()){
+			throw new LotPathException("Given set of edges is not continuous.");
+		}
 	}//setPath(Collection<LotEdge)
 	
 	/**
@@ -115,6 +120,63 @@ public class LotPath {
 			}
 		}
 	}//removeLoops
+	
+	/**
+	 * Determines if the path given is valid.
+	 * 
+	 * @param pathIn The path to check.
+	 * @return	If the path given is valid.
+	 */
+	public static boolean pathIsValid(LotPath pathIn){
+		for(int i = 0; i < pathIn.size(); i++){
+			if((i + 1) == pathIn.size()){
+				return true;
+			}else if(!pathIn.path.get(i).getEndNode().hasEdge(pathIn.path.get(i + 1))){
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	/**
+	 * Determines if the path held by this object is valid.
+	 * 
+	 * @return	If the path given is valid.
+	 */
+	public boolean pathIsValid(){
+		return pathIsValid(this);
+	}
+	
+	/**
+	 * Appends a collection of LotEdges to the current list.
+	 * 
+	 * @param edgeListIn	The edge list to append.
+	 * @throws LotPathException	If the given list breaks the path.
+	 */
+	public void append(Collection<LotEdge> edgeListIn) throws LotPathException{
+		LotNode endNode = this.path.getLast().getEndNode();
+		LinkedList<LotEdge> listToAppend = (LinkedList<LotEdge>)edgeListIn;
+		if(endNode.hasEdge(listToAppend.get(0))){
+			path.addAll(edgeListIn);
+			if(!this.pathIsValid()){
+				throw new LotPathException("The path we ended up with was not continuous.");
+			}
+		}else{
+			throw new LotPathException("The given set would not make a continuous path if appended.");
+		}
+	}
+	
+	/**
+	 * Appends a LotPath to this  LotPath.
+	 * 
+	 * @param pathIn	The path to append.
+	 * @throws LotPathException	If the given path breaks the path.
+	 */
+	public void append(LotPath pathIn) throws LotPathException{
+		this.append(pathIn.path);
+	}
+	
+	
 	
 	//TODO:: make an operator for comparing to another path, comparing metrics and such
 	

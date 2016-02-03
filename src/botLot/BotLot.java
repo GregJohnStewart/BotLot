@@ -784,42 +784,17 @@ public class BotLot{
 	}//getCurPath()
 	
 	/**
-	 * Lets anyone check if their path is valid.
-	 * 
-	 * @param pathIn	The path to check.
-	 * @return	If the path given is valid.
-	 */
-	public boolean pathIsValid(LotPath pathIn){
-		if(this.curPath != null && this.curPath.path != null && this.graphHasCurNode() && this.graphHasDestNode()){
-			LotNode tempNode = this.getCurNode();
-			for(LotEdge tempEdge : pathIn.path){
-				if(this.mainGraph.hasOtherNode(tempNode, tempEdge)){
-					try{
-						tempNode = this.mainGraph.getOtherNode(tempNode, tempEdge);
-					}catch(LotGraphException e){
-						System.out.println("FATAL ERR- curPathIsValid(). You should not get this. Error: " + e.getMessage());
-						System.exit(1);
-					}
-				}else{
-					return false;//if the path is not continuous
-				}
-			}//for each
-			return true;//if the path is continuous
-		}
-		return false;
-	}//pathIsValid(LotPath)
-	
-	/**
 	 * Checks the continuity of {@link #curPath}.
 	 * <p>
 	 * I.E., if all the edges lead through nodes that lead to the other nodes correctly.
-	 * <p>
-	 * Wrapper for {@link #pathIsValid(LotPath)}
 	 * 
 	 * @return	If {@link #curPath} is valid or not.
 	 */
 	public boolean curPathIsValid(){
-		return this.pathIsValid(this.getCurPath());
+		if(this.getCurPath() == null || this.getCurPath() == new LotPath()){
+			return false;
+		}
+		return this.getCurPath().pathIsValid();
 	}//curPathIsValid()
 	
 	/**
@@ -841,7 +816,7 @@ public class BotLot{
 			try{
 				LotPath newPath = BotLotPF.getShortestPath(this);
 				
-				if(!this.pathIsValid(newPath)){
+				if(!newPath.pathIsValid()){
 					throw new BotLotException("Path generated is not valid.");
 				}
 				return newPath;
