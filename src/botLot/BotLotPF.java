@@ -44,9 +44,10 @@ public class BotLotPF {
 		LotPath pathFound = null;
 		
 		//determine what algorithm to use.....
-		//System.out.println("node/edge ratio: " + lotIn.mainGraph.getNodeEdgeRatio());
+		System.out.println("\tnode/edge ratio: " + lotIn.mainGraph.getNodeEdgeRatio() + "\n\tThreshhold: " + ratioThreshHold);
 		if(lotIn.mainGraph.getNodeEdgeRatio() >= ratioThreshHold){
-			System.out.println("Ratio within bounds. Doing random path gen.");
+		//if(true){//testing
+			System.out.println("\tRatio within bounds. Doing random path gen.");
 			/*If about the same amount of nodes to edges, get best of a few random path gens
 			 * 
 			 * Idea being that the paths throughout the data set are fairly linear, therefore this algorithm should run with O(# edges between curNode and destNode).
@@ -61,8 +62,7 @@ public class BotLotPF {
 				}
 			}
 		}else{
-			System.out.println("Too complicated of a graph. Getting specific shortest path.");
-			//TODO:: implement something better
+			System.out.println("\tToo complicated of a graph. Getting specific shortest path.");
 			pathFound = getExactPath(lotIn);
 		}
 		
@@ -193,13 +193,13 @@ public class BotLotPF {
 			try {
 				pathOut.append(thisCurNode.getEdgeTo(lotIn.getDestNode()));
 			} catch (LotPathException e) {
-				System.out.println("FATAL ERROR- You should not ghet this. Could not append last edge. Error: " + e.getMessage());
+				System.out.println("FATAL ERROR- You should not get this. Could not append last edge. Error: " + e.getMessage());
 				System.exit(1);
 			}
 			return pathOut;
-		}else if(thisCurNode.getNumCompEdges() == 0){
+		}else if(thisCurNode.getNumCompEdges() == 0){//nowhere to go
 			throw new BotLotPFException(eolString);
-		}else if(thisCurNode.getNumCompEdges() == 1){
+		}else if(thisCurNode.getNumCompEdges() == 1){//only way to go is back the way we came
 			if(thisCurNode.getEdge(0).getEndNode() == lastNode){
 				throw new BotLotPFException(eolString);
 			}
@@ -212,19 +212,20 @@ public class BotLotPF {
 		//TODO:: figure out how to deal with loops in the graph/ why it already works with loops in the graph
 		LotPath tempPath;
 		for(LotEdge curEdge : thisCurNode.getConnectedEdges()){
-			if(curEdge.getEndNode() == thisCurNode || curEdge.getEndNode() == lastNode){//don't try one edge loops
+			//don't try one edge loops, or going back the way we came
+			if(curEdge.getEndNode() == thisCurNode || curEdge.getEndNode() == lastNode){
 				continue;
 			}
-			
+			//add the current edge to the path
 			tempPath = new LotPath();
 			try {
 				tempPath.append(curEdge);
 			} catch (LotPathException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
-				System.out.println("FATAL ERROR- You should not ghet this. Could not append next edge. Error: " + e.getMessage());
+				System.out.println("FATAL ERROR- You should not get this. Could not append next edge. Error: " + e.getMessage());
 				System.exit(1);
 			}
+			//get the path for the edge
 			try {
 				tempPath.append(getExactPath(lotIn, curEdge.getEndNode(), thisCurNode));
 				tempPath.removeLoops();
@@ -249,7 +250,7 @@ public class BotLotPF {
 			}
 		}
 		return pathOut;
-	}
+	}//getExactPath(BotLot, LotNode, LotNode)
 	
 	/**
 	 * Gets an exact shortest path to the destination node.
@@ -274,7 +275,7 @@ public class BotLotPF {
 			}
 			throw e;
 		}
-	}
+	}//getExactPath(BotLot)
 	
 	/**
 	 * Determines if there is a path from the curNode to the destNode.

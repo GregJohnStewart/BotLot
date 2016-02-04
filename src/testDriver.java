@@ -50,6 +50,7 @@ public class testDriver {
 				// System.out.println("...");
 				System.out.println("New Node: " + navigator.mainGraph.createNodeGiveId());
 				navigator.mainGraph.getNode(i).setActNumEdges(1);
+				navigator.mainGraph.getNode(i).setAtt("name", "node" + i);
 				// System.out.println("\tNode added. Id: " + nodeIds.get(i));
 			}
 
@@ -92,8 +93,8 @@ public class testDriver {
 			navigator.mainGraph.getEdgeFromTo(3, 2).setMetric(ThreadLocalRandom.current().nextInt(1, 10 + 1));
 			navigator.mainGraph.createEdge(5, 8);
 			navigator.mainGraph.getEdgeFromTo(5, 8).setMetric(ThreadLocalRandom.current().nextInt(1, 10 + 1));
-			navigator.mainGraph.createEdge(8, 5);
-			navigator.mainGraph.getEdgeFromTo(8, 5).setMetric(ThreadLocalRandom.current().nextInt(1, 10 + 1));
+			navigator.mainGraph.createEdge(8, 4);
+			navigator.mainGraph.getEdgeFromTo(8, 4).setMetric(ThreadLocalRandom.current().nextInt(1, 10 + 1));
 
 			System.out.println("Edges:");
 			for (int i = 0; i < navigator.mainGraph.getEdgeList().size(); i++) {
@@ -117,7 +118,7 @@ public class testDriver {
 
 		System.out.println(
 				"# Nodes: " + navigator.mainGraph.getNumNodes() + "\n# Edges: " + navigator.mainGraph.getNumEdges());
-		System.out.println(navigator.mainGraph.getASCIIGraph());
+		System.out.println(navigator.mainGraph.getASCIIGraph(true));
 
 		System.out.println("Calculating path...");
 		navigator.calcNewPath(navigator.mainGraph.getNode(3));

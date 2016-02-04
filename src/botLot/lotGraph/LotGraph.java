@@ -1560,41 +1560,67 @@ public class LotGraph {
 		return incompleteList;
 	}//getIncompleteNodes()
 	
-
 	/**
 	 * Returns an ASCII representation of the graph, with 1's representing
 	 * filled edges, and 0's representing empty edges.
 	 * 
-	 * TODO:: make it work (well) for sets larger than 9
+	 *TODO:: test with numNodes greater than 9
 	 * 
+	 * @param outputNodeList Whether or not to add the node list after the graph.
 	 * @return An ASCII representation of the graph.
 	 */
-	public String getASCIIGraph() {
+	public String getASCIIGraph(boolean outputNodeList) {
 		int numNodes = this.getNumNodes();
-		String output = "  ";
-		for (int i = 0; i < numNodes; i++) {
-			output += (i + 1) + " ";
+		int digits = String.valueOf(numNodes).length();
+		String output = "";
+		String topBar = "";
+		for(int i = 0; i < digits; i++){
+			output += " ";
+			topBar += "-";
 		}
-		output += "\n  ";
+		output += "|";
+		topBar += "-";
 		for (int i = 0; i < numNodes; i++) {
-			output += "--";
+			output += i;
+			for(int j = 0; j < String.valueOf(i).length(); j++){
+				topBar += "-";
+			}
+			for(int j = 0; j < digits - String.valueOf(numNodes).length(); j++){
+				output += " ";
+				topBar += "-";
+			}
+			output += " ";
+			topBar += "-";
 		}
+		output = output.substring(0, output.length()-1);
+		topBar = topBar.substring(0, topBar.length()-1);
+		output += "\n" + topBar;
 		for(int i = 0; i < numNodes; i++){
-			output += "\n" + (i + 1) + "|";
+			output += "\n" + i;
+			for(int j = 0; j < String.valueOf(i).length() - String.valueOf(numNodes).length(); j++){
+				output += " ";
+			}
+			output += "|";
 			for(int j = 0; j < numNodes; j++){
+				//TODO:: print out actual number of edges to that node
 				if(this.hasEdgeFromTo(j, i)){
 					output += "1 ";
 				} else {
 					output += "0 ";
 				}
+				for(int k = 0; k < String.valueOf(j).length() - String.valueOf(numNodes).length(); k++){
+					output += " ";
+				}
+			}
+			output = output.substring(0, output.length()-1);
+		}
+		if(outputNodeList){
+			int i = 0;
+			for(LotNode curNode : this.getNodes()){
+				output += "\n\t" + i + " - " + curNode.toString();
+				i++;
 			}
 		}
-		int i = 1;
-		for(LotNode curNode : this.getNodes()){
-			output += "\n\t" + i + " - " + curNode.toString();
-			i++;
-		}
-		
 		return output;
 	}// getASCIIGraph()
 
