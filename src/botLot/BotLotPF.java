@@ -13,6 +13,9 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
  * Functions needed to find paths in the BotLot class.
  * <p>
  * Started: 11/7/15
+ * <p>
+ * TODO::
+ * 	Implement conditional searches
  * 
  * @author Greg Stewart
  * @version	1.0 1/20/16
@@ -297,12 +300,11 @@ public class BotLotPF {
 			ArrayList<LotNode> nodesConnected = lotIn.getCurNode().getConnectedNodes();//nodes that are connected to the curNode (and nodes subsequently attatched to them, and so on...)
 			ArrayList<LotNode> tempList = new ArrayList<LotNode>();//temporary list of connected nodes
 			ArrayList<LotNode> nodesFinished = new ArrayList<LotNode>();//nodes we have hit in the past, to not go in circles
-			ExecutorService es = Executors.newCachedThreadPool();//the thread pool for multithreading
+			ExecutorService es;//the thread pool for multithreading
 			
 			nodesFinished.add(lotIn.getCurNode());//add the current node to list of nodes we have hit
 			nodesConnected.removeAll(nodesFinished);//ensure none of the edges pointed back to curNode
 			while(true){
-				//*
 				//for each in nodes connected, get nodes connected to them (if not one already searched)
 				//	essentially does this by emptying the list as it goes, saving memory and an index to keep track of
 				es = Executors.newCachedThreadPool();
@@ -323,37 +325,9 @@ public class BotLotPF {
 				try {
 					es.awaitTermination(minsToWait, TimeUnit.MINUTES);
 				} catch (InterruptedException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 					System.exit(1);
 				}
-				/**/
-				//System.out.println("Finished: " + nodesFinished.toString());
-				//System.out.println("Temp: " + tempList.toString());
-				//System.out.println("connected: " + nodesConnected.toString());
-				
-				
-				/*
-				//for each in nodes connected, get nodes connected to them (if not one already searched)
-				//	essentially does this by emptying the list as it goes, saving memory and an index to keep track of
-				while(nodesConnected.size() != 0){
-					
-					//check if dest node is in this node's connected set
-					if(nodesConnected.get(0).getConnectedNodes().contains(lotIn.getDestNode())){
-						return true;
-					}
-					//put nodes connected to curNode into tempList
-					for(LotNode curNode : nodesConnected.get(0).getConnectedNodes()){
-						if(!nodesFinished.contains(curNode) && curNode != null){
-							tempList.add(curNode);
-						}
-					}
-					//put node in nodesFinished and remove it from nodesConnected
-					nodesFinished.add(nodesConnected.remove(0));
-					
-				}
-				/**/
-				
 				//if we got this far and no nodes are in the temp list, there is nothing else we can do, so there is no path
 				if(tempList.size() == 0){
 					return false;
@@ -399,6 +373,7 @@ public class BotLotPF {
 			ArrayList<LotNode> nodesNotComplete = lotIn.mainGraph.getIncompleteNodes();
 			double curBestMetric = Double.POSITIVE_INFINITY;
 			LotPath tempPath = null; 
+			//TODO:: figure out how to multithread this
 			for(LotNode curNode : nodesNotComplete){
 				try {
 					lotIn.setDestNode(curNode);
@@ -437,6 +412,5 @@ public class BotLotPF {
 			System.exit(1);
 		}
 	}//setClosestNotCompleteNode(BotLot)
-	
 	
 }//class BotLotWorkers

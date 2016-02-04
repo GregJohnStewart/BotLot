@@ -46,7 +46,7 @@ public class testDriver {
 		if(needNewMap){
 			System.out.println("Adding new nodes...");
 
-			for (int i = 0; i < 9; i++) {
+			for (int i = 0; i <= 10; i++) {
 				// System.out.println("...");
 				System.out.println("New Node: " + navigator.mainGraph.createNodeGiveId());
 				navigator.mainGraph.getNode(i).setActNumEdges(1);
@@ -57,6 +57,7 @@ public class testDriver {
 			navigator.mainGraph.getNode(1).setActNumEdges(2);
 			navigator.mainGraph.getNode(2).setActNumEdges(3);
 			navigator.mainGraph.getNode(3).setActNumEdges(3);
+			navigator.mainGraph.getNode(7).setActNumEdges(2);
 
 			System.out.println("Nodes:");
 
@@ -95,7 +96,13 @@ public class testDriver {
 			navigator.mainGraph.getEdgeFromTo(5, 8).setMetric(ThreadLocalRandom.current().nextInt(1, 10 + 1));
 			navigator.mainGraph.createEdge(8, 4);
 			navigator.mainGraph.getEdgeFromTo(8, 4).setMetric(ThreadLocalRandom.current().nextInt(1, 10 + 1));
-
+			navigator.mainGraph.createEdge(7, 9);
+			navigator.mainGraph.getEdgeFromTo(7, 9).setMetric(ThreadLocalRandom.current().nextInt(1, 10 + 1));
+			navigator.mainGraph.createEdge(9, 10);
+			navigator.mainGraph.getEdgeFromTo(9, 10).setMetric(ThreadLocalRandom.current().nextInt(1, 10 + 1));
+			navigator.mainGraph.createEdge(10, 8);
+			navigator.mainGraph.getEdgeFromTo(10, 8).setMetric(ThreadLocalRandom.current().nextInt(1, 10 + 1));
+			
 			System.out.println("Edges:");
 			for (int i = 0; i < navigator.mainGraph.getEdgeList().size(); i++) {
 				System.out.println("\t" + navigator.mainGraph.getEdgeList().get(i).toString());

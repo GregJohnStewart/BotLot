@@ -10,13 +10,13 @@ import java.util.HashMap;//for attributes
  * @version 1.0 12/6/15
  */
 public class LotEdge{
-	/** The id of the node, required for normal graph operation. When used with BotLot, this is automatically set. */
+	/** The id of the edge, required for normal graph operation. When used with BotLot, this is automatically set. */
     private String id;
     /** The node this edge goes to. */
     private LotNode endNode;
-    /** The metric for the node, defaults to 0 */
+    /** The metric for the edge, defaults to 0 */
     private double metric;
-    /** User defined attributes of the node, defaults to empty */
+    /** User defined attributes of the edge, defaults to empty */
     protected HashMap<String,String> attributes;
     
     //=========================================================================

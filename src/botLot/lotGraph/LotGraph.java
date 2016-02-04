@@ -26,7 +26,7 @@ public class LotGraph {
 	/** The nodes we currently have. */
 	private ArrayList<LotNode> nodes;
 
-	/**
+	/*
 	 * stuff for id generation
 	 */
 	/** Random number generator for making new id's */
@@ -657,7 +657,11 @@ public class LotGraph {
 	public void removeNode(LotNode nodeToRemove) throws LotGraphException {
 		if (this.hasNode(nodeToRemove)) {
 			this.getNodes().remove(nodeToRemove);
-			//TODO:: go through all edges, removing this node from them
+			for(int i = 0; i < this.getEdgeList().size(); i++){
+				if(this.getEdge(i).getEndNode() == nodeToRemove){
+					this.getEdge(i).setEndNode(null);
+				}
+			}
 		} else {
 			throw new LotGraphException("The node given is not within sotred data.");
 		}

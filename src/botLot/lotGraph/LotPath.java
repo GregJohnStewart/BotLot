@@ -212,6 +212,18 @@ public class LotPath {
 		return false;
 	}
 	
+	/**
+	 * Determines if this path is longer than the path given.
+	 * <p>
+	 * Wrapper for {@link #isShorter(LotPath)}
+	 * 
+	 * @param pathIn	The path we are testing against.
+	 * @return	If this path is longer than the path given.
+	 */
+	public boolean isLonger(LotPath pathIn){
+		return !this.isShorter(pathIn);
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
