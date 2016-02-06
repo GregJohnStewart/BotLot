@@ -224,6 +224,10 @@ public class LotPath {
 		return !this.isShorter(pathIn);
 	}
 	
+	public boolean hasWaypoint(LotNode nodeIn){
+		//TODO:: do this
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

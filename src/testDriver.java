@@ -46,7 +46,7 @@ public class testDriver {
 		if(needNewMap){
 			System.out.println("Adding new nodes...");
 
-			for (int i = 0; i <= 10; i++) {
+			for (int i = 0; i <= 13; i++) {
 				// System.out.println("...");
 				System.out.println("New Node: " + navigator.mainGraph.createNodeGiveId());
 				navigator.mainGraph.getNode(i).setActNumEdges(1);
@@ -55,7 +55,7 @@ public class testDriver {
 			}
 
 			navigator.mainGraph.getNode(1).setActNumEdges(2);
-			navigator.mainGraph.getNode(2).setActNumEdges(3);
+			navigator.mainGraph.getNode(2).setActNumEdges(4);
 			navigator.mainGraph.getNode(3).setActNumEdges(3);
 			navigator.mainGraph.getNode(7).setActNumEdges(2);
 
@@ -73,9 +73,7 @@ public class testDriver {
 			navigator.mainGraph.getEdgeFromTo(1, 2).setMetric(ThreadLocalRandom.current().nextInt(1, 10 + 1));
 			navigator.mainGraph.createEdge(2, 3);
 			navigator.mainGraph.getEdgeFromTo(2, 3).setMetric(ThreadLocalRandom.current().nextInt(1, 10 + 1));
-			navigator.mainGraph.createEdge(3, 0);
-			navigator.mainGraph.getEdgeFromTo(3, 0).setMetric(ThreadLocalRandom.current().nextInt(1, 10 + 1));
-
+			
 			navigator.mainGraph.createEdge(1, 1);
 			navigator.mainGraph.getEdgeFromTo(1, 1).setMetric(ThreadLocalRandom.current().nextInt(1, 10 + 1));
 			navigator.mainGraph.createEdge(2, 1);
@@ -103,6 +101,16 @@ public class testDriver {
 			navigator.mainGraph.createEdge(10, 8);
 			navigator.mainGraph.getEdgeFromTo(10, 8).setMetric(ThreadLocalRandom.current().nextInt(1, 10 + 1));
 			
+			navigator.mainGraph.createEdge(3, 11);
+			navigator.mainGraph.getEdgeFromTo(3, 11).setMetric(ThreadLocalRandom.current().nextInt(1, 10 + 1));
+			navigator.mainGraph.createEdge(11, 3);
+			navigator.mainGraph.getEdgeFromTo(11, 3).setMetric(ThreadLocalRandom.current().nextInt(1, 10 + 1));
+			
+			navigator.mainGraph.createEdge(2, 12);
+			navigator.mainGraph.getEdgeFromTo(2, 12).setMetric(ThreadLocalRandom.current().nextInt(1, 10 + 1));
+			navigator.mainGraph.createEdge(12, 13);
+			navigator.mainGraph.getEdgeFromTo(12, 13).setMetric(ThreadLocalRandom.current().nextInt(1, 10 + 1));
+			
 			System.out.println("Edges:");
 			for (int i = 0; i < navigator.mainGraph.getEdgeList().size(); i++) {
 				System.out.println("\t" + navigator.mainGraph.getEdgeList().get(i).toString());
@@ -128,7 +136,7 @@ public class testDriver {
 		System.out.println(navigator.mainGraph.getASCIIGraph(true));
 
 		System.out.println("Calculating path...");
-		navigator.calcNewPath(navigator.mainGraph.getNode(3));
+		navigator.calcNewPath(navigator.mainGraph.getNode(11));
 		System.out.println("\tDone.");
 		System.out.println("Path found: " + navigator.getCurPath().toString());
 

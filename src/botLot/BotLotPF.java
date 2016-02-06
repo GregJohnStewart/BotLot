@@ -48,8 +48,8 @@ public class BotLotPF {
 		
 		//determine what algorithm to use.....
 		System.out.println("\tnode/edge ratio: " + lotIn.mainGraph.getNodeEdgeRatio() + "\n\tThreshhold: " + ratioThreshHold);
-		if(lotIn.mainGraph.getNodeEdgeRatio() >= ratioThreshHold){
-		//if(true){//testing
+		//if(lotIn.mainGraph.getNodeEdgeRatio() >= ratioThreshHold){
+		if(true){//testing
 			System.out.println("\tRatio within bounds. Doing random path gen.");
 			/*If about the same amount of nodes to edges, get best of a few random path gens
 			 * 
@@ -122,6 +122,10 @@ public class BotLotPF {
 			int edgeIndexInTempListToGoDown = 0;
 			lastNode = tempNode;
 			while(tempNode != lotIn.getDestNode() && tempNode.getNumEdges() > 0){
+				//TODO:: do this better (simply retry w/o throwing exception)
+				if(tempPath.hasWaypoint(tempNode)){
+					throw new BotLotPFException(eolString);
+				}
 				//System.out.println("\tEdges: " + tempEdgeList.toString() + " Size: "+ tempEdgeList.size() +"\n\ttempNode: " + tempNode.toString());
 				//System.out.println("\tGetting random edge...");
 				if(tempNode.getNumEdges() == 1){//if there is only one path
