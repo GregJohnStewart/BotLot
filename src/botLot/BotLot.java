@@ -784,17 +784,22 @@ public class BotLot{
 	}//getCurPath()
 	
 	/**
-	 * Checks the continuity of {@link #curPath}.
+	 * Checks the continuity of {@link #curPath}, and if it matches up with where we are, and where we want to go.
 	 * <p>
 	 * I.E., if all the edges lead through nodes that lead to the other nodes correctly.
 	 * 
 	 * @return	If {@link #curPath} is valid or not.
 	 */
 	public boolean curPathIsValid(){
-		//TODO::  check for curNode and destNode things
-		if(this.getCurPath() == null || this.getCurPath() == new LotPath()){
+		//curPath is null
+		if(!this.hasPath()){
 			return false;
 		}
+		//if it doesnt start at curNode, or doesnt end up at destNode
+		if(!this.getCurNode().hasEdge(this.getCurPath().path.get(0)) | !(this.getCurPath().path.getLast().getEndNode() == this.getDestNode())){
+			return false;
+		}
+		//if it is continuous or not
 		return this.getCurPath().pathIsValid();
 	}//curPathIsValid()
 	
@@ -822,8 +827,7 @@ public class BotLot{
 				}
 				return newPath;
 			}catch(BotLotPFException e){
-				System.out.println("FATAL ERR- calcNewPath(). This should not happen. Error: " + e.getMessage());
-				System.exit(1);
+				throw new BotLotException("There is no path between curNode and destination node. Or something broke in the path finiding (unlikely).");
 			}
 		}
 		if(!this.hasCurNode() && !this.hasDestNode() && !this.curNodeHasEdges()){

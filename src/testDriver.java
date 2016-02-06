@@ -46,7 +46,7 @@ public class testDriver {
 		if(needNewMap){
 			System.out.println("Adding new nodes...");
 
-			for (int i = 0; i <= 13; i++) {
+			for (int i = 0; i <= 14; i++) {
 				// System.out.println("...");
 				System.out.println("New Node: " + navigator.mainGraph.createNodeGiveId());
 				navigator.mainGraph.getNode(i).setActNumEdges(1);
@@ -58,6 +58,8 @@ public class testDriver {
 			navigator.mainGraph.getNode(2).setActNumEdges(4);
 			navigator.mainGraph.getNode(3).setActNumEdges(3);
 			navigator.mainGraph.getNode(7).setActNumEdges(2);
+			navigator.mainGraph.getNode(13).setActNumEdges(0);
+			navigator.mainGraph.getNode(14).setActNumEdges(0);
 
 			System.out.println("Nodes:");
 
@@ -124,6 +126,16 @@ public class testDriver {
 			System.out.println("Unable to set the current node. Error: " + e.getMessage());
 			System.exit(1);
 		}
+		System.out.println("Current node: " + navigator.getCurNode().toString());
+
+		System.out.println("Setting destination node...");
+		try {
+			navigator.setDestNode(14);
+		} catch (BotLotException e) {
+			System.out.println("Unable to set the Destination node. Error: " + e.getMessage());
+			System.exit(1);
+		}
+		System.out.println("Destination node: " + navigator.getDestNode().toString());
 		
 		if (navigator.mainGraph.graphIsComplete()) {
 			System.out.println("Graph is complete.");
@@ -142,16 +154,17 @@ public class testDriver {
 		}
 		
 		System.out.println("Calculating path...");
-		navigator.calcNewPath(navigator.mainGraph.getNode(11));
-		System.out.println("\tDone.");
-		System.out.println("Path found: " + navigator.getCurPath().toString());
-
-		System.out.println("Following path...");
-		navigator.movedToEndOfPath();
-		System.out.println("\tDone.");
-		System.out.println("Ended up at: " + navigator.getCurNode().toString());
-		
-		
+		try{
+			navigator.calcNewPath();
+			System.out.println("\tDone.");
+			System.out.println("Path found: " + navigator.getCurPath().toString());
+			System.out.println("Following path...");
+			navigator.movedToEndOfPath();
+			System.out.println("\tDone.");
+			System.out.println("Ended up at: " + navigator.getCurNode().toString());
+		}catch(BotLotException e){
+			System.out.println("Error: " + e.getMessage());
+		}
 		
 		System.out.println("Program complete.");
 

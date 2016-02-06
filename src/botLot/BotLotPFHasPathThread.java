@@ -17,15 +17,13 @@ class BotLotPFHasPathThread extends Thread {
 	private ArrayList<LotNode> finished;
 	private ArrayList<LotNode> connected;
 	private ArrayList<LotNode> temporary;
-	private LotNode ourNode;
 	
 	
-	BotLotPFHasPathThread(String name, ArrayList<LotNode> finList, ArrayList<LotNode> connList, ArrayList<LotNode> tempList, LotNode ourNodeIn){
+	BotLotPFHasPathThread(String name, ArrayList<LotNode> finList, ArrayList<LotNode> connList, ArrayList<LotNode> tempList){
 		this.threadName = name;
 		this.finished = finList;
 		this.connected = connList;
 		this.temporary = tempList;
-		this.ourNode = ourNodeIn;
 	}
 	
 	@Override
@@ -37,15 +35,15 @@ class BotLotPFHasPathThread extends Thread {
 			}
 		}
 		//put node in nodesFinished and remove it from nodesConnected
-		this.finished.add(ourNode);
+		
 	}
 	
 	public void start (){
-	      if (t == null){
-	         t = new Thread (this, this.threadName);
-	         t.start();
-	      }
-	   }
+		if (t == null){
+			t = new Thread (this, this.threadName);
+			t.start();
+		}
+	}
 	
 	public void setThreadName(String newName){
 		this.threadName = newName;

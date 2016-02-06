@@ -632,9 +632,8 @@ public class LotNode{
 	@Override
 	public String toString() {
 		final int maxLen = 10;
-		return "LotNode [id=" + id + ", edges=" + (edges != null ? toString(edges, maxLen) : null) + ", actNumEdges="
-				+ actNumEdges + ", attributes=" + (attributes != null ? toString(attributes.entrySet(), maxLen) : null)
-				+ "]";
+		return "LotNode [id=" + id + ", actNumEdges=" + actNumEdges + ", attributes=" + (attributes != null ? toString(attributes.entrySet(), maxLen) : null)
+				+ ", edges=" + (edges != null ? toString(edges, maxLen) : null) + "]";
 	}//toString
 
 	private String toString(Collection<?> collection, int maxLen) {

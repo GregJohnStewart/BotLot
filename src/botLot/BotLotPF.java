@@ -333,18 +333,33 @@ public class BotLotPF {
 				//	essentially does this by emptying the list as it goes, saving memory and an index to keep track of
 				es = Executors.newCachedThreadPool();
 				while(nodesConnected.size() != 0){
-					if(nodesConnected.get(0).getConnectedNodes().contains(lotIn.getDestNode())){
-						return true;
+					//TODO:: this sometimes throws a null pointer exception (nodesConnected.get(0) == null). figure out why.
+					LotNode curNode = null;
+					try{
+						curNode = nodesConnected.get(0);
+					}catch(NullPointerException e){
+						return hasPath(lotIn);
 					}
+					System.out.println("On: " + curNode);
+					if(curNode.getConnectedNodes().contains(lotIn.getDestNode())){//if we found the node we are going to
+						System.out.println("\tFound! This node connects to the destination node.");
+						return true;
+					}else if(nodesFinished.contains(curNode)){//in case we get to a node already finished
+						nodesConnected.remove(0);
+						continue;
+					}
+					//so we don't go back on this one
+					nodesFinished.add(curNode);
+					
 					es.execute(new BotLotPFHasPathThread(
-							"BotLotPFHasPathThread-" + nodesConnected.get(0).getId(),
+							"BotLotPFHasPathThread-" + curNode.getId(),
 							nodesFinished,
-							nodesConnected.get(0).getConnectedNodes(),
-							tempList,
-							nodesConnected.get(0)
+							curNode.getConnectedNodes(),
+							tempList
 							));
 					nodesConnected.remove(0);
 				}
+				System.out.println("done with this set.");
 				es.shutdown();
 				try {
 					es.awaitTermination(minsToWait, TimeUnit.MINUTES);
