@@ -1441,7 +1441,148 @@ public class LotGraph {
 		}
 		return false;
 	}// hasEdgeBothWays(String, String)
-
+	
+	/**
+	 *  Gets all the edges pointing to a particular node.
+	 *  
+	 * @param nodeIn	The the node we are getting the edges to.
+	 * @return	All the edges pointing to the node given.
+	 * @throws LotGraphException	If the node given is not found.
+	 */
+	public ArrayList<LotEdge> getEdgesToNode(LotNode nodeIn) throws LotGraphException{
+		if(this.hasNode(nodeIn)){
+			if(!this.hasEdgeToNode(nodeIn)){
+				return new ArrayList<LotEdge>();
+			}
+			ArrayList<LotEdge> edgesToNode = new ArrayList<LotEdge>();
+			for(LotNode curNode : this.getNodes()){
+				if(curNode.hasEdgeTo(nodeIn)){
+					for(LotEdge curEdge : curNode.getEdges()){
+						if(curEdge.getEndNode() == nodeIn){
+							edgesToNode.add(curEdge);
+						}
+					}
+				}//if something goes to the node given
+			}//main loop
+			return edgesToNode;
+		}else{
+			throw new LotGraphException("The id given does not belong to any held nodes.");
+		}
+	}
+	
+	/**
+	 * Gets all the edges pointing to a particular node.
+	 * 
+	 * @param nodeIdIn	The Id of the node we are getting the edges to.
+	 * @return	All the edges pointing to the node given.
+	 * @throws LotGraphException	If the node given is not found.
+	 */
+	public ArrayList<LotEdge> getEdgesToNode(String nodeIdIn) throws LotGraphException{
+		if(this.hasNode(nodeIdIn)){
+			return this.getEdgesToNode(this.getNode(nodeIdIn));
+		}else{
+			throw new LotGraphException("The id given does not belong to any held nodes.");
+		}
+	}
+	
+	/**
+	 * Gets all the edges pointing to a particular node.
+	 * 
+	 * @param nodeIndexIn	The index of the node we care about.
+	 * @return	All the edges pointing to a particular node.
+	 * @throws LotGraphException	If the node given is not found.
+	 */
+	public ArrayList<LotEdge> getEdgesToNode(int nodeIndexIn) throws LotGraphException{
+		if(this.hasNode(nodeIndexIn)){
+			return this.getEdgesToNode(this.getNode(nodeIndexIn));
+		}else{
+			throw new LotGraphException("The id given does not belong to any held nodes.");
+		}
+	}
+	
+	/**
+	 * Determines if there are edges pointing to the given node.
+	 * 
+	 * @param nodeIn	The node we are testing.
+	 * @return	If there are any edges pointing to the given node.
+	 * @throws LotGraphException	If the node given is not within the dataset.
+	 */
+	public boolean hasEdgeToNode(LotNode nodeIn) throws LotGraphException{
+		if(this.hasNode(nodeIn)){
+			for(LotNode curNode : this.getNodes()){
+				if(curNode.hasEdgeTo(nodeIn)){
+					return true;
+				}//if something goes to the node given
+			}//main loop
+		}else{
+			throw new LotGraphException("The given node is not within the dataset.");
+		}
+		return false; 
+	}
+	
+	/**
+	 * Determines if there are edges pointing to the given node.
+	 * 
+	 * @param nodeIdIn	The id of the node we are testing.
+	 * @return	If the node has any edges going to it.
+	 * @throws LotGraphException	If the node given is not within the dataset.
+	 */
+	public boolean hasEdgeTo(String nodeIdIn) throws LotGraphException{
+		if(this.hasNode(nodeIdIn)){
+			return this.hasEdgeToNode(this.getNode(nodeIdIn));
+		}else{
+			throw new LotGraphException("The id given does not belong to any held nodes.");
+		}
+	}
+	
+	/**
+	 * Determines if there are edges pointing to the given node.
+	 * 
+	 * @param nodeIndexIn	The index of the node we are testing.
+	 * @return	If the node has any edges going to it.
+	 * @throws LotGraphException	If the node given is not within the dataset.
+	 */
+	public boolean hasEdgeToNode(int nodeIndexIn) throws LotGraphException{
+		if(this.hasNode(nodeIndexIn)){
+			return this.hasEdgeToNode(this.getNode(nodeIndexIn));
+		}else{
+			throw new LotGraphException("The id given does not belong to any held nodes.");
+		}
+	}
+	
+	/**
+	 * Gets the number of edges the node has going to it.
+	 * 
+	 * @param nodeIn	The node we are testing.
+	 * @return	The number of edges going to the node.
+	 * @throws LotGraphException	If that node is not within the dataset.
+	 */
+	public int getNumEdgesToNode(LotNode nodeIn) throws LotGraphException{
+		return this.getEdgesToNode(nodeIn).size();
+	}
+	
+	/**
+	 * Gets the number of edges the node has going to it.
+	 * 
+	 * @param nodeIdIn	The id of the node we are testing.
+	 * @return	The number of edges going to the node.
+	 * @throws LotGraphException	If that node is not within the dataset.
+	 */
+	public int getNumEdgesToNode(String nodeIdIn) throws LotGraphException{
+		return this.getEdgesToNode(nodeIdIn).size();
+	}
+	
+	/**
+	 * Gets the number of edges the node has going to it.
+	 * 
+	 * @param nodeIndexIn	The index of the node we are testing.
+	 * @return	The number of edges going to the node.
+	 * @throws LotGraphException	If that node is not within the dataset.
+	 */
+	public int getNumEdgesToNode(int nodeIndexIn) throws LotGraphException{
+		return this.getEdgesToNode(nodeIndexIn).size();
+	}
+	
 	/**
 	 * Checks to see if the node list is empty
 	 * 
@@ -1568,7 +1709,7 @@ public class LotGraph {
 	 * Returns an ASCII representation of the graph, with 1's representing
 	 * filled edges, and 0's representing empty edges.
 	 * 
-	 *TODO:: test with numNodes greater than 9
+	 *TODO:: fix with numNodes greater than 9
 	 * 
 	 * @param outputNodeList Whether or not to add the node list after the graph.
 	 * @return An ASCII representation of the graph.
@@ -1578,6 +1719,9 @@ public class LotGraph {
 		int digits = String.valueOf(numNodes).length();
 		String output = "";
 		String topBar = "";
+		
+		//TODO:: make 2d array of strings to organize outputs, then concat that to regular string
+		
 		for(int i = 0; i < digits; i++){
 			output += " ";
 			topBar += "-";
