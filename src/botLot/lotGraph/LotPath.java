@@ -224,9 +224,37 @@ public class LotPath {
 		return !this.isShorter(pathIn);
 	}
 	
+	/**
+	 * Determines if the path hits the node given during its travel.
+	 * 
+	 * @param nodeIn	The node to check for.
+	 * @return	If we hit the node or not.
+	 */
 	public boolean hasWaypoint(LotNode nodeIn){
-		//TODO:: do this
-	}
+		return this.hasWaypoint(nodeIn, true);
+	}//hasWaypoint(LotNode)
+	
+	/**
+	 * Determines if the path hits the node given during its travel.
+	 * 
+	 * @param nodeIn	The node to check for.
+	 * @param countLast	If you want to account for the last node.
+	 * @return	If we hit the node or not.
+	 */
+	public boolean hasWaypoint(LotNode nodeIn, boolean countLast){
+		//loop through path, checking end nodes
+		for(LotEdge curEdge : this.path){
+			
+			if(curEdge.getEndNode() == nodeIn){
+				if(!countLast & curEdge == this.path.getLast()){
+					
+					return false;
+				}
+				return true;
+			}
+		}
+		return false;
+	}//hasWaypoint(LotNode)
 	
 	@Override
 	public int hashCode() {

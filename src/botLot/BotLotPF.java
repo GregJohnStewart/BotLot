@@ -1,8 +1,8 @@
 package botLot;
 import java.util.ArrayList;//for dealing with the graph structure itself.
-import java.util.Random;//for the random path gen.
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
 import botLot.lotGraph.*;
@@ -39,6 +39,7 @@ public class BotLotPF {
 	 * @return	A new path from the current node in lotIn to the destination node in that structure.
 	 * @throws BotLotPFException	If the LotGraph given is not ready for path finding.
 	 */
+	@SuppressWarnings("unused")
 	public static LotPath getShortestPath(BotLot lotIn) throws BotLotPFException{
 		if(!readyPathCheck(lotIn)){
 			throw new BotLotPFException(notReadyString);
@@ -92,7 +93,16 @@ public class BotLotPF {
 		throw new NotImplementedException();
 	}//doDijkstra(BotLot)
 	
-	
+	/**
+	 * Normalized random num gen. Exclusive of max, because used with indexes.
+	 * 
+	 * @param min	The minimum value you want.
+	 * @param max	The top cap you want. Will never be greater than (max - 1). 
+	 * @return	A random value between these two.
+	 */
+	private static int getRandNum(int min, int max){
+		return ThreadLocalRandom.current().nextInt(min, max);
+	}
 	
 	/**
 	 * Finds a path by randomly selecting edges on each node.
@@ -115,27 +125,37 @@ public class BotLotPF {
 		LotPath tempPath = new LotPath();
 		LotNode tempNode = lotIn.getCurNode();
 		LotNode lastNode = null;
-		Random rand = new Random();
+		int loopCount = 0;//# times caught in loop
 		//System.out.println("Calculating new path...");
 		try{
 			//System.out.println("start loop...");
 			int edgeIndexInTempListToGoDown = 0;
 			lastNode = tempNode;
+			
 			while(tempNode != lotIn.getDestNode() && tempNode.getNumEdges() > 0){
-				//TODO:: do this better (simply retry w/o throwing exception)
-				if(tempPath.hasWaypoint(tempNode)){
-					throw new BotLotPFException(eolString);
+				//TODO:: have hashmap to tell it not to go down trapping edge again
+				if(tempPath.hasWaypoint(tempNode, false) && tempPath.size() > 1){
+					//System.out.println("In loop. Retrying...");
+					loopCount++;
+					tempPath = new LotPath();
+					tempNode = lotIn.getCurNode();
+					lastNode = tempNode;
+					edgeIndexInTempListToGoDown = 0;
 				}
-				//System.out.println("\tEdges: " + tempEdgeList.toString() + " Size: "+ tempEdgeList.size() +"\n\ttempNode: " + tempNode.toString());
+
 				//System.out.println("\tGetting random edge...");
+				//System.out.println("\t\t# edges: " + tempNode.getNumEdges());
+				//TODO:: account for no edges
 				if(tempNode.getNumEdges() == 1){//if there is only one path
 					edgeIndexInTempListToGoDown = 0;
+					//System.out.println("\t\tOnly one path.");
 				}else{
-					edgeIndexInTempListToGoDown = (rand.nextInt((tempNode.getNumEdges() - 1)));
+					//System.out.println("\t\tMultiple paths.");
+					edgeIndexInTempListToGoDown = getRandNum(0, tempNode.getNumEdges());
 					//don't go down edge we came from
 					if(tempNode.hasEdgeTo(lastNode)){
 						while(edgeIndexInTempListToGoDown == tempNode.getEdgeIndex(tempNode.getEdgeTo(lastNode))){
-							edgeIndexInTempListToGoDown = (rand.nextInt((tempNode.getNumEdges() - 1)));
+							edgeIndexInTempListToGoDown = getRandNum(0, tempNode.getNumEdges());
 						}
 					}
 				}
@@ -174,13 +194,13 @@ public class BotLotPF {
 						}
 					}
 				}
-			}
+				//System.out.println("\tEOI. Edges: " + tempPath.toString() + " tempNode: " + tempNode.toString());
+			}//running loop
 		}catch(LotGraphException err){
 			throw new BotLotPFException("There was an error when trying to generate a random path. Error: " + err.getMessage());
 			//System.exit(1);
 		}
-		//remove loops; for every node, if there are duplicates and everything in between.
-		tempPath.removeLoops();
+		System.out.println("# times caught in loop: " + loopCount);
 		return tempPath;
 	}//findRandomPath(BotLot)
 	

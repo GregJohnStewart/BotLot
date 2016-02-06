@@ -135,6 +135,12 @@ public class testDriver {
 				"# Nodes: " + navigator.mainGraph.getNumNodes() + "\n# Edges: " + navigator.mainGraph.getNumEdges());
 		System.out.println(navigator.mainGraph.getASCIIGraph(true));
 
+		if(useXML){
+			System.out.println("Saving data to XML...");
+			dataSource.saveDataToSource(navigator.mainGraph);
+			System.out.println("\tDone.");
+		}
+		
 		System.out.println("Calculating path...");
 		navigator.calcNewPath(navigator.mainGraph.getNode(11));
 		System.out.println("\tDone.");
@@ -145,11 +151,7 @@ public class testDriver {
 		System.out.println("\tDone.");
 		System.out.println("Ended up at: " + navigator.getCurNode().toString());
 		
-		if(useXML){
-			System.out.println("Saving data to XML...");
-			dataSource.saveDataToSource(navigator.mainGraph);
-			System.out.println("\tDone.");
-		}
+		
 		
 		System.out.println("Program complete.");
 
