@@ -523,7 +523,7 @@ public class LotNode{
 	public ArrayList<LotEdge> getEdgesTo(LotNode toNode){
 		if(this.hasEdgeTo(toNode)){
 			ArrayList<LotEdge> edgesToNode = new ArrayList<LotEdge>();
-			for(LotEdge curEdge : this.getEdges()){
+			for(LotEdge curEdge : this.getConnectedEdges()){
 				if(curEdge.getEndNode() == toNode){
 					edgesToNode.add(curEdge);
 				}
@@ -543,7 +543,7 @@ public class LotNode{
 	public ArrayList<LotEdge> getEdgesTo(String toNodeId){
 		if(this.hasEdgeTo(toNodeId)){
 			ArrayList<LotEdge> edgesToNode = new ArrayList<LotEdge>();
-			for(LotEdge curEdge : this.getEdges()){
+			for(LotEdge curEdge : this.getConnectedEdges()){
 				if(curEdge.getEndNode().getId().equals(toNodeId)){
 					edgesToNode.add(curEdge);
 				}

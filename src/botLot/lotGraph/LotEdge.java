@@ -255,8 +255,6 @@ public class LotEdge{
 		return !this.isShorter(edgeIn);
 	}
 	
-	
-
 	@Override
 	public String toString() {
 		return "LotEdge [id=" + id + ", endNode=" + endNode.getId() + ", metric=" + metric + ", attributes=" + attributes + "]";

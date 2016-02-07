@@ -142,10 +142,7 @@ public class testDriver {
 		} else {
 			System.out.println("Graph is NOT complete.");
 		}
-
-		System.out.println(
-				"# Nodes: " + navigator.mainGraph.getNumNodes() + "\n# Edges: " + navigator.mainGraph.getNumEdges());
-		System.out.println(navigator.mainGraph.getASCIIGraph(true));
+		System.out.println(navigator.mainGraph.getASCIIGraph(true, true));
 
 		if(useXML){
 			System.out.println("Saving data to XML...");

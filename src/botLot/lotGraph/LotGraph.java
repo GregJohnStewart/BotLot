@@ -1710,28 +1710,31 @@ public class LotGraph {
 	 * Returns an ASCII representation of the graph, with 1's representing
 	 * filled edges, and 0's representing empty edges.
 	 * 
-	 *TODO:: fix with numNodes greater than 9
-	 * 
+	 * @param outputCounts Whether ort not to output the counts of nodes and edges at the top of the graph.
 	 * @param outputNodeList Whether or not to add the node list after the graph.
 	 * @return An ASCII representation of the graph.
 	 */
-	public String getASCIIGraph(boolean outputNodeList) {
+	public String getASCIIGraph(boolean outputCounts, boolean outputNodeList) {
 		int numNodes = this.getNumNodes();
 		int maxDigits = String.valueOf(numNodes).length();
 		String[][] outputArray = new String[numNodes + 2][ numNodes + 2];
 		String outputStr = "";
 		
+		if(outputCounts){
+			outputStr += "# Nodes: " + this.getNumNodes() + "\n# Edges: " + this.getNumEdges() + "\n";
+		}
+		
 		//null out graph
 		for(int i = 0; i < outputArray.length; i++){
 			for(int j = 0; j < outputArray.length; j++){
-				outputArray[i][j] = " ";
+				outputArray[i][j] = "";
 			}
 		}
 		//fill graph
-		for(int i = 3; i < outputArray.length; i++){
-			for(int j = 3; j < outputArray.length; j++){
+		for(int i = 2; i < outputArray.length; i++){
+			for(int j = 2; j < outputArray.length; j++){
 				try {
-					outputArray[i][j] = "" + this.getNode(i - 3).getNumEdgesTo(this.getNode(i - 3));
+					outputArray[i][j] = "" + this.getNode(i - 2).getNumEdgesTo(this.getNode(j - 2));
 				} catch (LotGraphException e) {
 					e.printStackTrace();
 					System.out.println("FATAL ERR- getASCIIGraph(boolean)- This should not happen. Error: " + e.getMessage());
@@ -1740,8 +1743,8 @@ public class LotGraph {
 			}
 		}
 		//calculate number of digits to account for
-		for(int i = 3; i < outputArray.length; i++){
-			for(int j = 3; j < outputArray.length; j++){
+		for(int i = 2; i < outputArray.length; i++){
+			for(int j = 2; j < outputArray.length; j++){
 				if(String.valueOf(outputArray[i][j]).length() > maxDigits){
 					maxDigits = String.valueOf(outputArray[i][j]).length();
 				}
@@ -1749,18 +1752,21 @@ public class LotGraph {
 		}
 		//fix these all in the graph
 		for(int i = 0; i < outputArray.length; i++){//do scaffolding
-			for(int j = 0; j < maxDigits;j++){
+			for(int j = 0; j < (maxDigits + 1);j++){
 				outputArray[i][1] += "-";
 			}
 			outputArray[1][i] = "|";
 		}
-		String format = "%"+ maxDigits +"d";
+		for(int j = 0; j < (maxDigits + 1);j++){
+			outputArray[0][0] += " ";
+		}
+		String format = "%"+ (maxDigits + 1) +"d";
 		for(int i = 2; i < outputArray.length; i++){//setup numbers
 			outputArray[i][0] = String.format(format, (i - 2));
-			outputArray[0][i] = "" + (i - 2);
+			outputArray[0][i] = String.format(format, (i - 2));
 		}
-		for(int i = 3; i < outputArray.length; i++){//setup rest
-			for(int j = 3; j < outputArray.length; j++){
+		for(int i = 2; i < outputArray.length; i++){//setup rest
+			for(int j = 2; j < outputArray.length; j++){
 				outputArray[i][j] = String.format(format, Integer.parseInt(outputArray[i][j]));
 			}
 		}
@@ -1773,54 +1779,10 @@ public class LotGraph {
 			outputStr += "\n";
 		}
 		
-		/*
-		for(int i = 0; i < digits; i++){
-			output += " ";
-			topBar += "-";
-		}
-		output += "|";
-		topBar += "-";
-		for (int i = 0; i < numNodes; i++) {
-			output += i;
-			for(int j = 0; j < String.valueOf(i).length(); j++){
-				topBar += "-";
-			}
-			for(int j = 0; j < digits - String.valueOf(numNodes).length(); j++){
-				output += " ";
-				topBar += "-";
-			}
-			output += " ";
-			topBar += "-";
-		}
-		output = output.substring(0, output.length()-1);
-		topBar = topBar.substring(0, topBar.length()-1);
-		output += "\n" + topBar;
-		for(int i = 0; i < numNodes; i++){
-			output += "\n" + i;
-			for(int j = 0; j < String.valueOf(i).length() - String.valueOf(numNodes).length(); j++){
-				output += " ";
-			}
-			output += "|";
-			for(int j = 0; j < numNodes; j++){
-				//TODO:: print out actual number of edges to that node
-				if(this.hasEdgeFromTo(j, i)){
-					output += "1 ";
-				} else {
-					output += "0 ";
-				}
-				for(int k = 0; k < String.valueOf(j).length() - String.valueOf(numNodes).length(); k++){
-					output += " ";
-				}
-			}
-			output = output.substring(0, output.length()-1);
-		}
-		*/
-		
-		
 		if(outputNodeList){
 			int i = 0;
 			for(LotNode curNode : this.getNodes()){
-				outputStr += "\n\t" + i + " - " + curNode.toString();
+				outputStr += "\n\t" + String.format(format,i) + " - " + curNode.toString();
 				i++;
 			}
 		}
