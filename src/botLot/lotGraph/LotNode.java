@@ -515,6 +515,98 @@ public class LotNode{
 	}//hasEdgeTo(String)
 	
 	/**
+	 * Gets a list of edges going to a specified node.
+	 * 
+	 * @param toNode	The node to get edges to.
+	 * @return	A list of edges going to the specified node.
+	 */
+	public ArrayList<LotEdge> getEdgesTo(LotNode toNode){
+		if(this.hasEdgeTo(toNode)){
+			ArrayList<LotEdge> edgesToNode = new ArrayList<LotEdge>();
+			for(LotEdge curEdge : this.getEdges()){
+				if(curEdge.getEndNode() == toNode){
+					edgesToNode.add(curEdge);
+				}
+			}//main loop
+			return edgesToNode;
+		}else{
+			return new ArrayList<LotEdge>();
+		}
+	}
+	
+	/**
+	 * Gets a list of edges going to a specified node.
+	 * 
+	 * @param toNodeId	The node to get edges to.
+	 * @return	A list of edges going to the specified node.
+	 */
+	public ArrayList<LotEdge> getEdgesTo(String toNodeId){
+		if(this.hasEdgeTo(toNodeId)){
+			ArrayList<LotEdge> edgesToNode = new ArrayList<LotEdge>();
+			for(LotEdge curEdge : this.getEdges()){
+				if(curEdge.getEndNode().getId().equals(toNodeId)){
+					edgesToNode.add(curEdge);
+				}
+			}//main loop
+			return edgesToNode;
+		}else{
+			return new ArrayList<LotEdge>();
+		}
+	}
+	
+	/**
+	 * Gets the number of edges that go to a specified node from this node.
+	 * 
+	 * @param toNode	The node to get the number of edges to.
+	 * @return	The number of edges that go to a specified node from this node.
+	 */
+	public int getNumEdgesTo(LotNode toNode){
+		return this.getEdgesTo(toNode).size();
+	}
+	
+	/**
+	 * Gets the number of edges that go to a specified node from this node.
+	 * 
+	 * @param toNodeId	The node to get the number of edges to.
+	 * @return	The number of edges to the given node.
+	 */
+	public int getNumEdgesTo(String toNodeId){
+		return this.getEdgesTo(toNodeId).size();
+	}
+	
+	/**
+	 * Gets the edge with the shortest metric to a specified node.
+	 * 
+	 * @param toNode	The node to get the shortest edge to.
+	 * @return	The shortest edge to the given node.
+	 */
+	public LotEdge getShortestEdgeTo(LotNode toNode){
+		LotEdge shortestEdge = new LotEdge("",null,Double.POSITIVE_INFINITY, null);
+		for(LotEdge curEdge : this.getEdgesTo(toNode)){
+			if(shortestEdge.isLonger(curEdge)){
+				shortestEdge = curEdge;
+			}
+		}
+		return shortestEdge;
+	}
+	
+	/**
+	 * Gets the edge with the shortest metric to a specified node.
+	 * 
+	 * @param toNodeId	The id of the node to get the shortest edge to.
+	 * @return	The shortest edge to the given node.
+	 */
+	public LotEdge getShortestEdgeTo(String toNodeId){
+		LotEdge shortestEdge = new LotEdge("",null,Double.POSITIVE_INFINITY, null);
+		for(LotEdge curEdge : this.getEdgesTo(toNodeId)){
+			if(shortestEdge.isLonger(curEdge)){
+				shortestEdge = curEdge;
+			}
+		}
+		return shortestEdge;
+	}
+	
+	/**
 	 * Gets a list of the nodes this node is connected to.
 	 * 
 	 * @return	A list of the nodes this node is connected to.

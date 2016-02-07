@@ -231,6 +231,31 @@ public class LotEdge{
 		}
 		return false;
 	}//hasAtt(String,String)
+	
+	/**
+	 * Determines if this edge is shorter than the edge given.
+	 * 
+	 * @param edgeIn	The edge we are testing against.
+	 * @return	If this edge is shorter than the edge given.
+	 */
+	public boolean isShorter(LotEdge edgeIn){
+		if(this.getMetric() < edgeIn.getMetric()){
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * Determines if this edge is longer than the edge given.
+	 * 
+	 * @param edgeIn	The edge we are testing against.
+	 * @return	If this edge is longer than the edge given.
+	 */
+	public boolean isLonger(LotEdge edgeIn){
+		return !this.isShorter(edgeIn);
+	}
+	
+	
 
 	@Override
 	public String toString() {

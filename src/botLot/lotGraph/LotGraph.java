@@ -1583,6 +1583,7 @@ public class LotGraph {
 		return this.getEdgesToNode(nodeIndexIn).size();
 	}
 	
+	
 	/**
 	 * Checks to see if the node list is empty
 	 * 
@@ -1716,12 +1717,63 @@ public class LotGraph {
 	 */
 	public String getASCIIGraph(boolean outputNodeList) {
 		int numNodes = this.getNumNodes();
-		int digits = String.valueOf(numNodes).length();
-		String output = "";
-		String topBar = "";
+		int maxDigits = String.valueOf(numNodes).length();
+		String[][] outputArray = new String[numNodes + 2][ numNodes + 2];
+		String outputStr = "";
 		
-		//TODO:: make 2d array of strings to organize outputs, then concat that to regular string
+		//null out graph
+		for(int i = 0; i < outputArray.length; i++){
+			for(int j = 0; j < outputArray.length; j++){
+				outputArray[i][j] = " ";
+			}
+		}
+		//fill graph
+		for(int i = 3; i < outputArray.length; i++){
+			for(int j = 3; j < outputArray.length; j++){
+				try {
+					outputArray[i][j] = "" + this.getNode(i - 3).getNumEdgesTo(this.getNode(i - 3));
+				} catch (LotGraphException e) {
+					e.printStackTrace();
+					System.out.println("FATAL ERR- getASCIIGraph(boolean)- This should not happen. Error: " + e.getMessage());
+					System.exit(1);
+				}
+			}
+		}
+		//calculate number of digits to account for
+		for(int i = 3; i < outputArray.length; i++){
+			for(int j = 3; j < outputArray.length; j++){
+				if(String.valueOf(outputArray[i][j]).length() > maxDigits){
+					maxDigits = String.valueOf(outputArray[i][j]).length();
+				}
+			}
+		}
+		//fix these all in the graph
+		for(int i = 0; i < outputArray.length; i++){//do scaffolding
+			for(int j = 0; j < maxDigits;j++){
+				outputArray[i][1] += "-";
+			}
+			outputArray[1][i] = "|";
+		}
+		String format = "%"+ maxDigits +"d";
+		for(int i = 2; i < outputArray.length; i++){//setup numbers
+			outputArray[i][0] = String.format(format, (i - 2));
+			outputArray[0][i] = "" + (i - 2);
+		}
+		for(int i = 3; i < outputArray.length; i++){//setup rest
+			for(int j = 3; j < outputArray.length; j++){
+				outputArray[i][j] = String.format(format, Integer.parseInt(outputArray[i][j]));
+			}
+		}
 		
+		//output graph
+		for(int i = 0; i < outputArray.length; i++){
+			for(int j = 0; j < outputArray.length; j++){
+				outputStr += "" + outputArray[j][i];
+			}
+			outputStr += "\n";
+		}
+		
+		/*
 		for(int i = 0; i < digits; i++){
 			output += " ";
 			topBar += "-";
@@ -1762,14 +1814,17 @@ public class LotGraph {
 			}
 			output = output.substring(0, output.length()-1);
 		}
+		*/
+		
+		
 		if(outputNodeList){
 			int i = 0;
 			for(LotNode curNode : this.getNodes()){
-				output += "\n\t" + i + " - " + curNode.toString();
+				outputStr += "\n\t" + i + " - " + curNode.toString();
 				i++;
 			}
 		}
-		return output;
+		return outputStr;
 	}// getASCIIGraph()
 
 	/**
