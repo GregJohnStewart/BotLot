@@ -55,7 +55,7 @@ public class testDriver {
 			}
 
 			navigator.mainGraph.getNode(1).setActNumEdges(2);
-			navigator.mainGraph.getNode(2).setActNumEdges(4);
+			navigator.mainGraph.getNode(2).setActNumEdges(5);
 			navigator.mainGraph.getNode(3).setActNumEdges(3);
 			navigator.mainGraph.getNode(7).setActNumEdges(2);
 			navigator.mainGraph.getNode(13).setActNumEdges(0);
@@ -78,6 +78,8 @@ public class testDriver {
 			
 			navigator.mainGraph.createEdge(1, 1);
 			navigator.mainGraph.getEdgeFromTo(1, 1).setMetric(ThreadLocalRandom.current().nextInt(1, 10 + 1));
+			navigator.mainGraph.createEdge(2, 1);
+			navigator.mainGraph.getEdgeFromTo(2, 1).setMetric(ThreadLocalRandom.current().nextInt(1, 10 + 1));
 			navigator.mainGraph.createEdge(2, 1);
 			navigator.mainGraph.getEdgeFromTo(2, 1).setMetric(ThreadLocalRandom.current().nextInt(1, 10 + 1));
 			navigator.mainGraph.createEdge(3, 4);
@@ -130,7 +132,7 @@ public class testDriver {
 
 		System.out.println("Setting destination node...");
 		try {
-			navigator.setDestNode(14);
+			navigator.setDestNode(5);
 		} catch (BotLotException e) {
 			System.out.println("Unable to set the Destination node. Error: " + e.getMessage());
 			System.exit(1);
@@ -148,6 +150,13 @@ public class testDriver {
 			System.out.println("Saving data to XML...");
 			dataSource.saveDataToSource(navigator.mainGraph);
 			System.out.println("\tDone.");
+		}
+		
+		
+		if(BotLotPF.hasPath(navigator, navigator.mainGraph.getNode(3), navigator.getDestNode())){
+			System.out.println("YES-------------------------------------------------------");
+		}else{
+			System.out.println("NO--------------------------------------------------------");
 		}
 		
 		System.out.println("Calculating path...");

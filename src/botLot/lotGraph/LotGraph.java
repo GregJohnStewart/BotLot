@@ -1329,6 +1329,32 @@ public class LotGraph {
 		}
 		return null;
 	}// getEdgeFromTo(int,int)
+	
+	
+	public ArrayList<LotEdge> getEdgesFromTo(LotNode fromNode, LotNode toNode) throws LotGraphException{
+		if (this.hasNode(fromNode) && this.hasNode(toNode)) {
+			ArrayList<LotEdge> edgesFromTo = new ArrayList<LotEdge>();
+			
+			for(LotEdge curEdge : fromNode.getConnectedEdges()){
+				if(curEdge.getEndNode() == toNode){
+					edgesFromTo.add(curEdge);
+				}
+			}
+			
+			return edgesFromTo;
+		} else {
+			if (!this.hasNode(fromNode) && !this.hasNode(toNode)) {
+				throw new LotGraphException("Neither nodeOne nor nodeTwo found in stored data.");
+			} else if (!this.hasNode(fromNode)) {
+				throw new LotGraphException("nodeOne not found in stored data.");
+			} else if (!this.hasNode(toNode)) {
+				throw new LotGraphException("nodeTwo not found in stored data.");
+			} else {
+				throw new LotGraphException(
+						"Unspecified error in getEdgeFromTo(LotNode,LotNode). You should not get this.");
+			}
+		}
+	}
 
 	/**
 	 * Determines if there is an edge from the first node to the second node.
@@ -1721,7 +1747,7 @@ public class LotGraph {
 		String outputStr = "";
 		
 		if(outputCounts){
-			outputStr += "# Nodes: " + this.getNumNodes() + "\n# Edges: " + this.getNumEdges() + "\n";
+			outputStr += "# Nodes: " + this.getNumNodes() + "\n# Edges: " + this.getNumEdges() + "\n  Ratio: " + this.getNodeEdgeRatio() + "\n";
 		}
 		
 		//null out graph

@@ -34,8 +34,6 @@ class BotLotPFHasPathThread extends Thread {
 				temporary.add(curNode);
 			}
 		}
-		//put node in nodesFinished and remove it from nodesConnected
-		
 	}
 	
 	public void start (){

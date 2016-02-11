@@ -17,6 +17,8 @@ import java.util.NoSuchElementException;
 public class LotPath {
 	/** the path of edges held by this object */
 	public LinkedList<LotEdge> path;
+	/** Flag to denote this should be treated as a path with infinite size. For comparison purposes. */
+	public boolean infSizeFlag = false;
 	
 	/**
 	 * Constructor that takes in a LotPath.
@@ -206,7 +208,7 @@ public class LotPath {
 	 * @return	If this path is shorter than the path given.
 	 */
 	public boolean isShorter(LotPath pathIn){
-		if(this.getPathMetric() < pathIn.getPathMetric()){
+		if(this.getPathMetric() < pathIn.getPathMetric() || !infSizeFlag){
 			return true;
 		}
 		return false;
@@ -283,6 +285,6 @@ public class LotPath {
 
 	@Override
 	public String toString() {
-		return "LotPath [metric="+this.getPathMetric()+", numEdges="+this.path.size()+" edge/metric ratio="+this.getEdgesMetricRatio()+", path=" + path + " ]";
+		return "LotPath [metric="+this.getPathMetric()+", numEdges="+this.path.size()+", edge/metric ratio="+this.getEdgesMetricRatio()+", path=" + path + " ]";
 	}
 }//class LotPath
