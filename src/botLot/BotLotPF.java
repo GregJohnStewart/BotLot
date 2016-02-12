@@ -1,5 +1,6 @@
 package botLot;
 import java.util.ArrayList;//for dealing with the graph structure itself.
+import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadLocalRandom;
@@ -246,12 +247,12 @@ public class BotLotPF {
 						try {
 							//TODO:: should this work?
 							//if(!hasPath(lotIn, curNode, tempNode) && tempNode != lotIn.getDestNode()){
-							System.out.println("Testing if there is a path from " + tempNode.toString() + " to destNode....");
+							//System.out.println("Testing if there is a path from " + tempNode.toString() + " to destNode....");
 							if(!hasPath(lotIn, tempNode, lotIn.getDestNode()) && tempNode != lotIn.getDestNode()){
-								System.out.println("\tThere isnt!");
+									//System.out.println("\tThere isnt!");
 								trapEdgeList.addAll(lotIn.mainGraph.getEdgesFromTo(curNode, tempNode));
 							}else{
-								System.out.println("\tThere is!");
+								//System.out.println("\tThere is!");
 								if(!nodesFinished.contains(tempNode) && tempNode != null){
 									tempList.add(tempNode);
 								}
@@ -290,7 +291,8 @@ public class BotLotPF {
 	 * @return	A shortest path leading to the end node.
 	 * @throws BotLotPFException	If there is no path to the end node.
 	 */
-	private static LotPath getExactPath(BotLot lotIn, LotNode thisCurNode, LotNode lastNode, ArrayList<LotEdge> trapEdges) throws BotLotPFException{
+	private static LotPath getExactPath(BotLot lotIn, LotNode thisCurNode, LotNode lastNode, HashMap<LotNode,Integer> hitCounts, ArrayList<LotEdge> trapEdges) throws BotLotPFException{
+		//System.out.println("Doing the thing!!");
 		LotPath pathOut = new LotPath();
 		//take care of special cases
 		if(thisCurNode.hasEdgeTo(lotIn.getDestNode())){//if we found the destination node
@@ -318,6 +320,29 @@ public class BotLotPF {
 			if(curEdge.getEndNode() == thisCurNode || curEdge.getEndNode() == lastNode || trapEdges.contains(curEdge)){
 				continue;
 			}
+			try {
+				if(hitCounts.containsKey(curEdge.getEndNode())){
+					//TODO:: verify this works for all cases
+					if( hitCounts.get(curEdge.getEndNode()) >= Math.pow(lotIn.mainGraph.getNumEdgesToNode(curEdge.getEndNode()),2) ){
+						continue;
+					}
+				}
+			} catch (LotGraphException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				System.out.println("FATAL ERROR- You should not get this. Error: " + e.getMessage());
+				System.exit(1);
+			}
+			
+			//add to the hashmap if need to, else increment
+			if(!hitCounts.containsKey(curEdge.getEndNode())){
+				hitCounts.put(curEdge.getEndNode(), 1);
+				System.out.println("\tNew Node.");
+			}else{
+				hitCounts.put(curEdge.getEndNode(), (hitCounts.get(curEdge.getEndNode()) + 1));
+				System.out.println("\tBeen here before. Count: " + hitCounts.get(curEdge.getEndNode()));
+			}
+			
 			//add the current edge to the path
 			tempPath = new LotPath();
 			try {
@@ -329,7 +354,7 @@ public class BotLotPF {
 			}
 			//get the path for the edge
 			try {
-				tempPath.append(getExactPath(lotIn, curEdge.getEndNode(), thisCurNode, trapEdges));
+				tempPath.append(getExactPath(lotIn, curEdge.getEndNode(), thisCurNode, hitCounts, trapEdges));
 				tempPath.removeLoops();
 				pathsMade.add(tempPath);
 			}catch(BotLotPFException e){
@@ -371,7 +396,7 @@ public class BotLotPF {
 		}
 		try{
 			System.out.println("Trap Edges: " + getTrapEdges(lotIn));
-			return getExactPath(lotIn, lotIn.getCurNode(), lotIn.getCurNode(), getTrapEdges(lotIn));
+			return getExactPath(lotIn, lotIn.getCurNode(), lotIn.getCurNode(), new HashMap<LotNode,Integer>(), getTrapEdges(lotIn));
 		}catch(BotLotPFException e){
 			if(e.getMessage().equals(eolString)){
 				e.printStackTrace();

@@ -132,7 +132,7 @@ public class testDriver {
 
 		System.out.println("Setting destination node...");
 		try {
-			navigator.setDestNode(5);
+			navigator.setDestNode(11);
 		} catch (BotLotException e) {
 			System.out.println("Unable to set the Destination node. Error: " + e.getMessage());
 			System.exit(1);
