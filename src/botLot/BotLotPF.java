@@ -287,6 +287,7 @@ public class BotLotPF {
 	 * @param lotIn	The BotLot we are dealing with.
 	 * @param thisCurNode	The node this iteration is on.
 	 * @param lastNode	The node whose iteration called this iteration.
+	 * @param hitCounts A hashmap used to determine if we have been places before, and how often.
 	 * @param trapEdges	A list of edges to not go down.
 	 * @return	A shortest path leading to the end node.
 	 * @throws BotLotPFException	If there is no path to the end node.

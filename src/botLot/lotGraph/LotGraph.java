@@ -1330,7 +1330,14 @@ public class LotGraph {
 		return null;
 	}// getEdgeFromTo(int,int)
 	
-	
+	/**
+	 * Gets a list of edges going from one node to another.
+	 * 
+	 * @param fromNode	The node we are coming from.
+	 * @param toNode	The node we are going to.
+	 * @return	A list of edges going from one node to another
+	 * @throws LotGraphException	If either node given is not in the data set.
+	 */
 	public ArrayList<LotEdge> getEdgesFromTo(LotNode fromNode, LotNode toNode) throws LotGraphException{
 		if (this.hasNode(fromNode) && this.hasNode(toNode)) {
 			ArrayList<LotEdge> edgesFromTo = new ArrayList<LotEdge>();
