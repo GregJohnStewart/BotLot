@@ -1,4 +1,4 @@
-package botLot;
+package botLot.pathFinding;
 /**
  * BotLotPFException.java
  * <p>

@@ -4,6 +4,8 @@ import java.util.LinkedList;//for dealing with the LinkedList of the path.
 
 import botLot.BotLotException;
 import botLot.lotGraph.*;
+import botLot.pathFinding.BotLotPF;
+import botLot.pathFinding.BotLotPFException;
 /**
  * BotLot.java 
  * <p>

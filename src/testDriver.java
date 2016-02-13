@@ -3,6 +3,7 @@ import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
 
 import botLot.*;
+import botLot.pathFinding.BotLotPF;
 
 public class testDriver {
 
@@ -132,7 +133,7 @@ public class testDriver {
 
 		System.out.println("Setting destination node...");
 		try {
-			navigator.setDestNode(11);
+			navigator.setDestNode(13);
 		} catch (BotLotException e) {
 			System.out.println("Unable to set the Destination node. Error: " + e.getMessage());
 			System.exit(1);
@@ -154,9 +155,9 @@ public class testDriver {
 		
 		
 		if(BotLotPF.hasPath(navigator, navigator.mainGraph.getNode(3), navigator.getDestNode())){
-			System.out.println("YES-------------------------------------------------------");
+			System.out.println("YES -------------------------------------------------------");
 		}else{
-			System.out.println("NO--------------------------------------------------------");
+			System.out.println("NO  -------------------------------------------------------");
 		}
 		
 		System.out.println("Calculating path...");

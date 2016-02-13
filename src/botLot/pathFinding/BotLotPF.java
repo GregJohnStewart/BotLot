@@ -1,4 +1,4 @@
-package botLot;
+package botLot.pathFinding;
 import java.util.ArrayList;//for dealing with the graph structure itself.
 import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
@@ -6,6 +6,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
+import botLot.BotLot;
+import botLot.BotLotException;
 import botLot.lotGraph.*;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 /**
@@ -90,8 +92,12 @@ public class BotLotPF {
 				throw new BotLotPFException(notReadyString);
 			}
 		}
-		//TODO:: use Dijkstra's algorithm to find a shortest path
-		throw new NotImplementedException();
+		//TODO:: use Dijkstra's algorithm to find a shortest p
+		LotPath pathOut = new LotPath();
+		
+		
+		
+		return pathOut;
 	}//doDijkstra(BotLot)
 	
 	/**
@@ -338,10 +344,10 @@ public class BotLotPF {
 			//add to the hashmap if need to, else increment
 			if(!hitCounts.containsKey(curEdge.getEndNode())){
 				hitCounts.put(curEdge.getEndNode(), 1);
-				System.out.println("\tNew Node.");
+				//System.out.println("\tNew Node.");
 			}else{
 				hitCounts.put(curEdge.getEndNode(), (hitCounts.get(curEdge.getEndNode()) + 1));
-				System.out.println("\tBeen here before. Count: " + hitCounts.get(curEdge.getEndNode()));
+				//System.out.println("\tBeen here before. Count: " + hitCounts.get(curEdge.getEndNode()));
 			}
 			
 			//add the current edge to the path

@@ -1,4 +1,4 @@
-package botLot;
+package botLot.pathFinding;
 
 import java.util.ArrayList;
 import botLot.lotGraph.LotNode;
