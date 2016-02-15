@@ -7,7 +7,7 @@ import botLot.BotLot;
 import botLot.lotGraph.*;
 
 /**
- * Interface to set up the methods needed for all path generation.
+ * Abstract class to set up the methods needed for all path generation.
  * <p>
  * Started: 2/13/16
  * 
@@ -48,6 +48,20 @@ public abstract class BotLotPFAlgorithm {
 	}
 	
 	/**
+	 * Constructor that initializes everything, actually everything. Including the list of nodes to avoid.
+	 * 
+	 * @param graphIn	The graph to use.
+	 * @param curNodeIn	The node we are starting at.
+	 * @param destNodeIn	The node we are going to.
+	 * @param edgesToAvoidIn	Edges to not go down ever.
+	 * @throws BotLotPFException	If curNode and/or destNode cannot be set.
+	 */
+	public BotLotPFAlgorithm(LotGraph graphIn, LotNode curNodeIn, LotNode destNodeIn, Collection<LotEdge> edgesToAvoidIn) throws BotLotPFException{
+		this(graphIn, curNodeIn, destNodeIn);
+		this.addEdgesToAvoid(edgesToAvoidIn);
+	}
+	
+	/**
 	 * Basic constructor for path finding.
 	 */
 	public BotLotPFAlgorithm(){
@@ -61,8 +75,9 @@ public abstract class BotLotPFAlgorithm {
 	 * Put the actual path finding code here, already checked for object readiness.
 	 * <p>
 	 * DO NOT CALL THIS FROM ANY OTHER CLASS THAN THE SUB CLASS YOU IMPLEMENTED THIS IN
+	 * @throws BotLotPFException 
 	 */
-	protected abstract LotPath calculatePath();
+	protected abstract LotPath calculatePath() throws BotLotPFException;
 	
 	/**
 	 * Executes this method of path finding. Checks for object readiness.
@@ -72,7 +87,8 @@ public abstract class BotLotPFAlgorithm {
 	 */
 	public LotPath findPath() throws BotLotPFException{
 		if(this.ready()){
-			return calculatePath();
+			this.addTrapEdges();
+			return this.calculatePath();
 		}else{
 			throw new BotLotPFException("Object not ready for path generation.");
 		}
@@ -296,6 +312,17 @@ public abstract class BotLotPFAlgorithm {
 	}
 	
 	/**
+	 * Uses the worker class to add trapping edges to the list of egdes not to go down.
+	 * 
+	 * @return	This object.
+	 * @throws BotLotPFException	If something is not ready or goes wrong.
+	 */
+	public BotLotPFAlgorithm addTrapEdges() throws BotLotPFException{
+		BotLotPFWorkers.addTrapEdges(this);
+		return this;
+	}
+	
+	/**
 	 * Clears the list of edges to avoid..
 	 * 
 	 * @return This object.
@@ -308,15 +335,10 @@ public abstract class BotLotPFAlgorithm {
 	/**
 	 * Determines if the object is ready to find a path.
 	 * 
-	 * @return
+	 * @return	If the object is ready to find a path.
 	 */
 	public boolean ready(){
-		if(this.hasGraph()){
-			if(this.hasCurNode() && this.hasDestNode()){
-				return true;
-			}
-		}
-		return false;
+		return BotLotPFWorkers.readyCheck(this, true);
 	}
 	
 }//interface BotLotPFAlgorithm

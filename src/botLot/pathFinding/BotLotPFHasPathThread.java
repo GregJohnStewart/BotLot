@@ -1,6 +1,8 @@
 package botLot.pathFinding;
 
 import java.util.ArrayList;
+
+import botLot.lotGraph.LotEdge;
 import botLot.lotGraph.LotNode;
 
 /**
@@ -17,13 +19,14 @@ class BotLotPFHasPathThread extends Thread {
 	private ArrayList<LotNode> finished;
 	private ArrayList<LotNode> connected;
 	private ArrayList<LotNode> temporary;
+	private ArrayList<LotEdge> egdesToAvoid;
 	
-	
-	BotLotPFHasPathThread(String name, ArrayList<LotNode> finList, ArrayList<LotNode> connList, ArrayList<LotNode> tempList){
+	BotLotPFHasPathThread(String name, ArrayList<LotNode> finList, ArrayList<LotNode> connList, ArrayList<LotNode> tempList, ArrayList<LotEdge> avoidList){
 		this.threadName = name;
 		this.finished = finList;
 		this.connected = connList;
 		this.temporary = tempList;
+		this.egdesToAvoid = avoidList;
 	}
 	
 	@Override
