@@ -1,6 +1,7 @@
 package botLot.pathFinding;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.concurrent.ThreadLocalRandom;
 
 import botLot.BotLot;
@@ -23,19 +24,54 @@ import botLot.lotGraph.LotPath;
  * @version	1.0 2/13/16
  */
 public class BotLotPFRandom extends BotLotPFAlgorithm {
+	/**
+	 * Constructor using a BotLot object.
+	 * 
+	 * @param lotIn	The BotLot object to use.
+	 */
 	public BotLotPFRandom(BotLot lotIn) {
 		super(lotIn);
 	}
-
+	
+	/**
+	 * Constructor using a BotLot object and a list of edges to avoid.
+	 * 
+	 * @param lotIn
+	 * @param edgesToAvoidIn
+	 */
+	public BotLotPFRandom(BotLot lotIn, Collection<LotEdge> edgesToAvoidIn) {
+		super(lotIn, edgesToAvoidIn);
+	}
+	
+	/**
+	 * Basic constructor for path finding.
+	 */
 	public BotLotPFRandom() {
 		super();
 	}
-
+	
+	/**
+	 * Constructor that initializes all the variables separately.
+	 * 
+	 * @param graphIn	The graph to use.
+	 * @param curNodeIn	The node we are starting at.
+	 * @param destNodeIn	The node we are going to.
+	 * @throws BotLotPFException  If curNode and/or destNode cannot be set.
+	 */
 	public BotLotPFRandom(LotGraph graphIn, LotNode curNodeIn, LotNode destNodeIn) throws BotLotPFException {
 		super(graphIn, curNodeIn, destNodeIn);
 		// TODO Auto-generated constructor stub
 	}
 	
+	/**
+	 * Constructor that initializes everything, actually everything. Including the list of nodes to avoid.
+	 * 
+	 * @param graphIn	The graph to use.
+	 * @param curNodeIn	The node we are starting at.
+	 * @param destNodeIn	The node we are going to.
+	 * @param edgesToAvoidIn	Edges to not go down ever.
+	 * @throws BotLotPFException	If curNode and/or destNode cannot be set.
+	 */
 	public BotLotPFRandom(LotGraph graphIn, LotNode curNodeIn, LotNode destNodeIn, ArrayList<LotEdge> edgesToAvoidIn) throws BotLotPFException {
 		super(graphIn, curNodeIn, destNodeIn, edgesToAvoidIn);
 		// TODO Auto-generated constructor stub

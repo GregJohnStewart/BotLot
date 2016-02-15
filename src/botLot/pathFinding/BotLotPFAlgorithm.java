@@ -25,13 +25,34 @@ public abstract class BotLotPFAlgorithm {
 	private ArrayList<LotEdge> edgesToAvoid;
 	
 	/**
-	 * Constructor that sets everything all at once.
+	 * Basic constructor for path finding.
+	 */
+	public BotLotPFAlgorithm(){
+		this.mainGraph = null;
+		this.curNode = null;
+		this.destNode = null;
+		this.edgesToAvoid = new ArrayList<LotEdge>();
+	}
+	
+	/**
+	 * Constructor using a BotLot object.
 	 * 
 	 * @param lotIn	The BotLot object to use.
 	 */
 	public BotLotPFAlgorithm(BotLot lotIn){
 		this();
 		this.setAll(lotIn);
+	}
+	
+	/**
+	 * Constructor using a BotLot object and a list of edges to avoid.
+	 * 
+	 * @param lotIn
+	 * @param edgesToAvoidIn
+	 */
+	public BotLotPFAlgorithm(BotLot lotIn, Collection<LotEdge> edgesToAvoidIn){
+		this(lotIn);
+		this.setEdgesToAvoid(edgesToAvoidIn);
 	}
 	
 	/**
@@ -59,16 +80,6 @@ public abstract class BotLotPFAlgorithm {
 	public BotLotPFAlgorithm(LotGraph graphIn, LotNode curNodeIn, LotNode destNodeIn, Collection<LotEdge> edgesToAvoidIn) throws BotLotPFException{
 		this(graphIn, curNodeIn, destNodeIn);
 		this.addEdgesToAvoid(edgesToAvoidIn);
-	}
-	
-	/**
-	 * Basic constructor for path finding.
-	 */
-	public BotLotPFAlgorithm(){
-		this.mainGraph = null;
-		this.curNode = null;
-		this.destNode = null;
-		this.edgesToAvoid = new ArrayList<LotEdge>();
 	}
 	
 	/**
