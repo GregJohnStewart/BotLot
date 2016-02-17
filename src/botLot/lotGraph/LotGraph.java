@@ -15,6 +15,8 @@ import java.util.Collection;
  * <p>
  * Future plans:
  * 		Keep a list of paths for later use, use ID's to keep track of them, etc.
+ * <p>
+ * TODO:: review methods for cleanliness and best practice
  * 
  * @author Greg Stewart
  * @version 1.0 12/7/15
@@ -240,7 +242,13 @@ public class LotGraph {
 		return newEdge;
 	}// createEdge()
 	
-
+	/**
+	 * Creates an edge going out from a given node.
+	 * 
+	 * @param fromNode	The node the edges is going out from.
+	 * @return	The edge created.
+	 * @throws LotGraphException	If the edge could not be created for some reason.
+	 */
 	public LotEdge createEdge(LotNode fromNode) throws LotGraphException{
 		LotEdge newEdge = this.createEdge();
 		try {
@@ -250,10 +258,25 @@ public class LotGraph {
 		}
 		return newEdge;
 	}
+	
+	/**
+	 * Creates an edge going out from a given node, and returns the id.
+	 * 
+	 * @param fromNode	The node the edges is going out from.
+	 * @return	The id of the edge created.
+	 * @throws LotGraphException	If the edge could not be created for some reason.
+	 */
 	public String createEdgeGiveId(LotNode fromNode) throws LotGraphException{
 		return this.createEdge(fromNode).getId();
 	}
 	
+	/**
+	 * Creates an edge going out from a given node.
+	 * 
+	 * @param fromNodeId	The id of the node the edges is going out from.
+	 * @return	The edge created.
+	 * @throws LotGraphException	If the edge could not be created for some reason.
+	 */
 	public LotEdge createEdge(String fromNodeId) throws LotGraphException{
 		LotEdge newEdge = this.createEdge();
 		try {
@@ -263,10 +286,25 @@ public class LotGraph {
 		}
 		return newEdge;
 	}
+	
+	/**
+	 * Creates an edge going out from a given node, and returns the id.
+	 * 
+	 * @param fromNodeId	The id of the node the edges is going out from.
+	 * @return	The id of the edge created.
+	 * @throws LotGraphException	If the edge could not be created for some reason.
+	 */
 	public String createEdgeGiveId(String fromNodeId) throws LotGraphException{
 		return this.createEdge(fromNodeId).getId();
 	}
 	
+	/**
+	 * Creates an edge going out from a given node.
+	 * 
+	 * @param fromNodeIndex	The index of the node in the structure that the new edge will start at.
+	 * @return	The newly created edge.
+	 * @throws LotGraphException	If the edge could not be created for some reason.
+	 */
 	public LotEdge createEdge(int fromNodeIndex) throws LotGraphException{
 		LotEdge newEdge = this.createEdge();
 		try {
@@ -276,6 +314,14 @@ public class LotGraph {
 		}
 		return newEdge;
 	}
+	
+	/**
+	 * Creates an edge going out from a given node, and returns the id.
+	 * 
+	 * @param fromNodeIndex	The index of the node in the structure that the new edge will start at.
+	 * @return	The id of the newly created edge.
+	 * @throws LotGraphException	If the edge could not be created for some reason.
+	 */
 	public String createEdgeGiveId(int fromNodeIndex) throws LotGraphException{
 		return this.createEdge(fromNodeIndex).getId();
 	}
@@ -916,9 +962,9 @@ public class LotGraph {
 	 */
 	public int getNodeIndex(String nodeIdIn) {
 		if (this.hasNode(nodeIdIn)) {
-			for (int i = 0; i < this.getNumNodes(); i++) {
-				if (this.getNodes().get(i).getId().equals(nodeIdIn)) {
-					return i;
+			for(LotNode curNode : this.getNodes()){
+				if(curNode.getId().equals(nodeIdIn)){
+					return this.getNodes().indexOf(curNode);
 				}
 			}
 		}
@@ -1031,13 +1077,8 @@ public class LotGraph {
 	 */
 	public ArrayList<LotEdge> getEdgeList() {
 		ArrayList<LotEdge> edgeList = new ArrayList<LotEdge>();
-		for (int i = 0; i < this.getNumNodes(); i++) {
-			try {
-				edgeList.addAll(this.getNode(i).getEdges());
-			} catch (LotGraphException e) {
-				System.out.println("FATAL ERROR- getEdgeList()- This should not happen. Error: " + e.getMessage());
-				System.exit(1);
-			}
+		for (LotNode curNode : this.getNodes()) {
+			edgeList.addAll(curNode.getEdges());
 		}
 		return edgeList;
 	}// getEdgeList()
@@ -1050,7 +1091,7 @@ public class LotGraph {
 	public int getNumEdges() {
 		return this.getEdgeList().size();
 	}// getNumEdges()
-
+	
 	/**
 	 * Gets the specified edge.
 	 * 
