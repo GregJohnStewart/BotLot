@@ -23,7 +23,7 @@ import botLot.lotGraph.LotPath;
  * @author Greg Stewart
  * @version	1.0 2/13/16
  */
-public class BotLotPFRandom extends BotLotPFAlgorithm {
+public class BotLotPFRandom extends BotLotPFAlgorithm {	
 	/**
 	 * Constructor using a BotLot object.
 	 * 
@@ -94,6 +94,7 @@ public class BotLotPFRandom extends BotLotPFAlgorithm {
 		LotPath tempPath = new LotPath();
 		LotNode tempNode = this.getCurNode();
 		LotNode lastNode = null;
+		/*
 		//int loopCount = 0;//# times caught in loop
 		//System.out.println("Calculating new path...");
 		try{
@@ -169,6 +170,7 @@ public class BotLotPFRandom extends BotLotPFAlgorithm {
 			throw new BotLotPFException("There was an error when trying to generate a random path. Error: " + err.getMessage());
 			//System.exit(1);
 		}
+		*/
 		//System.out.println("# times caught in loop: " + loopCount);
 		return tempPath;
 	}

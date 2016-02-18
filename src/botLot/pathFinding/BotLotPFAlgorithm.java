@@ -23,6 +23,8 @@ public abstract class BotLotPFAlgorithm {
 	private LotNode destNode;
 	/** Edges that we will not even try to go down. */
 	private ArrayList<LotEdge> edgesToAvoid;
+	/** Flag to add trap edges to edges to avoid list before path generation. Defaults to 'true'. */
+	public boolean addTrapOnFind = true;
 	
 	/**
 	 * Basic constructor for path finding.
@@ -98,7 +100,11 @@ public abstract class BotLotPFAlgorithm {
 	 */
 	public LotPath findPath() throws BotLotPFException{
 		if(this.ready()){
-			this.addTrapEdges();
+			if(this.addTrapOnFind){
+				this.addTrapEdges();
+				this.addTrapOnFind = false;
+			}
+			System.out.println("Trap Edges: " + this.getEdgesToAvoid()); 
 			return this.calculatePath();
 		}else{
 			throw new BotLotPFException("Object not ready for path generation.");

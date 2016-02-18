@@ -38,7 +38,6 @@ public class BotLotPF {
 		}
 		LotPath pathFound = new LotPath();
 		pathFound.infSizeFlag = true;
-		BotLotPFAlgorithm randomPathFinder;
 		//determine what algorithm to use.....
 		System.out.println("\tnode/edge ratio: " + graphIn.getNodeEdgeRatio() + "\n\tThreshhold: " + ratioThreshHold);
 		//if(graphIn.getNodeEdgeRatio() >= ratioThreshHold){
@@ -50,7 +49,7 @@ public class BotLotPF {
 			 */
 			LotPath tempPath = new LotPath();
 			tempPath.infSizeFlag = true;
-			randomPathFinder = new BotLotPFRandom(graphIn, curNode, destNode, edgesToAvoid);
+			BotLotPFAlgorithm randomPathFinder = new BotLotPFRandom(graphIn, curNode, destNode, edgesToAvoid);
 			for(int i = 0; i < numTimesToDoRand; i++){
 				tempPath = randomPathFinder.findPath();
 				if(pathFound.isLonger(tempPath)){

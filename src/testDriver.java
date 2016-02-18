@@ -124,7 +124,7 @@ public class testDriver {
 
 		System.out.println("Setting current node...");
 		try {
-			navigator.setCurNode(0);
+			navigator.setCurNode(2);
 		} catch (BotLotException e) {
 			System.out.println("Unable to set the current node. Error: " + e.getMessage());
 			System.exit(1);
@@ -133,7 +133,7 @@ public class testDriver {
 
 		System.out.println("Setting destination node...");
 		try {
-			navigator.setDestNode(11);
+			navigator.setDestNode(3);
 		} catch (BotLotException e) {
 			System.out.println("Unable to set the Destination node. Error: " + e.getMessage());
 			System.exit(1);
