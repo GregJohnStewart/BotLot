@@ -88,8 +88,7 @@ public final class BotLotPFWorkers {
 			ArrayList<LotNode> nodesConnected = curNode.getConnectedNodes();//nodes that are connected to the curNode (and nodes subsequently attatched to them, and so on...)
 			ArrayList<LotNode> tempList = new ArrayList<LotNode>();//temporary list of connected nodes
 			ArrayList<LotNode> nodesFinished = new ArrayList<LotNode>();//nodes we have hit in the past, to not go in circles
-			
-			ArrayList<LotEdge> trapEdgeList = new ArrayList<LotEdge>();
+			ArrayList<LotEdge> trapEdgeList = new ArrayList<LotEdge>();//nodes that will trap an algorithm from getting to the destination
 			
 			nodesFinished.add(curNode);//add the current node to list of nodes we have hit
 			nodesConnected.removeAll(nodesFinished);//ensure none of the edges pointed back to curNode
@@ -185,88 +184,47 @@ public final class BotLotPFWorkers {
 	public static boolean hasPath(LotGraph graphIn, LotNode curNode, LotNode destNode, ArrayList<LotEdge> edgesToAvoid) throws BotLotPFException{
 		//final int minsToWait = Integer.MAX_VALUE;
 		if(readyCheck(graphIn, curNode, destNode, false)){
-			//check if curNode is directly connected to destNode (avoid much processing)
-			if(curNode.getConnectedNodes().contains(destNode)){
-				return true;
-			}
-			//else have to go find it, following edges
-			ArrayList<LotNode> nodesConnected = new ArrayList<LotNode>();//nodes that are connected to the curNode (and nodes subsequently attatched to them, and so on...)
-			for(LotEdge curEdge : curNode.getEdges()){
-				if(!edgesToAvoid.contains(curEdge)){
-					nodesConnected.add(curEdge.getEndNode());
-				}
-			}
+			ArrayList<LotNode> nodesConnected = curNode.getConnectedNodes();//nodes that are connected to the curNode (and nodes subsequently attatched to them, and so on...)
 			ArrayList<LotNode> tempList = new ArrayList<LotNode>();//temporary list of connected nodes
+			ArrayList<LotNode> workingList = new ArrayList<LotNode>();//temporary list of connected nodes
 			ArrayList<LotNode> nodesFinished = new ArrayList<LotNode>();//nodes we have hit in the past, to not go in circles
-			//ExecutorService es;//the thread pool for multithreading
+			LotNode workingNode = null;
 			
-			nodesFinished.add(curNode);//add the current node to list of nodes we have hit
-			nodesConnected.removeAll(nodesFinished);//ensure none of the edges pointed back to curNode
+			nodesFinished.add(curNode);
+			nodesConnected.removeAll(nodesFinished);
 			while(true){
-				//for each in nodes connected, get nodes connected to them (if not one already searched)
-				//	essentially does this by emptying the list as it goes, saving memory and an index to keep track of
-				//es = Executors.newCachedThreadPool();
+				/*go through each node,
+				 * 1- get nodes connected to it
+				 * 2- remove connected nodes that are connected via avoiding edges
+				 * 3- test if the nodes left are the destination node
+				 * 		-return true if destNode found
+				 * 4- remove it (the current node) from connected, place it into nodesFinished
+				 */
 				while(nodesConnected.size() != 0){
-					//TODO:: this sometimes throws a null pointer exception (nodesConnected.get(0) == null). figure out why.
-					LotNode curNodeInner = null;
-					try{
-						curNodeInner = nodesConnected.get(0);
-					}catch(NullPointerException e){
-						return hasPath(graphIn, curNode, destNode, edgesToAvoid);
-					}
-					//System.out.println("On: " + curNodeInner);
-					if(curNodeInner.getConnectedNodes().contains(destNode)){//if we found the node we are going to
-						ArrayList<LotEdge> tempEdgeList = curNodeInner.getEdgesTo(destNode);
-						tempEdgeList.removeAll(edgesToAvoid);
-						for(LotEdge curEdge : tempEdgeList){
-							if(curEdge.getEndNode() == destNode){
-								//System.out.println("\tFound! This node connects to the destination node.");
-								return true;
-							}
-						}
-					}else if(nodesFinished.contains(curNodeInner)){//in case we get to a node already finished
-						nodesConnected.remove(0);
-						continue;
-					}
-					//so we don't go back on this one
-					nodesFinished.add(curNodeInner);
+					workingNode = nodesConnected.get(0);
+					workingList = workingNode.getConnectedNodes();
 					
-					/*
-					es.execute(new BotLotPFHasPathThread(
-							"BotLotPFHasPathThread-" + curNodeInner.getId(),
-							nodesFinished,
-							curNodeInner.getConnectedNodes(),
-							tempList
-							));
-					*/
-					for(LotNode curTempNode : nodesConnected){
+					for(LotNode tempNode : workingList){
 						try {
-							//don't add node if the edges going to it are ones to avoid.
-							for(LotEdge curEdge : graphIn.getEdgesFromTo(curNodeInner, curTempNode)){
-								if(!edgesToAvoid.contains(curEdge)){
-									if(!nodesFinished.contains(curTempNode) && curTempNode != null){
-										tempList.add(curTempNode);
-									}
+							//only deal with nodes we can get to (avoiding certain edges)
+							if(!edgesToAvoid.contains(graphIn.getEdgeFromTo(workingNode, tempNode))){
+								if(tempNode == destNode){
+									return true;
+								}
+								//only add to tempList if we haven't been here before
+								if(!nodesFinished.contains(tempNode) && !nodesConnected.contains(tempNode) && !tempList.contains(tempNode)){
+									tempList.add(tempNode);
 								}
 							}
 						} catch (LotGraphException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
+							System.out.println("FATAL ERR- hasPath();- this should not happen. Error: " + e.getMessage());
 							System.exit(1);
 						}
 					}
-					nodesConnected.remove(0);
-				}
-				/*
-				//System.out.println("done with this set.");
-				es.shutdown();
-				try {
-					es.awaitTermination(minsToWait, TimeUnit.MINUTES);
-				} catch (InterruptedException e1) {
-					e1.printStackTrace();
-					System.exit(1);
-				}
-				*/
+					nodesFinished.add(nodesConnected.remove(0));
+				}//for each in nodes connected
 				//if we got this far and no nodes are in the temp list, there is nothing else we can do, so there is no path
 				if(tempList.size() == 0){
 					return false;
@@ -274,7 +232,7 @@ public final class BotLotPFWorkers {
 					nodesConnected = new ArrayList<LotNode>(tempList);
 					tempList = new ArrayList<LotNode>();
 				}
-			}//running loop (runs indefinitely, until the algorithm finishes)
+			}//main loop
 		}
 		throw new BotLotPFException(notReadyMessage);
 	}//hasPath(BotLot, LotNode, LotNode)

@@ -153,8 +153,8 @@ public class testDriver {
 			System.out.println("\tDone.");
 		}
 		
-		
-		if(BotLotPFWorkers.hasPath(navigator.mainGraph, navigator.mainGraph.getNode(3), navigator.getDestNode())){
+		System.out.println("Has Path?");
+		if(BotLotPFWorkers.hasPath(navigator)){
 			System.out.println("YES -------------------------------------------------------");
 		}else{
 			System.out.println("NO  -------------------------------------------------------");
