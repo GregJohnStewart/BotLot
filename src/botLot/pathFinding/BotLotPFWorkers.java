@@ -48,7 +48,7 @@ public final class BotLotPFWorkers {
 			}
 		}
 		return false;
-	}
+	}//readyCheck(LotGraph)
 	
 	/**
 	 * Checks if the data in a BotLot object is ready to have actions performed on it.
@@ -73,7 +73,7 @@ public final class BotLotPFWorkers {
 	}
 	
 	/**
-	 * Gets a list of edges that would put a searching algorithm into a trapped state. Trapped meaning they can no longer reach the destination node.
+	 * Gets a list of edges that would put a searching algorithm into a trapped or dead end state. Trapped meaning they can no longer reach the destination node.
 	 * 
 	 * @param lotIn	The BotLot object we are dealing with.
 	 * @param curNode The current node we are at.
@@ -86,9 +86,10 @@ public final class BotLotPFWorkers {
 	 */
 	public static ArrayList<LotEdge> getTrapEdges(LotGraph graphIn, LotNode curNode, LotNode destNode) throws BotLotPFException{
 		if(readyCheck(graphIn, curNode, destNode, true)){
-			System.out.println("Entered getTrapEdges()");
+			//System.out.println("Entered getTrapEdges()");
 			ArrayList<LotEdge> trapEdgeList = new ArrayList<LotEdge>();//nodes that will trap an algorithm from getting to the destination
-			ArrayList<LotNode> nodesConnected = curNode.getConnectedNodes();//nodes that are connected to the curNode (and nodes subsequently attatched to them, and so on...)
+			ArrayList<LotNode> nodesConnected = new ArrayList<LotNode>();//nodes that are connected to the curNode (and nodes subsequently attatched to them, and so on...)
+			nodesConnected.add(curNode);
 			ArrayList<LotNode> tempList = new ArrayList<LotNode>();//temporary list of connected nodes
 			ArrayList<LotNode> workingList = new ArrayList<LotNode>();//temporary list of connected nodes
 			ArrayList<LotNode> nodesFinished = new ArrayList<LotNode>();//nodes we have hit in the past, to not go in circles
@@ -96,33 +97,28 @@ public final class BotLotPFWorkers {
 			
 			//nodesFinished.add(curNode);
 			//nodesConnected.removeAll(nodesFinished);
+
+			//System.out.println("Start finding the trapping edges....");
 			while(true){
-				/*go through each node,
-				 * 1- get nodes connected to it
-				 * 2- remove connected nodes that are connected via avoiding edges
-				 * 3- test if the nodes left are the destination node
-				 * 		-return true if destNode found
-				 * 4- remove it (the current node) from connected, place it into nodesFinished
-				 */
 				while(nodesConnected.size() != 0){
 					workingNode = nodesConnected.get(0);
 					workingList = workingNode.getConnectedNodes();
-					
+					//System.out.println("\tWorking off of node: " + workingNode);
 					for(LotNode tempNode : workingList){
 						try {
+							//System.out.println("\t\tExamining edge to: " + tempNode);
 							//only deal with it if we haven't been here before
-							if(!nodesFinished.contains(tempNode) && !nodesConnected.contains(tempNode) && !tempList.contains(tempNode) && tempNode != destNode){
+							if(!nodesFinished.contains(tempNode) && !nodesConnected.contains(tempNode) && !tempList.contains(tempNode)){
+								
 								if(!hasPath(graphIn, tempNode, destNode, trapEdgeList)){
-									System.out.println("Trap Edge(s) Found: \n"
-											+ "\tEdges: " + graphIn.getEdgesFromTo(workingNode, tempNode).toString()
-											+ "\n\tFrom Node: " + workingNode.toString()
-											+ "\n\t  To Node: " + tempNode.toString()
-											+ "\n\t End Goal: " + destNode.toString());
+									//System.out.println("\t\t\tHas no path to destination********");
 									trapEdgeList.addAll(graphIn.getEdgesFromTo(workingNode, tempNode));
-									
 								}else{
+									//System.out.println("\t\t\tHas path to destination.");
 									tempList.add(tempNode);
 								}
+							}else{
+								//System.out.println("\t\t\tHas been examined before.");
 							}
 							
 						} catch (LotGraphException e) {
@@ -144,7 +140,7 @@ public final class BotLotPFWorkers {
 			}//main loop
 		}//if got valid stuff
 		throw new BotLotPFException("LotGraph not ready to determine path.");
-	}
+	}//getTrapEdges(LotGraph, LotNode, LotNode) throws BotLotPFException
 	
 	/**
 	 * Gets a list of edges that would trap an algorithm.
@@ -183,7 +179,8 @@ public final class BotLotPFWorkers {
 	public static boolean hasPath(LotGraph graphIn, LotNode curNode, LotNode destNode, ArrayList<LotEdge> edgesToAvoid) throws BotLotPFException{
 		//final int minsToWait = Integer.MAX_VALUE;
 		if(readyCheck(graphIn, curNode, destNode, false)){
-			ArrayList<LotNode> nodesConnected = curNode.getConnectedNodes();//nodes that are connected to the curNode (and nodes subsequently attatched to them, and so on...)
+			ArrayList<LotNode> nodesConnected = new ArrayList<LotNode>();//nodes that are connected to the curNode (and nodes subsequently attatched to them, and so on...)
+			nodesConnected.add(curNode);
 			ArrayList<LotNode> tempList = new ArrayList<LotNode>();//temporary list of connected nodes
 			ArrayList<LotNode> workingList = new ArrayList<LotNode>();//temporary list of connected nodes
 			ArrayList<LotNode> nodesFinished = new ArrayList<LotNode>();//nodes we have hit in the past, to not go in circles
@@ -273,4 +270,4 @@ public final class BotLotPFWorkers {
 		return hasPath(algIn.getGraph(), algIn.getCurNode(), algIn.getDestNode(), algIn.getEdgesToAvoid());
 	}//hasPath(BotLot)
 	
-}
+}//class BotLotPFWorkers

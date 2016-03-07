@@ -100,11 +100,13 @@ public abstract class BotLotPFAlgorithm {
 	 */
 	public LotPath findPath() throws BotLotPFException{
 		if(this.ready()){
+			System.out.println("in findPath()...");
 			if(this.addTrapOnFind){
 				this.addTrapEdges();
 				this.addTrapOnFind = false;
+				System.out.println("Trap Edges: " + this.getEdgesToAvoid());
 			}
-			System.out.println("Trap Edges: " + this.getEdgesToAvoid()); 
+			
 			return this.calculatePath();
 		}else{
 			throw new BotLotPFException("Object not ready for path generation.");
