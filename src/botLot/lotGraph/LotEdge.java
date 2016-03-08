@@ -7,7 +7,7 @@ import java.util.HashMap;//for attributes
  * Started: 10/7/15
  * 
  * @author Greg Stewart
- * @version 1.0 12/6/15
+ * @version 1.0 3/7/16
  */
 public class LotEdge{
 	/** The id of the edge, required for normal graph operation. When used with BotLot, this is automatically set. */
@@ -18,6 +18,8 @@ public class LotEdge{
     private double metric;
     /** User defined attributes of the edge, defaults to empty */
     protected HashMap<String,String> attributes;
+	/** Flag to denote this should be treated as a path with infinite size. For comparison purposes. */
+	public boolean infSizeFlag = false;
     
     //=========================================================================
     //    Constructors
@@ -164,7 +166,7 @@ public class LotEdge{
 	 */
 	public LotNode getEndNode(){
 		return this.endNode;
-	}
+	}//getEndNode()
 	
 	/**
 	 * Checks if the edge's end is set.
@@ -239,7 +241,7 @@ public class LotEdge{
 	 * @return	If this edge is shorter than the edge given.
 	 */
 	public boolean isShorter(LotEdge edgeIn){
-		if(this.getMetric() < edgeIn.getMetric()){
+		if(this.getMetric() < edgeIn.getMetric() || edgeIn.infSizeFlag){
 			return true;
 		}
 		return false;

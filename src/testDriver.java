@@ -14,17 +14,23 @@ public class testDriver {
 		boolean needNewMap = true;
 		String temp;
 
-		System.out.println("Begin test run");
-
+		System.out.println("Begin test run.....");
+		
+		
+		
 		BotLot navigator = new BotLot();
 		BotLotDS dataSource = new BotLotDS();
-
+		
 		System.out.print("Use XML file (" + xmlPath + ")? (y/n): ");
 		temp = keyboard.nextLine();
+
 		keyboard.close();
 		if (temp.equals("y") || temp.equals("Y")) {
+			System.out.println("Set to get data from XML.");
 			useXML = true;
 			needNewMap = false;
+		}else{
+			System.out.println("Recreating the graph.");
 		}
 
 		if (useXML) {
@@ -124,7 +130,7 @@ public class testDriver {
 
 		System.out.println("Setting current node...");
 		try {
-			navigator.setCurNode(6);
+			navigator.setCurNode(0);
 		} catch (BotLotException e) {
 			System.out.println("Unable to set the current node. Error: " + e.getMessage());
 			System.exit(1);
@@ -133,7 +139,7 @@ public class testDriver {
 
 		System.out.println("Setting destination node...");
 		try {
-			navigator.setDestNode(5);
+			navigator.setDestNode(11);
 		} catch (BotLotException e) {
 			System.out.println("Unable to set the Destination node. Error: " + e.getMessage());
 			System.exit(1);

@@ -12,7 +12,7 @@ import java.util.NoSuchElementException;
  * Started: 11/18/15
  * 
  * @author Greg Stewart
- * @version	1.0 1/20/16
+ * @version	1.0 3/7/16
  */
 public class LotPath {
 	/** the path of edges held by this object */
@@ -56,7 +56,7 @@ public class LotPath {
 	 */
 	public void setPath(Collection<LotEdge> collectionIn) throws LotPathException{
 		this.path = new LinkedList<LotEdge>(collectionIn);
-		if(!this.pathIsValid()){
+		if(!this.pathIsContinuous()){
 			throw new LotPathException("Given set of edges is not continuous.");
 		}
 	}//setPath(Collection<LotEdge)
@@ -130,25 +130,30 @@ public class LotPath {
 	 * @param pathIn The path to check.
 	 * @return	If the path given is valid.
 	 */
-	public static boolean pathIsValid(LotPath pathIn){
-		for(int i = 0; i < pathIn.size(); i++){
-			if((i + 1) == pathIn.size()){
-				return true;
-			}else if(!pathIn.path.get(i).getEndNode().hasEdge(pathIn.path.get(i + 1))){
-				return false;
+	public static boolean pathIsContinuous(LotPath pathIn){
+		LotEdge lastEdge = null;
+		for(LotEdge curEdge : pathIn.path){
+			if(lastEdge == null){
+				lastEdge = curEdge;
+			}else{
+				if(lastEdge.getEndNode().getConnectedEdges().contains(curEdge)){
+					lastEdge = curEdge;
+				}else{
+					return false;
+				}
 			}
 		}
 		return true;
-	}
+	}//pathIsContinuous(LotPath)
 	
 	/**
 	 * Determines if the path held by this object is valid.
 	 * 
 	 * @return	If the path given is valid.
 	 */
-	public boolean pathIsValid(){
-		return pathIsValid(this);
-	}
+	public boolean pathIsContinuous(){
+		return pathIsContinuous(this);
+	}//pathIsContinuous()
 	
 	/**
 	 * Appends a collection of LotEdges to the current list.
@@ -163,13 +168,13 @@ public class LotPath {
 		LinkedList<LotEdge> listToAppend = (LinkedList<LotEdge>)edgeListIn;
 		if(this.path.getLast().getEndNode().hasEdge(listToAppend.get(0))){
 			path.addAll(edgeListIn);
-			if(!this.pathIsValid()){
+			if(!this.pathIsContinuous()){
 				throw new LotPathException("The path we ended up with was not continuous.");
 			}
 		}else{
 			throw new LotPathException("The given set would not make a continuous path if appended.");
 		}
-	}
+	}//append(Collection<LotEdge>)
 	
 	/**
 	 * Appends a LotPath to this  LotPath.
@@ -179,7 +184,7 @@ public class LotPath {
 	 */
 	public void append(LotPath pathIn) throws LotPathException{
 		this.append(pathIn.path);
-	}
+	}//append(LotPath)
 	
 	/**
 	 * Appends an edge to the path.
@@ -199,7 +204,7 @@ public class LotPath {
 		}else{
 			throw new LotPathException("The given edge would not make a continuous path if appended.");
 		}
-	}
+	}//append(LotEdge)
 	
 	/**
 	 * Determines if this path is shorter than the path given.
@@ -208,11 +213,11 @@ public class LotPath {
 	 * @return	If this path is shorter than the path given.
 	 */
 	public boolean isShorter(LotPath pathIn){
-		if(this.getPathMetric() < pathIn.getPathMetric() || !infSizeFlag){
+		if(this.getPathMetric() < pathIn.getPathMetric() || pathIn.infSizeFlag){
 			return true;
 		}
 		return false;
-	}
+	}//isShorter(LotPath)
 	
 	/**
 	 * Determines if this path is longer than the path given.
@@ -224,7 +229,7 @@ public class LotPath {
 	 */
 	public boolean isLonger(LotPath pathIn){
 		return !this.isShorter(pathIn);
-	}
+	}//isLonger(LotPath)
 	
 	/**
 	 * Determines if the path hits the node given during its travel.
@@ -246,10 +251,8 @@ public class LotPath {
 	public boolean hasWaypoint(LotNode nodeIn, boolean countLast){
 		//loop through path, checking end nodes
 		for(LotEdge curEdge : this.path){
-			
 			if(curEdge.getEndNode() == nodeIn){
 				if(!countLast & curEdge == this.path.getLast()){
-					
 					return false;
 				}
 				return true;

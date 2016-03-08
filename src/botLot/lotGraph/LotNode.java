@@ -637,6 +637,18 @@ public class LotNode{
 	}
 	
 	/**
+	 * Gets a list of edges that are connected to other nodes, excluding those in the given list.
+	 * 
+	 * @param edgesToAvoid	The list of edges to not include in the returned list.
+	 * @return	A list of edges this node holds that are connected and not in the given list.
+	 */
+	public ArrayList<LotEdge> getConnectedEdges(Collection<LotEdge> edgesToAvoid){
+		ArrayList<LotEdge> tempList = this.getConnectedEdges();
+		tempList.removeAll(edgesToAvoid);
+		return tempList;
+	}
+	
+	/**
 	 * Gets the index of the given node. Returns '-1' if not present.
 	 * 
 	 * @param edgeIn	The node to get the index of.

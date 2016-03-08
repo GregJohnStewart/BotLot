@@ -1,4 +1,4 @@
-package botLot.pathFinding;
+package botLot.pathFinding.Algorithm;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -11,6 +11,7 @@ import botLot.lotGraph.LotGraphException;
 import botLot.lotGraph.LotNode;
 import botLot.lotGraph.LotPath;
 import botLot.lotGraph.LotPathException;
+import botLot.pathFinding.BotLotPFException;
 /**
  * Finds an exact shortest path.
  * <p>
@@ -58,10 +59,10 @@ public class BotLotPFExact extends BotLotPFAlgorithm {
 	 * @param curNodeIn	The node we are starting at.
 	 * @param destNodeIn	The node we are going to.
 	 * @param edgesToAvoidIn	Edges to not go down ever.
-	 * @throws BotLotPFException	If curNode and/or destNode cannot be set.
+	 * @throws BotLotPFAlgException	If curNode and/or destNode cannot be set.
 	 */
 	public BotLotPFExact(LotGraph graphIn, LotNode curNodeIn, LotNode destNodeIn, Collection<LotEdge> edgesToAvoidIn)
-			throws BotLotPFException {
+			throws BotLotPFAlgException {
 		super(graphIn, curNodeIn, destNodeIn, edgesToAvoidIn);
 	}
 	
@@ -71,9 +72,9 @@ public class BotLotPFExact extends BotLotPFAlgorithm {
 	 * @param graphIn	The graph to use.
 	 * @param curNodeIn	The node we are starting at.
 	 * @param destNodeIn	The node we are going to.
-	 * @throws BotLotPFException  If curNode and/or destNode cannot be set.
+	 * @throws BotLotPFAlgException  If curNode and/or destNode cannot be set.
 	 */
-	public BotLotPFExact(LotGraph graphIn, LotNode curNodeIn, LotNode destNodeIn) throws BotLotPFException {
+	public BotLotPFExact(LotGraph graphIn, LotNode curNodeIn, LotNode destNodeIn) throws BotLotPFAlgException {
 		super(graphIn, curNodeIn, destNodeIn);
 	}
 	
@@ -87,7 +88,7 @@ public class BotLotPFExact extends BotLotPFAlgorithm {
 	 * @return	A shortest path leading to the end node.
 	 * @throws BotLotPFException	If there is no path to the end node.
 	 */
-	private LotPath getExactPath(LotNode thisCurNode, LotNode lastNode, HashMap<LotNode,Integer> hitCounts) throws BotLotPFException{
+	private LotPath getExactPath(LotNode thisCurNode, LotNode lastNode, HashMap<LotNode,Integer> hitCounts) throws BotLotPFAlgException{
 		//System.out.println("Doing the thing!!");
 		LotPath pathOut = new LotPath();
 		//take care of special cases
@@ -100,10 +101,10 @@ public class BotLotPFExact extends BotLotPFAlgorithm {
 			}
 			return pathOut;
 		}else if(thisCurNode.getNumCompEdges() == 0){//nowhere to go
-			throw new BotLotPFException(eolString);
+			throw new BotLotPFAlgException(eolString);
 		}else if(thisCurNode.getNumCompEdges() == 1){//only way to go is back the way we came
 			if(thisCurNode.getEdge(0).getEndNode() == lastNode){
-				throw new BotLotPFException(eolString);
+				throw new BotLotPFAlgException(eolString);
 			}
 		}
 		
@@ -153,7 +154,7 @@ public class BotLotPFExact extends BotLotPFAlgorithm {
 				tempPath.append(getExactPath(curEdge.getEndNode(), thisCurNode, hitCounts));
 				tempPath.removeLoops();
 				pathsMade.add(tempPath);
-			}catch(BotLotPFException e){
+			}catch(BotLotPFAlgException e){
 				if(!e.getMessage().equals(eolString)){
 					e.printStackTrace();
 					System.out.println("FATAL ERROR- You should not ghet this. Error: " + e.getMessage());
@@ -178,10 +179,10 @@ public class BotLotPFExact extends BotLotPFAlgorithm {
 	}//getExactPath(BotLot, LotNode, LotNode)
 	
 	@Override
-	protected LotPath calculatePath() throws BotLotPFException {
+	protected LotPath calculatePath() throws BotLotPFAlgException {
 		try{
 			return getExactPath(this.getCurNode(), this.getDestNode(), new HashMap<LotNode, Integer>());
-		}catch(BotLotPFException e){
+		}catch(BotLotPFAlgException e){
 			if(e.getMessage().equals(eolString)){
 				e.printStackTrace();
 				System.out.println("FATAL ERROR- You should not ghet this. Error: " + e.getMessage());

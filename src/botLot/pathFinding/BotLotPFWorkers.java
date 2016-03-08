@@ -7,6 +7,8 @@ import botLot.lotGraph.LotEdge;
 import botLot.lotGraph.LotGraph;
 import botLot.lotGraph.LotGraphException;
 import botLot.lotGraph.LotNode;
+import botLot.lotGraph.LotPath;
+import botLot.pathFinding.Algorithm.BotLotPFAlgorithm;
 
 /**
  * Worker methods for path finding.
@@ -16,7 +18,7 @@ import botLot.lotGraph.LotNode;
  * TODO:: Javadoc stuff
  * 
  * @author Greg Stewart
- * @version	1.0 2/13/16
+ * @version	1.0 3/7/16
  */
 public final class BotLotPFWorkers {
 	/** The string to be used when throwing exceptions when the data given is not ready. */
@@ -32,18 +34,21 @@ public final class BotLotPFWorkers {
 	 * @return	If all the data is ready.
 	 */
 	public static boolean readyCheck(LotGraph graphIn, LotNode curNode, LotNode destNode, boolean checkPath){
+		//System.out.println("in readyCheck()");
 		if(graphIn != null || graphIn != new LotGraph()){
+			//System.out.println("has graph. " + curNode + " " + destNode);
 			if(graphIn.hasNode(curNode) && graphIn.hasNode(destNode)){
+				//System.out.println("has cur and dest");
 				if(checkPath){
 					try {
 						return hasPath(graphIn, curNode, destNode);
 					} catch (BotLotPFException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 						System.out.println("FATAL ERR- readyCheck(LotGraph, curNode, destNode);- this should not happen. Error: " + e.getMessage());
 						System.exit(1);
 					}
 				}
+				//System.out.println("ready.");
 				return true;
 			}
 		}
@@ -80,9 +85,6 @@ public final class BotLotPFWorkers {
 	 * @param destNode The node we are trying to get to.
 	 * @return	A list of edges that will trap a navigational driver from getting to the destination node.
 	 * @throws BotLotPFException If the object given is not ready for path generation.
-	 * 
-	 * TODO:: rewrite to make use of new input
-	 * TODO:: review javadoc documentation
 	 */
 	public static ArrayList<LotEdge> getTrapEdges(LotGraph graphIn, LotNode curNode, LotNode destNode) throws BotLotPFException{
 		if(readyCheck(graphIn, curNode, destNode, true)){
@@ -122,7 +124,6 @@ public final class BotLotPFWorkers {
 							}
 							
 						} catch (LotGraphException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 							System.out.println("FATAL ERR- hasPath();- this should not happen. Error: " + e.getMessage());
 							System.exit(1);
@@ -167,7 +168,6 @@ public final class BotLotPFWorkers {
 	 * Determines if there is a path from the curNode to the destNode.
 	 * <p>
 	 * Uses a multi-threaded algorithm to accomplish this quickly for very large and/or complex data sets.
-	 * TODO:: fix, always returns false
 	 * 
 	 * @param lotGraph	The graph object to use.
 	 * @param curNode	The node we are starting at.
@@ -213,7 +213,6 @@ public final class BotLotPFWorkers {
 								}
 							}
 						} catch (LotGraphException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 							System.out.println("FATAL ERR- hasPath();- this should not happen. Error: " + e.getMessage());
 							System.exit(1);
@@ -270,4 +269,83 @@ public final class BotLotPFWorkers {
 		return hasPath(algIn.getGraph(), algIn.getCurNode(), algIn.getDestNode(), algIn.getEdgesToAvoid());
 	}//hasPath(BotLot)
 	
-}//class BotLotPFWorkers
+	/**
+	 * Checks if the given path is valid, and actually describes a path through the graph.
+	 * 
+	 * @param pathIn	The path to check if it is valid.
+	 * @param graphIn	The graph this path is associated with.
+	 * @param curNode	The node we are currently at.
+	 * @param destNode	The node we are trying to get to.
+	 * @param edgesToAvoid	Edges to not go down.
+	 * @return	If the path given is valid.
+	 * @throws BotLotPFException	If something goes wrong.
+	 */
+	public static boolean pathIsValid(LotPath pathIn, LotGraph graphIn, LotNode curNode, LotNode destNode, ArrayList<LotEdge> edgesToAvoid) throws BotLotPFException{
+		//System.out.println("Entered PathIsValid");
+		if(readyCheck(graphIn, curNode, destNode, false)){
+			if(pathIn.size() == 0){
+				return false;
+			}
+			if(!pathIn.pathIsContinuous() | pathIn.path.getLast().getEndNode() != destNode){
+				//System.out.println("\tPath not continuous");
+				return false;
+			}
+			LotNode curTempNode = curNode;
+			ArrayList<LotEdge> tempEdgeList = null;
+			for(LotEdge curEdge : pathIn.path){
+				tempEdgeList = curTempNode.getConnectedEdges(edgesToAvoid);
+				if(tempEdgeList.contains(curEdge)){
+					curTempNode = curEdge.getEndNode();
+					if(curTempNode == destNode){
+						//System.out.println("\tPath Founds to be Valid");
+						return true;
+					}
+				}else{
+					//System.out.println("\t" + curTempNode + " does not have edge " + curEdge);
+					return false;
+				}
+			}
+			//System.out.println("Didnt reach end.");
+			return false;
+		}else{
+			throw new BotLotPFException("Data given is not ready to be operated on.");
+		}
+	}//pathIsValid(LotPath, LotGraph, LotNode, LotNode, ArrayList<LotEdge>) throws BotLotPFException
+	
+	/**
+	 * Checks if the given path is valid, and actually describes a path through the graph. 
+	 * 
+	 * @param pathIn	The path to check.
+	 * @param lotIn	The BotLot object to check against.
+	 * @return	If the path given is valid.
+	 * @throws BotLotPFException	If something went wrong.
+	 */
+	public static boolean pathIsValid(LotPath pathIn, BotLot lotIn) throws BotLotPFException{
+		//System.out.println("Data: " + lotIn.getCurNode() + " " + lotIn.getDestNode());
+		return pathIsValid(pathIn, lotIn.mainGraph, lotIn.getCurNode(), lotIn.getDestNode(), new ArrayList<LotEdge>());
+	}
+	
+	/**
+	 * Checks if the path held in the BotLot object is valid, and actually describes a path through the graph.
+	 * 
+	 * @param lotIn	The BotLot object we care about.
+	 * @return	If the curPath in the object is valid.
+	 * @throws BotLotPFException	If something went wrong.
+	 */
+	public static boolean pathIsValid(BotLot lotIn) throws BotLotPFException{
+		return pathIsValid(lotIn.getCurPath(), lotIn);
+	}
+	
+	/**
+	 * If the path given is valid based on the values held in the given algorithm.
+	 * 
+	 * @param pathIn	The path to check.
+	 * @param algIn	The algorithm to get information about.
+	 * @return	If the path given is valid.
+	 * @throws BotLotPFException	If something went wrong.
+	 */
+	public static boolean pathIsValid(LotPath pathIn, BotLotPFAlgorithm algIn) throws BotLotPFException{
+		return pathIsValid(pathIn, algIn.getGraph(), algIn.getCurNode(), algIn.getDestNode(), algIn.getEdgesToAvoid());
+	}
+	
+}//classBotLotPFWorkers

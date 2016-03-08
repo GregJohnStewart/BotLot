@@ -1,11 +1,14 @@
 package botLot;
 import java.util.ArrayList;//for dealing with the ArrayLists in the graph.
+import java.util.Collection;
 import java.util.LinkedList;//for dealing with the LinkedList of the path.
 
 import botLot.BotLotException;
 import botLot.lotGraph.*;
 import botLot.pathFinding.BotLotPF;
 import botLot.pathFinding.BotLotPFException;
+import botLot.pathFinding.BotLotPFWorkers;
+import botLot.pathFinding.Algorithm.BotLotPFAlgException;
 /**
  * BotLot.java 
  * <p>
@@ -14,7 +17,7 @@ import botLot.pathFinding.BotLotPFException;
  * Started: 10/7/15
  * 
  * @author Greg Stewart
- * @version	1.0 12/12/15
+ * @version	1.0 3/7/16
  */
 public class BotLot{
 	/** The main graph. Where all data is held. */
@@ -80,10 +83,8 @@ public class BotLot{
 		this.clearCurNode();
 	}//BotLot()
 	
-	
 	//endregion
 	
-
     //=========================================================================
     //    Setters
     //region Setters
@@ -98,15 +99,9 @@ public class BotLot{
 	 */
 	public void setGraph(LotGraph graphIn){
 		this.mainGraph = graphIn;
-		if(!this.mainGraph.hasNode(this.getCurNode())){
-			this.clearCurNode();
-		}
-		if(!this.mainGraph.hasNode(this.getDestNode())){
-			this.clearDestNode();
-		}
-		if(!this.curPathIsValid()){
-			this.clearCurPath();
-		}
+		this.clearCurNode();
+		this.clearDestNode();
+		this.clearCurPath();
 	}//setGraph(LotGraph)
 	
 	/**
@@ -261,33 +256,6 @@ public class BotLot{
 	}//addEdge()
 	
 	/**
-	 * Creates an edge off of the current node.
-	 * 
-	 * @return	The edge created.
-	 * @throws BotLotException	If the current node isn't set.
-	 */
-	public LotEdge createEdge() throws BotLotException{
-		if(this.graphHasCurNode()){
-			try {
-				return this.mainGraph.createEdge(this.getCurNode());
-			} catch (LotGraphException e) {
-				System.out.println("FATAL ERR- createEdge()- This should not happen. Error: " + e.getMessage());
-				System.exit(1);
-			}
-		}
-		throw new BotLotException("Cur node not set.");
-	}//createEdge()
-	/**
-	 * Creates an edge off of the current node, and returns it's id.
-	 * 
-	 * @return	The id of the new edge.
-	 * @throws BotLotException	If the current node isn't set.
-	 */
-	public String createEdgeGiveId() throws BotLotException{
-		return this.createEdge().getId();
-	}//createEdgeGiveId()
-	
-	/**
 	 * Creates an edge to the given node.
 	 * 
 	 * @param toNode	The given node.
@@ -378,6 +346,7 @@ public class BotLot{
 		}
 		throw new BotLotException("toNode was not found in data.");
 	}//createEdgeTo(int)
+	
 	/**
 	 * Creates an edge to the given node and returns its ID.
 	 * <p>
@@ -660,7 +629,7 @@ public class BotLot{
 	 * Gets the edges that {@link #curNode} has going out from it.
 	 * 
 	 * @return	An ArrayList of the edges that are going out from this node.
-	 * @throws BotLotException If the current node is no longer in the graph.
+	 * @throws BotLotException If the current node is not set.
 	 */
 	public ArrayList<LotEdge> getCurNodeEdges() throws BotLotException{
 		if(this.graphHasCurNode()){
@@ -669,6 +638,34 @@ public class BotLot{
 			throw new BotLotException("The current node is no longer in the data set.");
 		}
 	}//getCurNodeEdges()
+	
+	/**
+	 * Gets the edges that {@link #curNode} has going out from it that are connected.
+	 * 
+	 * @return	An ArrayList of the edges that are going out from this node that are connected to other nodes.
+	 * @throws BotLotException If the current node is not set.
+	 */
+	public ArrayList<LotEdge> getCurNodeConnectedEdges() throws BotLotException{
+		if(this.graphHasCurNode()){
+			return this.getCurNode().getConnectedEdges();
+		}else{
+			throw new BotLotException("The current node is no longer in the data set.");
+		}
+	}//getCurNodeConnectedEdges()
+	
+	/**
+	 * Gets the edges that {@link #curNode} has going out from it that are connected, omitting the edges in the given set.
+	 * @param edgesToAvoid	A set of edges to avoid going down.
+	 * @return	An ArrayList of the edges that are going out from this node that are connected to other nodes, excluding the ones in the given set.
+	 * @throws BotLotException If the current node is not set.
+	 */
+	public ArrayList<LotEdge> getCurNodeConnectedEdges(Collection<LotEdge> edgesToAvoid) throws BotLotException{
+		if(this.graphHasCurNode()){
+			return this.getCurNode().getConnectedEdges(edgesToAvoid);
+		}else{
+			throw new BotLotException("The current node is no longer in the data set.");
+		}
+	}//getCurNodeConnectedEdges()
 	
 	/**
 	 * Determines if BotLot knows where we are (If {@link #curNode} is set or not).
@@ -795,14 +792,18 @@ public class BotLot{
 	public boolean curPathIsValid(){
 		//curPath is null
 		if(!this.hasPath()){
-			return false;
-		}
-		//if it doesnt start at curNode, or doesnt end up at destNode
-		if(!this.getCurNode().hasEdge(this.getCurPath().path.get(0)) | !(this.getCurPath().path.getLast().getEndNode() == this.getDestNode())){
+			System.out.println("No path set.");
 			return false;
 		}
 		//if it is continuous or not
-		return this.getCurPath().pathIsValid();
+		try {
+			return BotLotPFWorkers.pathIsValid(this);
+		} catch (BotLotPFException e) {
+			e.printStackTrace();
+			System.out.println("FATAL ERROR- curPathIsValid()- this should not happen. Error: " + e.getMessage());
+			System.exit(1);
+		}
+		return false;
 	}//curPathIsValid()
 	
 	/**
@@ -813,23 +814,30 @@ public class BotLot{
 	 * @return	If we have a path.
 	 */
 	public boolean hasPath(){
-		if(!(this.getCurPath() == new LotPath()) && !(this.getCurPath() != null)){
+		if((this.getCurPath() == new LotPath()) || (this.getCurPath() == null)){
 			return false;
 		}
 		return true;
 	}//hasPath()
 	
+	/**
+	 * 
+	 * @return
+	 * @throws BotLotException
+	 */
 	public LotPath calcNewPathGivePath() throws BotLotException{
 		if(this.hasCurNode() && this.hasDestNode() && this.curNodeHasEdges()){
 			try{
 				LotPath newPath = BotLotPF.getShortestPath(this);
 				
-				if(!newPath.pathIsValid()){
+				if(!BotLotPFWorkers.pathIsValid(newPath, this)){
 					throw new BotLotException("Path generated is not valid.");
 				}
 				return newPath;
-			}catch(BotLotPFException e){
+			}catch(BotLotPFAlgException e){
 				throw new BotLotException("There is no path between curNode and destination node. Or something broke in the path finiding (unlikely).");
+			} catch (BotLotPFException e) {
+				throw new BotLotException("There is no path between curNode and destination node. Or something broke in the path finiding (unlikely).");		
 			}
 		}
 		if(!this.hasCurNode() && !this.hasDestNode() && !this.curNodeHasEdges()){
