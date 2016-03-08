@@ -821,9 +821,10 @@ public class BotLot{
 	}//hasPath()
 	
 	/**
+	 * Calculates a new path using the data and returns it.
 	 * 
-	 * @return
-	 * @throws BotLotException
+	 * @return	The new path.
+	 * @throws BotLotException	If something went wrong.
 	 */
 	public LotPath calcNewPathGivePath() throws BotLotException{
 		if(this.hasCurNode() && this.hasDestNode() && this.curNodeHasEdges()){
@@ -854,7 +855,7 @@ public class BotLot{
 			exceptionOutput += " curNode's edges";
 		}
 		throw new BotLotException(exceptionOutput);
-	}
+	}//calcNewPathGivePath()
 	
 	/**
 	 * Calculates a new path based on {@link #curNode} and {@link #destNode}.

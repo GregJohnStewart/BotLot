@@ -80,6 +80,8 @@ public class BotLotPFExact extends BotLotPFAlgorithm {
 	
 	/**
 	 * Recursive method to find an exact shortest path.
+	 * <p>
+	 * TODO:: redo this
 	 * 
 	 * @param thisCurNode	The node this iteration is on.
 	 * @param lastNode	The node whose iteration called this iteration.

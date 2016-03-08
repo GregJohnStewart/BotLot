@@ -80,11 +80,11 @@ public final class BotLotPFWorkers {
 	/**
 	 * Gets a list of edges that would put a searching algorithm into a trapped or dead end state. Trapped meaning they can no longer reach the destination node.
 	 * 
-	 * @param lotIn	The BotLot object we are dealing with.
-	 * @param curNode The current node we are at.
-	 * @param destNode The node we are trying to get to.
-	 * @return	A list of edges that will trap a navigational driver from getting to the destination node.
-	 * @throws BotLotPFException If the object given is not ready for path generation.
+	 * @param graphIn	The graph we are dealing with.
+	 * @param curNode	The node we are starting at.
+	 * @param destNode	The node we are trying to get to.
+	 * @return	A list of edges that would trap a path finding algorithm.
+	 * @throws BotLotPFException	If something went wrong.
 	 */
 	public static ArrayList<LotEdge> getTrapEdges(LotGraph graphIn, LotNode curNode, LotNode destNode) throws BotLotPFException{
 		if(readyCheck(graphIn, curNode, destNode, true)){
@@ -166,15 +166,13 @@ public final class BotLotPFWorkers {
 	
 	/**
 	 * Determines if there is a path from the curNode to the destNode.
-	 * <p>
-	 * Uses a multi-threaded algorithm to accomplish this quickly for very large and/or complex data sets.
 	 * 
-	 * @param lotGraph	The graph object to use.
+	 * @param graphIn	The graph we are dealing with.
 	 * @param curNode	The node we are starting at.
-	 * @param destNode	The node we want to go to.
-	 * @param edgesToAvoid	A list of edges to not go down.
-	 * @return	If there is a path between curNode and destNode.
-	 * @throws BotLotPFException	If the data is not ready, or does not have the given nodes.
+	 * @param destNode	The node we are trying to get to.
+	 * @param edgesToAvoid	Edges we are trying to avoid.
+	 * @return	If there is a path from the current node to the dest node.
+	 * @throws BotLotPFException	if something went wrong.
 	 */
 	public static boolean hasPath(LotGraph graphIn, LotNode curNode, LotNode destNode, ArrayList<LotEdge> edgesToAvoid) throws BotLotPFException{
 		//final int minsToWait = Integer.MAX_VALUE;
@@ -258,12 +256,10 @@ public final class BotLotPFWorkers {
 	
 	/**
 	 * Determines if there is a path from the curNode to the destNode.
-	 * <p>
-	 * Uses a multi-threaded algorithm to accomplish this quickly for very large and/or complex data sets.
 	 * 
-	 * @param lotIn	The BotLot that we are dealing with.
-	 * @return	If there is a path from the curNode to the destNode of the BotLot given.
-	 * @throws BotLotPFException If the BotLot object given isn't ready for path generation.
+	 * @param algIn	The algorithm to get information from.
+	 * @return	If there is a path between the curNode and destNode of the algorithm object.
+	 * @throws BotLotPFException	If something went wrong.
 	 */
 	public static boolean hasPath(BotLotPFAlgorithm algIn) throws BotLotPFException{
 		return hasPath(algIn.getGraph(), algIn.getCurNode(), algIn.getDestNode(), algIn.getEdgesToAvoid());
