@@ -8,7 +8,7 @@ import botLot.lotGraph.*;
 import botLot.pathFinding.BotLotPF;
 import botLot.pathFinding.BotLotPFException;
 import botLot.pathFinding.BotLotPFWorkers;
-import botLot.pathFinding.Algorithm.BotLotPFAlgException;
+import botLot.pathFinding.Algorithms.BotLotPFAlgException;
 /**
  * BotLot.java 
  * <p>

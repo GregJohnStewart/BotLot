@@ -12,7 +12,7 @@ import java.util.NoSuchElementException;
  * Started: 11/18/15
  * 
  * @author Greg Stewart
- * @version	1.0 3/7/16
+ * @version	1.0 3/12/16
  */
 public class LotPath {
 	/** the path of edges held by this object */
@@ -42,6 +42,18 @@ public class LotPath {
 	}//LotPath(Collection<LotEdge>)
 	
 	/**
+	 * Creates a lot path out of a list of nodes.
+	 * 
+	 * @param nodeListIn	The list of nodes we are getting.
+	 * @param helloWorldIgnoreThis	Doesn't do anything. Only here to differentiate between LotPath(Collection<LotEdge>)
+	 * @throws LotPathException	If there is no actual path described by this list.
+	 */
+	public LotPath(Collection<LotNode> nodeListIn, boolean helloWorldIgnoreThis) throws LotPathException{
+		this();
+		this.setPathWithNodes(nodeListIn);
+	}
+	
+	/**
 	 * Basic constructor. Initializes a new linked list for the edges.
 	 */
 	public LotPath(){
@@ -60,6 +72,23 @@ public class LotPath {
 			throw new LotPathException("Given set of edges is not continuous.");
 		}
 	}//setPath(Collection<LotEdge)
+	
+	/**
+	 * Sets the current path to one given via a collection of nodes.
+	 * 
+	 * @param nodeListIn	The list of nodes to turn into the path.
+	 * @throws LotPathException	If something went wrong.
+	 */
+	public void setPathWithNodes(Collection<LotNode> nodeListIn) throws LotPathException{
+		LinkedList<LotNode> nodeList = new LinkedList<LotNode>(nodeListIn);
+		while(true){
+			if(nodeList.size() == 1){
+				return;
+			}
+			this.append(nodeList.get(0).getShortestEdgeTo(nodeList.get(1)));
+			nodeList.removeFirst();
+		}
+	}//setPathWithNodes(Collection<LotNode>)
 	
 	/**
 	 * Gets the metric for traveling the whole path.
@@ -125,6 +154,21 @@ public class LotPath {
 	}//removeLoops
 	
 	/**
+	 * Determines if this path contains any loops.
+	 * 
+	 * @return	If this path contains any loops.
+	 */
+	public boolean hasLoops(){
+		for(int i = 0;i < this.path.size(); i++){
+			//System.out.println("\tAt edge " + i + " of " + this.path.size());
+			if(this.path.indexOf(this.path.get(i)) != this.path.lastIndexOf(this.path.get(i))){
+				return true;
+			}
+		}
+		return false;
+	}//hasLoops()
+	
+	/**
 	 * Determines if the path given is valid.
 	 * 
 	 * @param pathIn The path to check.
@@ -185,6 +229,8 @@ public class LotPath {
 	public void append(LotPath pathIn) throws LotPathException{
 		this.append(pathIn.path);
 	}//append(LotPath)
+	
+	
 	
 	/**
 	 * Appends an edge to the path.

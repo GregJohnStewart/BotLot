@@ -1,4 +1,4 @@
-package botLot.pathFinding.Algorithm;
+package botLot.pathFinding.Algorithms;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -12,6 +12,8 @@ import botLot.pathFinding.BotLotPFWorkers;
  * Abstract class to set up the methods needed for all path generation.
  * <p>
  * Started: 2/13/16
+ * 
+ * TODO:: make an interface for subclasses to use?
  * 
  * @author Greg Stewart
  * @version	1.0 3/7/16

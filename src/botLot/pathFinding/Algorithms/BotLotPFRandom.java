@@ -1,4 +1,4 @@
-package botLot.pathFinding.Algorithm;
+package botLot.pathFinding.Algorithms;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -7,7 +7,6 @@ import java.util.concurrent.ThreadLocalRandom;
 import botLot.BotLot;
 import botLot.lotGraph.LotEdge;
 import botLot.lotGraph.LotGraph;
-import botLot.lotGraph.LotGraphException;
 import botLot.lotGraph.LotNode;
 import botLot.lotGraph.LotPath;
 import botLot.lotGraph.LotPathException;

@@ -8,7 +8,7 @@ import botLot.lotGraph.LotGraph;
 import botLot.lotGraph.LotGraphException;
 import botLot.lotGraph.LotNode;
 import botLot.lotGraph.LotPath;
-import botLot.pathFinding.Algorithm.BotLotPFAlgorithm;
+import botLot.pathFinding.Algorithms.BotLotPFAlgorithm;
 
 /**
  * Worker methods for path finding.

@@ -4,10 +4,10 @@ import java.util.ArrayList;//for dealing with the graph structure itself.
 import botLot.BotLot;
 import botLot.BotLotException;
 import botLot.lotGraph.*;
-import botLot.pathFinding.Algorithm.BotLotPFAlgException;
-import botLot.pathFinding.Algorithm.BotLotPFAlgorithm;
-import botLot.pathFinding.Algorithm.BotLotPFExact;
-import botLot.pathFinding.Algorithm.BotLotPFRandom;
+import botLot.pathFinding.Algorithms.BotLotPFAlgException;
+import botLot.pathFinding.Algorithms.BotLotPFAlgorithm;
+import botLot.pathFinding.Algorithms.BotLotPFDijkstra;
+import botLot.pathFinding.Algorithms.BotLotPFRandom;
 /**
  * BotLotPF.java
  * <p>
@@ -45,8 +45,8 @@ public class BotLotPF {
 		pathFound.infSizeFlag = true;
 		//determine what algorithm to use.....
 		//System.out.println("\tnode/edge ratio: " + graphIn.getNodeEdgeRatio() + "\n\tThreshhold: " + ratioThreshHold);
-		//if(graphIn.getNodeEdgeRatio() >= ratioThreshHold){
-		if(true){//testing
+		if(graphIn.getNodeEdgeRatio() >= ratioThreshHold){
+		//if(true){//testing
 			//System.out.println("\tRatio within bounds. Doing random path gen.");
 			/*If about the same amount of nodes to edges, get best of a few random path gens
 			 * 
@@ -63,12 +63,11 @@ public class BotLotPF {
 					pathFound = tempPath;
 				}
 			}
-			//System.out.println("Path: " + pathFound.toString());
 		}else{
 			System.out.println("\tToo complicated of a graph. Getting specific shortest path.");
-			pathFound = new BotLotPFExact(graphIn, curNode, destNode, edgesToAvoid).findPath();
-			//pathFound = getExactPath(lotIn);
+			pathFound = new BotLotPFDijkstra(graphIn, curNode, destNode, edgesToAvoid).findPath();
 		}
+		System.out.println("Path: " + pathFound.toString());
 		return pathFound;
 	}//getShortestPath(BotLot)
 	

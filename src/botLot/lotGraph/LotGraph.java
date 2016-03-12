@@ -1575,6 +1575,48 @@ public class LotGraph {
 	}
 	
 	/**
+	 * Gets all the edges pointing to a particular node, excluding ones contained in the given list.
+	 * 
+	 * @param nodeIn	The node we are getting the edges to. 
+	 * @param edgesToAvoid	A list of edges to not concern ourselves with.
+	 * @return	All the edges pointing to a particular node, excluding ones contained in the given list.
+	 * @throws LotGraphException If the node given is not contained within the data.
+	 */
+	public ArrayList<LotEdge> getEdgesToNode(LotNode nodeIn, Collection<LotEdge> edgesToAvoid) throws LotGraphException{
+		ArrayList<LotEdge> tempList = this.getEdgesToNode(nodeIn);
+		tempList.removeAll(edgesToAvoid);
+		return tempList;
+	}
+	
+	/**
+	 * Gets all the edges pointing to a particular node, excluding ones contained in the given list.
+	 * 
+	 * @param nodeIdIn	The Id of the node we are getting the edges to. 
+	 * @param edgesToAvoid	A list of edges to not concern ourselves with.
+	 * @return	All the edges pointing to a particular node, excluding ones contained in the given list.
+	 * @throws LotGraphException If the node Id given is not contained within the data.
+	 */
+	public ArrayList<LotEdge> getEdgesToNode(String nodeIdIn, Collection<LotEdge> edgesToAvoid) throws LotGraphException{
+		ArrayList<LotEdge> tempList = this.getEdgesToNode(nodeIdIn);
+		tempList.removeAll(edgesToAvoid);
+		return tempList;
+	}
+	
+	/**
+	 * Gets all the edges pointing to a particular node, excluding ones contained in the given list.
+	 * 
+	 * @param nodeIndexIn	The index of the node we are getting the edges to. 
+	 * @param edgesToAvoid	A list of edges to not concern ourselves with.
+	 * @return	All the edges pointing to a particular node, excluding ones contained in the given list.
+	 * @throws LotGraphException If the node index given is not contained within the data.
+	 */
+	public ArrayList<LotEdge> getEdgesToNode(int nodeIndexIn, Collection<LotEdge> edgesToAvoid) throws LotGraphException{
+		ArrayList<LotEdge> tempList = this.getEdgesToNode(nodeIndexIn);
+		tempList.removeAll(edgesToAvoid);
+		return tempList;
+	}
+	
+	/**
 	 * Determines if there are edges pointing to the given node.
 	 * 
 	 * @param nodeIn	The node we are testing.
@@ -1625,6 +1667,63 @@ public class LotGraph {
 	}
 	
 	/**
+	 * Determines if there are any edges pointing to a specified node, not counting edges in the given list.
+	 * 
+	 * @param nodeIn	The node we are dealing with.
+	 * @param edgesToAvoid	Edges we are not considering.
+	 * @return	If there are any edges pointing to the specified node, not counting edges in the given list.
+	 * @throws LotGraphException	If the node given isn't in the data set.
+	 */
+	public boolean hasEdgeToNode(LotNode nodeIn, Collection<LotEdge> edgesToAvoid) throws LotGraphException{
+		if(this.hasNode(nodeIn)){
+			if(this.getEdgesToNode(nodeIn, edgesToAvoid).size() > 0){
+				return true;
+			}
+		}else{
+			throw new LotGraphException("The given node is not within the dataset.");
+		}
+		return false; 
+	}//hasEdgeToNode(LotNode, Sollection<LotEdge>)
+	
+	/**
+	 * Determines if there are any edges pointing to a specified node, not counting edges in the given list.
+	 * 
+	 * @param nodeIdIn	The id of the node we are dealing with.
+	 * @param edgesToAvoid	Edges we are not considering.
+	 * @return	If there are any edges pointing to the specified node, not counting edges in the given list.
+	 * @throws LotGraphException	If the node given isn't in the data set.
+	 */
+	public boolean hasEdgeToNode(String nodeIdIn, Collection<LotEdge> edgesToAvoid) throws LotGraphException{
+		if(this.hasNode(nodeIdIn)){
+			if(this.getEdgesToNode(nodeIdIn, edgesToAvoid).size() > 0){
+				return true;
+			}
+		}else{
+			throw new LotGraphException("The given node is not within the dataset.");
+		}
+		return false; 
+	}//hasEdgeToNode(LotNode, Sollection<LotEdge>)
+	
+	/**
+	 * Determines if there are any edges pointing to a specified node, not counting edges in the given list.
+	 * 
+	 * @param nodeIndexIn	The index of the node we are dealing with.
+	 * @param edgesToAvoid	Edges we are not considering.
+	 * @return	If there are any edges pointing to the specified node, not counting edges in the given list.
+	 * @throws LotGraphException	If the node given isn't in the data set.
+	 */
+	public boolean hasEdgeToNode(int nodeIndexIn, Collection<LotEdge> edgesToAvoid) throws LotGraphException{
+		if(this.hasNode(nodeIndexIn)){
+			if(this.getEdgesToNode(nodeIndexIn, edgesToAvoid).size() > 0){
+				return true;
+			}
+		}else{
+			throw new LotGraphException("The given node is not within the dataset.");
+		}
+		return false; 
+	}//hasEdgeToNode(LotNode, Sollection<LotEdge>)
+	
+	/**
 	 * Gets the number of edges the node has going to it.
 	 * 
 	 * @param nodeIn	The node we are testing.
@@ -1651,12 +1750,47 @@ public class LotGraph {
 	 * 
 	 * @param nodeIndexIn	The index of the node we are testing.
 	 * @return	The number of edges going to the node.
-	 * @throws LotGraphException	If that node is not within the dataset.
+	 * @throws LotGraphException	If that node is not within the data set.
 	 */
 	public int getNumEdgesToNode(int nodeIndexIn) throws LotGraphException{
 		return this.getEdgesToNode(nodeIndexIn).size();
 	}
 	
+	/**
+	 * Gets the number of edges the node has going to it, excluding the ones in the given list.
+	 * 
+	 * @param nodeIn	The node we are dealing with.
+	 * @param edgesToAvoid	A list of edges to not consider.
+	 * @return	The number of edges going to the node not in the list given.
+	 * @throws LotGraphException	If the node given is not in the data set.
+	 */
+	public int getNumEdgesToNode(LotNode nodeIn, Collection<LotEdge> edgesToAvoid) throws LotGraphException{
+		return this.getEdgesToNode(nodeIn, edgesToAvoid).size();
+	}
+	
+	/**
+	 * Gets the number of edges the node has going to it, excluding the ones in the given list.
+	 * 
+	 * @param nodeIdIn	The Id of the node we are dealing with.
+	 * @param edgesToAvoid	A list of edges to not consider.
+	 * @return	The number of edges going to the node not in the list given.
+	 * @throws LotGraphException	If the node given is not in the data set.
+	 */
+	public int getNumEdgesToNode(String nodeIdIn, Collection<LotEdge> edgesToAvoid) throws LotGraphException{
+		return this.getEdgesToNode(nodeIdIn, edgesToAvoid).size();
+	}
+	
+	/**
+	 * Gets the number of edges the node has going to it, excluding the ones in the given list.
+	 * 
+	 * @param nodeIndexIn	The Index of the node we are dealing with.
+	 * @param edgesToAvoid	A list of edges to not consider.
+	 * @return	The number of edges going to the node not in the list given.
+	 * @throws LotGraphException	If the node given is not in the data set.
+	 */
+	public int getNumEdgesToNode(int nodeIndexIn, Collection<LotEdge> edgesToAvoid) throws LotGraphException{
+		return this.getEdgesToNode(nodeIndexIn, edgesToAvoid).size();
+	}
 	
 	/**
 	 * Checks to see if the node list is empty
