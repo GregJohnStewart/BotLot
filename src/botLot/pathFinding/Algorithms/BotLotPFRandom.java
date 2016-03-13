@@ -25,7 +25,7 @@ import botLot.pathFinding.BotLotPFWorkers;
  * @author Greg Stewart
  * @version	1.0 3/7/16
  */
-public class BotLotPFRandom extends BotLotPFAlgorithm {	
+public class BotLotPFRandom extends BotLotPFAlgorithm implements BotLotPFAlgInterface {	
 	/**
 	 * Constructor using a BotLot object.
 	 * 

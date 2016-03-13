@@ -123,15 +123,17 @@ public class LotGraph {
 	 * 
 	 * @param nodesIn
 	 *            The node list in.
+     * @return	This graph.
 	 * @throws LotGraphException
 	 *             If the node list was found to be invalid.
 	 */
-	public void setNodes(Collection<LotNode> nodesIn) throws LotGraphException {
+	public LotGraph setNodes(Collection<LotNode> nodesIn) throws LotGraphException {
 		if (checkNodeEdges(nodesIn)) {
 			this.nodes = (ArrayList<LotNode>)nodesIn;
 		} else {
 			throw new LotGraphException("Node list given is invalid.");
 		}
+		return this;
 	}// setNodes(ArrayList<LotNode>
 
 	/**
@@ -141,10 +143,11 @@ public class LotGraph {
 	 *            The edge to set to.
 	 * @param fromNode
 	 *            The node we are adding this edge to.
+     * @return	This graph.
 	 * @throws LotGraphException
 	 *             If either node does not exist.
 	 */
-	public void setEdge(LotEdge edgeIn, LotNode fromNode) throws LotGraphException {
+	public LotGraph setEdge(LotEdge edgeIn, LotNode fromNode) throws LotGraphException {
 		if (this.hasNode(fromNode)) {
 			if (this.hasNode(edgeIn.getEndNode()) | edgeIn.getEndNode() == null) {
 				if (!this.nodeIsFull(fromNode)) {
@@ -164,6 +167,7 @@ public class LotGraph {
 		} else {
 			throw new LotGraphException("fromNode is not inside the stored data.");
 		}
+		return this;
 	}// setEdge(LotEdge, LotNode)
 
 	/**
@@ -173,10 +177,11 @@ public class LotGraph {
 	 *            The edge to give the node.
 	 * @param fromNodeId
 	 *            The first node's ID.
+     * @return	This graph.
 	 * @throws LotGraphException
 	 *             If either node does not exist.
 	 */
-	public void setEdge(LotEdge edgeIn, String fromNodeId) throws LotGraphException {
+	public LotGraph setEdge(LotEdge edgeIn, String fromNodeId) throws LotGraphException {
 		if (this.hasNode(fromNodeId)) {
 			if (this.hasNode(edgeIn.getEndNode()) | edgeIn.getEndNode() == null) {
 				if (!this.nodeIsFull(fromNodeId)) {
@@ -196,6 +201,7 @@ public class LotGraph {
 		} else {
 			throw new LotGraphException("fromNodeId does not point to any node in the set.");
 		}
+		return this;
 	}// setEdge(LotEdge,String)
 
 	/**
@@ -205,10 +211,11 @@ public class LotGraph {
 	 *            The edge we are adding to a node.
 	 * @param fromNodeIndex
 	 *            The node we are dealing with.
+     * @return	This graph.
 	 * @throws LotGraphException
 	 *             If either node does not exist.
 	 */
-	public void setEdge(LotEdge edgeIn, int fromNodeIndex) throws LotGraphException {
+	public LotGraph setEdge(LotEdge edgeIn, int fromNodeIndex) throws LotGraphException {
 		if (this.hasNode(fromNodeIndex)) {
 			if (this.hasNode(edgeIn.getEndNode()) | edgeIn.getEndNode() == null) {
 				if (!this.nodeIsFull(fromNodeIndex)) {
@@ -228,6 +235,7 @@ public class LotGraph {
 		} else {
 			throw new LotGraphException("fromNodeIndex does not point to any node in the set.");
 		}
+		return this;
 	}// setEdge(LotEdge edgeIn, int fromNodeIndex)
 
 	/**
@@ -454,10 +462,11 @@ public class LotGraph {
 	 * 
 	 * @param edgeIn
 	 *            The edge to remove.
+     * @return	This graph.
 	 * @throws LotGraphException
 	 *             If the edge is not in the data set.
 	 */
-	public void removeEdge(LotEdge edgeIn) throws LotGraphException {
+	public LotGraph removeEdge(LotEdge edgeIn) throws LotGraphException {
 		if (this.hasEdge(edgeIn)) {
 			// find which node has the edge
 			outerLoop: for (int i = 0; i < this.getNumNodes(); i++) {
@@ -476,6 +485,7 @@ public class LotGraph {
 		} else {
 			throw new LotGraphException("Edge not found in stored data.");
 		}
+		return this;
 	}// removeEdge(LotEdge)
 
 	/**
@@ -483,10 +493,11 @@ public class LotGraph {
 	 * 
 	 * @param edgeIdIn
 	 *            The id of the edge to remove.
+     * @return	This graph.
 	 * @throws LotGraphException
 	 *             If the edge is not in the data set.
 	 */
-	public void removeEdge(String edgeIdIn) throws LotGraphException {
+	public LotGraph removeEdge(String edgeIdIn) throws LotGraphException {
 		if (this.hasEdge(edgeIdIn)) {
 			outerLoop: for (int i = 0; i < this.getNumNodes(); i++) {
 				if (this.getNode(i).hasEdge(edgeIdIn)) {
@@ -504,6 +515,7 @@ public class LotGraph {
 		} else {
 			throw new LotGraphException("Edge not found in stored data.");
 		}
+		return this;
 	}// removeEdge(String)
 
 	/**
@@ -513,10 +525,11 @@ public class LotGraph {
 	 * 
 	 * @param edgeIndexIn
 	 *            The index of the edge in the generated index list to remove.
+     * @return	This graph.
 	 * @throws LotGraphException
 	 *             If the edge is not in the data set.
 	 */
-	public void removeEdge(int edgeIndexIn) throws LotGraphException {
+	public LotGraph removeEdge(int edgeIndexIn) throws LotGraphException {
 		if (this.hasEdge(edgeIndexIn)) {
 			// get node
 			LotNode tempNode = null;
@@ -541,6 +554,7 @@ public class LotGraph {
 		} else {
 			throw new LotGraphException("Edge not found in stored data.");
 		}
+		return this;
 	}// removeEdge(int)
 
 	/**
@@ -550,10 +564,11 @@ public class LotGraph {
 	 *            The first node.
 	 * @param toNode
 	 *            The second node.
+     * @return	This graph.
 	 * @throws LotGraphException
 	 *             If either node is not found within {@link #nodes}.
 	 */
-	public void removeEdgeFromTo(LotNode fromNode, LotNode toNode) throws LotGraphException {
+	public LotGraph removeEdgeFromTo(LotNode fromNode, LotNode toNode) throws LotGraphException {
 		if (this.hasNode(fromNode) && this.hasNode(toNode)) {
 			if (this.getNode(fromNode).hasEdgeTo(toNode)) {
 				try {
@@ -573,6 +588,7 @@ public class LotGraph {
 				throw new LotGraphException("toNode is not within the stored data.");
 			}
 		}
+		return this;
 	}// removeEdge(LotNode, LotNode)
 
 	/**
@@ -582,10 +598,11 @@ public class LotGraph {
 	 *            The id of node one.
 	 * @param toNodeId
 	 *            The id of node two.
+     * @return	This graph.
 	 * @throws LotGraphException
 	 *             If either node cannot be found in {@link #nodes}.
 	 */
-	public void removeEdgeFromTo(String fromNodeId, String toNodeId) throws LotGraphException {
+	public LotGraph removeEdgeFromTo(String fromNodeId, String toNodeId) throws LotGraphException {
 		if (this.hasNode(fromNodeId) && this.hasNode(toNodeId)) {
 			if (this.getNode(fromNodeId).hasEdgeTo(toNodeId)) {
 				try {
@@ -605,6 +622,7 @@ public class LotGraph {
 				throw new LotGraphException("toNodeId is not within the stored data.");
 			}
 		}
+		return this;
 	}// removeEdge(String, String)
 
 	/**
@@ -614,10 +632,11 @@ public class LotGraph {
 	 *            The index of the first index.
 	 * @param toNodeIndex
 	 *            The index of the second node.
+     * @return	This graph.
 	 * @throws LotGraphException
 	 *             If either node cannot be found in {@link #nodes}.
 	 */
-	public void removeEdgeFromTo(int fromNodeIndex, int toNodeIndex) throws LotGraphException {
+	public LotGraph removeEdgeFromTo(int fromNodeIndex, int toNodeIndex) throws LotGraphException {
 		if (this.hasNode(fromNodeIndex) && this.hasNode(toNodeIndex)) {
 			if (this.getNode(fromNodeIndex).hasEdgeTo(this.getNode(toNodeIndex))) {
 				try {
@@ -637,6 +656,7 @@ public class LotGraph {
 				throw new LotGraphException("toNodeIndex is not within the stored data.");
 			}
 		}
+		return this;
 	}// removeNode(int,int)
 
 	/**
@@ -644,19 +664,21 @@ public class LotGraph {
 	 * 
 	 * @param newNode
 	 *            The node to add.
+     * @return	This graph.
 	 * @throws LotGraphException
 	 *             If the new node has the same ID of a node already present in
 	 *             {@link #nodes}.
 	 */
-	public void addNode(LotNode newNode) throws LotGraphException {
+	public LotGraph addNode(LotNode newNode) throws LotGraphException {
 		if (!checkNodeEdges(newNode)) {
 			throw new LotGraphException("Node entered has invalid edges.");
 		}
 		if (this.idIsUnique('n', newNode.getId())) {
 			this.getNodes().add(newNode);
 		} else {
-			throw new LotGraphException("Node entered has duplicate ID(" + newNode.getId() + ").");
+			throw new LotGraphException("Node entered has duplicate ID (" + newNode.getId() + ").");
 		}
+		return this;
 	}// addNode(LotNode newNode)
 
 	/**
@@ -697,10 +719,11 @@ public class LotGraph {
 	 * 
 	 * @param nodeToRemove
 	 *            The node to remove from the list.
+     * @return	This graph.
 	 * @throws LotGraphException
 	 *             If the node cannot be found.
 	 */
-	public void removeNode(LotNode nodeToRemove) throws LotGraphException {
+	public LotGraph removeNode(LotNode nodeToRemove) throws LotGraphException {
 		if (this.hasNode(nodeToRemove)) {
 			this.getNodes().remove(nodeToRemove);
 			for(int i = 0; i < this.getEdgeList().size(); i++){
@@ -711,6 +734,7 @@ public class LotGraph {
 		} else {
 			throw new LotGraphException("The node given is not within sotred data.");
 		}
+		return this;
 	}// removeNode(LotNode)
 
 	/**
@@ -718,16 +742,18 @@ public class LotGraph {
 	 * 
 	 * @param nodeToRemoveId
 	 *            The id of the node to remove.
+     * @return	This graph.
 	 * @throws LotGraphException
 	 *             If the node cannot be found.
 	 */
-	public void removeNode(String nodeToRemoveId) throws LotGraphException {
+	public LotGraph removeNode(String nodeToRemoveId) throws LotGraphException {
 		if (this.hasNode(nodeToRemoveId)) {
 			LotNode tempNode = this.getNode(nodeToRemoveId);
 			this.removeNode(tempNode);
 		} else {
 			throw new LotGraphException("The node given is not within stored data.");
 		}
+		return this;
 	}// removeNode(String)
 
 	/**
@@ -736,16 +762,18 @@ public class LotGraph {
 	 * 
 	 * @param nodeToRemoveIndex
 	 *            The index of the node to remove.
+     * @return	This graph.
 	 * @throws LotGraphException
 	 *             If the node index is not within the node list.
 	 */
-	public void removeNode(int nodeToRemoveIndex) throws LotGraphException {
+	public LotGraph removeNode(int nodeToRemoveIndex) throws LotGraphException {
 		if (this.hasNode(nodeToRemoveIndex)) {
 			LotNode tempNode = this.getNode(nodeToRemoveIndex);
 			this.removeNode(tempNode);
 		} else {
 			throw new LotGraphException("The node given is not within sotred data.");
 		}
+		return this;
 	}// removeNode(int)
 
 	/**
@@ -753,9 +781,11 @@ public class LotGraph {
 	 * 
 	 * @param randIn
 	 *            The new random number generator.
+     * @return	This graph.
 	 */
-	public void setRand(Random randIn) {
+	public LotGraph setRand(Random randIn) {
 		this.rand = randIn;
+		return this;
 	}// setRand(Random)
 
 	// =========================================================================

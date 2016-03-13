@@ -90,9 +90,11 @@ public class LotNode{
      * Trusts that the Id being given is valid, and does not conflict with other Id's.
      *
      * @param   idIn    The new Id to set to.
+     * @return	This node.
      */
-    public void setId(String idIn){
+    public LotNode setId(String idIn){
         this.id = idIn;
+        return this;
     }//setId
 
     /**
@@ -100,13 +102,15 @@ public class LotNode{
      * 
      * @param edgesIn	The edges to give this node.
      * @throws LotNodeException	If Edge list given larger than the actual number of edges.
+     * @return	This node.
      */
-    public void setEdges(ArrayList<LotEdge> edgesIn) throws LotNodeException{
+    public LotNode setEdges(ArrayList<LotEdge> edgesIn) throws LotNodeException{
 		if(edgesIn.size() > this.getActNumEdges() && this.getActNumEdges() > UNDETERMINED_NUM_EDGES){
 			throw new LotNodeException("Edge list given larger than the actual number of edges.");
 		}else{
 			this.edges = edgesIn;
 		}
+		return this;
 	}//setEdges(ArrayList<LotEdges>
     
     /**
@@ -114,8 +118,9 @@ public class LotNode{
      * 
      * @param edgesIn	The edges to give this node.
      * @throws LotNodeException	If the resulting list is larger than the actual number of edges.
+     * @return	This node.
      */
-    public void addEdges(ArrayList<LotEdge> edgesIn) throws LotNodeException{
+    public LotNode addEdges(ArrayList<LotEdge> edgesIn) throws LotNodeException{
 		if(this.getActNumEdges() > UNDETERMINED_NUM_EDGES & (edgesIn.size() + this.getNumEdges()) > this.getActNumEdges()){
 			throw new LotNodeException("Edge list given larger than the actual number of edges.");
 		}else{
@@ -127,6 +132,7 @@ public class LotNode{
 				}
 			}
 		}
+		return this;
 	}//addEdges(ArrayList<LotEdges>
     
     /**
@@ -134,8 +140,9 @@ public class LotNode{
      * 
      * @param edgeIn	The edge to add.
      * @throws LotNodeException	If the node list is already full.
+     * @return	This node.
      */
-	public void addEdge(LotEdge edgeIn) throws LotNodeException{
+	public LotNode addEdge(LotEdge edgeIn) throws LotNodeException{
 		if(this.isFull()){
 			throw new LotNodeException("Node is already full.");
 		}else if(this.hasEdge(edgeIn)){
@@ -143,64 +150,74 @@ public class LotNode{
 		}else{
 			this.edges.add(edgeIn);
 		}
+		return this;
 	}//addEdges(LotEdge)
 	
 	/**
 	 * Clears the edge list.
+     * @return	This node.
 	 */
-	public void clearEdges(){
+	public LotNode clearEdges(){
 		this.edges.clear();
+		return this;
 	}//clearEdges()
 	
 	/**
 	 * Removes a specific edge from {@link #edges}.
 	 * 
 	 * @param edgeToRemove	The edge to remove.
+     * @return	This node.
 	 * @throws LotNodeException If the node given was not found in {@link #edges}.
 	 */
-	public void remEdge(LotEdge edgeToRemove) throws LotNodeException{
+	public LotNode remEdge(LotEdge edgeToRemove) throws LotNodeException{
 		if(this.hasEdge(edgeToRemove)){
 			this.edges.remove(edgeToRemove);
 		}else{
 			throw new LotNodeException("This edge is not in the set.");
 		}
+		return this;
 	}//remEdge(LotEdge)
 	
 	/**
 	 * Removes a specific edge from {@link #edges}.
 	 * 
 	 * @param edgeIdToRemove	The ID of the edge to remove.
+     * @return	This node.
 	 * @throws LotNodeException	If no edge with the given ID found in {@link #edges}.
 	 */
-	public void remEdge(String edgeIdToRemove) throws LotNodeException{
+	public LotNode remEdge(String edgeIdToRemove) throws LotNodeException{
 		if(this.hasEdge(edgeIdToRemove)){
 			this.edges.remove(this.getEdge(edgeIdToRemove));
 		}else{
 			throw new LotNodeException("No edge with the given ID found.");
 		}
+		return this;
 	}//remEdge(String)
 	
 	/**
 	 * Removes an edge based on the index given.
 	 * 
 	 * @param edgeIndexToRemove	The index of the node to remove.
+     * @return	This node.
 	 * @throws LotNodeException	If there is no edge on that index.
 	 */
-	public void remEdge(int edgeIndexToRemove) throws LotNodeException{
+	public LotNode remEdge(int edgeIndexToRemove) throws LotNodeException{
 		if(this.hasEdge(edgeIndexToRemove)){
 			this.edges.remove(this.getEdge(edgeIndexToRemove));
 		}else{
 			throw new LotNodeException("No edge with the given ID found.");
 		}
+		return this;
 	}//remEdge(int)
 	
 	/**
 	 * Removes an edge that goes to the given node.
 	 * 
 	 * @param nodeIn	The ending node of the edge to remove.
+     * @return	This node.
 	 * @throws LotNodeException	If the node given is not present.
 	 */
-	public void remEdgeTo(LotNode nodeIn) throws LotNodeException{
+	public LotNode remEdgeTo(LotNode nodeIn) throws LotNodeException{
 		if(this.hasEdgeTo(nodeIn)){
 			try {
 				this.remEdge(this.getEdgeTo(nodeIn));
@@ -211,15 +228,17 @@ public class LotNode{
 		}else{
 			throw new LotNodeException("No edges in data set point to given node.");
 		}
+		return this;
 	}//hasEdgeTo(LotNode)
 	
 	/**
 	 * Removes an edge that goes to the node with the given ID.
 	 * 
 	 * @param nodeIdIn	The ID of the ending node of the edge to remove.
+     * @return	This node.
 	 * @throws LotNodeException	If the specified node isn't an end node of any edge.
 	 */
-	public void remEdgeTo(String nodeIdIn) throws LotNodeException{
+	public LotNode remEdgeTo(String nodeIdIn) throws LotNodeException{
 		if(this.hasEdgeTo(nodeIdIn)){
 			try {
 				this.remEdge(this.getEdgeTo(nodeIdIn));
@@ -230,15 +249,18 @@ public class LotNode{
 		}else{
 			throw new LotNodeException("No edges in data set point to given node.");
 		}
-	}
+		return this;
+	}//remEdgeTo(String)
 
 	/**
 	 * Sets {@link #actNumEdges}.
 	 * 
 	 * @param numEdgesIn	The new number of edges.
+     * @return	This node.
 	 */
-	public void setActNumEdges(int numEdgesIn){
+	public LotNode setActNumEdges(int numEdgesIn){
 		this.actNumEdges = numEdgesIn;
+		return this;
 	}//setNumEdges(int)
 	
 	/**
@@ -248,27 +270,33 @@ public class LotNode{
      *
      * @param   attKeyIn    The attribute to add or edit.
      * @param   attValIn    The attribute's value.
+     * @return	This node.
      */
-    public void setAtt(String attKeyIn, String attValIn){
+    public LotNode setAtt(String attKeyIn, String attValIn){
         this.attributes.put(attKeyIn, attValIn);
+        return this;
     }//setAtt(String, String)
     
     /**
      * Sets {@link #attributes} to a new set of attributes.
 	 *
      * @param   attsIn    The attributes to set {@link #attributes}.
+     * @return	This node.
      */
-    public void setAtts(HashMap<String, String> attsIn){
+    public LotNode setAtts(HashMap<String, String> attsIn){
         this.attributes = attsIn;
+        return this;
     }//setAtts(HashMap<String, String>)
 	
 	/** 
      * Removes an attribute from {@link #attributes}.
      *
      * @param   attKeyIn    The key of the attribute to remove.
+     * @return	This node.
      */
-    public void remAtt(String attKeyIn){
+    public LotNode remAtt(String attKeyIn){
         this.attributes.remove(attKeyIn);
+        return this;
     }//setId(String)
     
     //endregion

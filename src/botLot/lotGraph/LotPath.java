@@ -11,6 +11,8 @@ import java.util.NoSuchElementException;
  * <p>
  * Started: 11/18/15
  * 
+ * TODO:: deal with edges to avoid.
+ * 
  * @author Greg Stewart
  * @version	1.0 3/12/16
  */
@@ -64,26 +66,29 @@ public class LotPath {
 	 * Sets the {@link #path} to a collection of edges.
 	 * 
 	 * @param collectionIn	The collection of edges.
+     * @return	This path.
 	 * @throws LotPathException If the given set of edges is not continuous.
 	 */
-	public void setPath(Collection<LotEdge> collectionIn) throws LotPathException{
+	public LotPath setPath(Collection<LotEdge> collectionIn) throws LotPathException{
 		this.path = new LinkedList<LotEdge>(collectionIn);
 		if(!this.pathIsContinuous()){
 			throw new LotPathException("Given set of edges is not continuous.");
 		}
+		return this;
 	}//setPath(Collection<LotEdge)
 	
 	/**
 	 * Sets the current path to one given via a collection of nodes.
 	 * 
 	 * @param nodeListIn	The list of nodes to turn into the path.
+     * @return	This path.
 	 * @throws LotPathException	If something went wrong.
 	 */
-	public void setPathWithNodes(Collection<LotNode> nodeListIn) throws LotPathException{
+	public LotPath setPathWithNodes(Collection<LotNode> nodeListIn) throws LotPathException{
 		LinkedList<LotNode> nodeList = new LinkedList<LotNode>(nodeListIn);
 		while(true){
 			if(nodeList.size() == 1){
-				return;
+				return this;
 			}
 			this.append(nodeList.get(0).getShortestEdgeTo(nodeList.get(1)));
 			nodeList.removeFirst();
@@ -203,11 +208,12 @@ public class LotPath {
 	 * Appends a collection of LotEdges to the current list.
 	 * 
 	 * @param edgeListIn	The edge list to append.
+     * @return	This path.
 	 * @throws LotPathException	If the given list breaks the path.
 	 */
-	public void append(Collection<LotEdge> edgeListIn) throws LotPathException{
+	public LotPath append(Collection<LotEdge> edgeListIn) throws LotPathException{
 		if(edgeListIn.isEmpty()){
-			return;
+			return this;
 		}
 		LinkedList<LotEdge> listToAppend = (LinkedList<LotEdge>)edgeListIn;
 		if(this.path.getLast().getEndNode().hasEdge(listToAppend.get(0))){
@@ -218,27 +224,29 @@ public class LotPath {
 		}else{
 			throw new LotPathException("The given set would not make a continuous path if appended.");
 		}
+		return this;
 	}//append(Collection<LotEdge>)
 	
 	/**
 	 * Appends a LotPath to this  LotPath.
 	 * 
 	 * @param pathIn	The path to append.
+     * @return	This path.
 	 * @throws LotPathException	If the given path breaks the path.
 	 */
-	public void append(LotPath pathIn) throws LotPathException{
+	public LotPath append(LotPath pathIn) throws LotPathException{
 		this.append(pathIn.path);
+		return this;
 	}//append(LotPath)
-	
-	
 	
 	/**
 	 * Appends an edge to the path.
 	 * 
 	 * @param edgeIn	The edge to add.
+     * @return	This path.
 	 * @throws LotPathException	If the edge given would not make a continuous path if appended.
 	 */
-	public void append(LotEdge edgeIn) throws LotPathException{
+	public LotPath append(LotEdge edgeIn) throws LotPathException{
 		boolean hasPathToEdge;
 		try{
 			hasPathToEdge = this.path.getLast().getEndNode().hasEdge(edgeIn);
@@ -250,7 +258,26 @@ public class LotPath {
 		}else{
 			throw new LotPathException("The given edge would not make a continuous path if appended.");
 		}
+		return this;
 	}//append(LotEdge)
+	
+	/**
+	 * Appends an edge from the last node pointed to in the set to the given node
+	 * 
+	 * @param nodeIn	The node to add an edge to.
+	 * @return	This path.
+	 * @throws LotPathException	If something went wrong.
+	 */
+	public LotPath append(LotNode nodeIn) throws LotPathException{
+		if(this.path.size() == 0){
+			throw new LotPathException("There are no nodes in path.");
+		}else if(this.path.getLast().getEndNode().hasEdgeTo(nodeIn)){
+			this.append(this.path.getLast().getEndNode().getShortestEdgeTo(nodeIn));
+		}else{
+			throw new LotPathException("Node given has no paths going to it from the last node in path.");
+		}
+		return this;
+	}//append(LotNode)
 	
 	/**
 	 * Determines if this path is shorter than the path given.

@@ -82,27 +82,33 @@ public class LotEdge{
      * Trusts that the Id being given is valid, and does not conflict with other Id's.
      *
      * @param   idIn    The new Id to set {@link #id} to.
+     * @return	This edge.
      */
-    public void setId(String idIn){
+    public LotEdge setId(String idIn){
         this.id = idIn;
+        return this;
     }//setId(String)
     
     /**
      * Sets the Edges' end node ({@link #endNode}). Trusts that the node is valid.
      * 
-     * @param nodeIn	The new node.
+     * @param nodeIn	The new end node.
+     * @return	This edge.
      */
-    public void setEndNode(LotNode nodeIn){
+    public LotEdge setEndNode(LotNode nodeIn){
     	this.endNode = nodeIn;
+    	return this;
     }//setEndNode(LotNode)
     
     /**
      * Sets the edge's {@link #metric}.
      *
      * @param	metricIn	The new metric of the edge.
+     * @return	This edge.
      */
-    public void setMetric(double metricIn){
+    public LotEdge setMetric(double metricIn){
         this.metric = metricIn;
+        return this;
     }//setMetric(double)
 
     /**
@@ -112,34 +118,43 @@ public class LotEdge{
      *
      * @param	attKeyIn	The attribute to add or edit.
      * @param	attValIn	The attribute's value.
+     * @return	This edge.
      */
-    public void setAtt(String attKeyIn, String attValIn){
+    public LotEdge setAtt(String attKeyIn, String attValIn){
         this.attributes.put(attKeyIn, attValIn);
+        return this;
     }//setAtt(String, String)
 
     /**
      * Sets {@link #attributes} to a new set of attributes.
      *
      * @param	attsIn	The attributes to set this Edge's to.
+     * @return	This edge.
      */
-    public void setAtts(HashMap<String,String> attsIn){
+    public LotEdge setAtts(HashMap<String,String> attsIn){
         this.attributes = attsIn;
+        return this;
     }//setAtt(HashMap<String,String>)
 	
 	/**
      * Removes an attribute from {@link #attributes}.
      *
      * @param   attKeyIn    The key of the attribute to remove.
+     * @return	This edge.
      */
-    public void remAtt(String attKeyIn){
+    public LotEdge remAtt(String attKeyIn){
         this.attributes.remove(attKeyIn);
+        return this;
     }//remAtt(String)
     
 	/**
      * Clears all attributes from this edge.
+     * 
+     * @return	This edge.
 	 */
-	public void clearAtts(){
+	public LotEdge clearAtts(){
 		this.attributes.clear();
+		return this;
 	}//clearAtts()
     
     //endregion

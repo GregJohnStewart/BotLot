@@ -175,6 +175,13 @@ public class testDriver {
 			navigator.movedToEndOfPath();
 			System.out.println("\tDone.");
 			System.out.println("Ended up at: " + navigator.getCurNode().toString());
+			
+			System.out.println("Is this our destiation?");
+			if(navigator.getCurNode() == navigator.getDestNode()){
+				System.out.println("NO  -------------------------------------------------------");
+			}else{
+				System.out.println("YES -------------------------------------------------------");
+			}
 		}catch(BotLotException e){
 			System.out.println("Error: " + e.getMessage());
 		}
