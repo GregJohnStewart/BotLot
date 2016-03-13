@@ -1112,6 +1112,18 @@ public class LotGraph {
 		}
 		return edgeList;
 	}// getEdgeList()
+	
+	/**
+	 * Gets an arrayList of initialized edges in {@link #nodes}, excluding the ones in the given list.
+	 * 
+	 * @param edgesToAvoid	Edges to not include in the returned set.
+	 * @return	An arrayList of initialized edges in {@link #nodes}, excluding the ones in the given list.
+	 */
+	public ArrayList<LotEdge> getEdgeList(Collection<LotEdge> edgesToAvoid){
+		ArrayList<LotEdge> listOut = this.getEdgeList();
+		listOut.removeAll(edgesToAvoid);
+		return listOut;
+	}//getEdgeList(Collection<LotEdge>)
 
 	/**
 	 * Gets the number of edges currently set.
