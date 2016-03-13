@@ -47,12 +47,12 @@ public class LotPath {
 	 * Creates a lot path out of a list of nodes.
 	 * 
 	 * @param nodeListIn	The list of nodes we are getting.
-	 * @param helloWorldIgnoreThis	Doesn't do anything. Only here to differentiate between LotPath(Collection<LotEdge>)
+	 * @param edgesToAvoid	Edges we do not want to go down. Simply give this param as an empty subclass of Collection to negate this. (this param is required to overload the other constructor with a collection)
 	 * @throws LotPathException	If there is no actual path described by this list.
 	 */
-	public LotPath(Collection<LotNode> nodeListIn, boolean helloWorldIgnoreThis) throws LotPathException{
+	public LotPath(Collection<LotNode> nodeListIn, Collection<LotEdge> edgesToAvoid) throws LotPathException{
 		this();
-		this.setPathWithNodes(nodeListIn);
+		this.setPathWithNodes(nodeListIn, edgesToAvoid);
 	}
 	
 	/**
@@ -81,20 +81,36 @@ public class LotPath {
 	 * Sets the current path to one given via a collection of nodes.
 	 * 
 	 * @param nodeListIn	The list of nodes to turn into the path.
-     * @return	This path.
+	 * @return	This path.
 	 * @throws LotPathException	If something went wrong.
 	 */
 	public LotPath setPathWithNodes(Collection<LotNode> nodeListIn) throws LotPathException{
+		return setPathWithNodes(nodeListIn, new LinkedList<LotEdge>());
+	}//setPathWithNodes(Collection<LotNode>)
+	
+	/**
+	 * Sets the current path to one given via a collection of nodes.
+	 * 
+	 * @param nodeListIn	The list of nodes in.
+	 * @param edgesToAvoidIn	Edges we do not want to go down.
+	 * @return	This LotPath.
+	 * @throws LotPathException	If something goes wrong.
+	 */
+	public LotPath setPathWithNodes(Collection<LotNode> nodeListIn, Collection<LotEdge> edgesToAvoidIn) throws LotPathException{
 		LinkedList<LotNode> nodeList = new LinkedList<LotNode>(nodeListIn);
 		while(true){
 			if(nodeList.size() == 1){
 				return this;
 			}
-			this.append(nodeList.get(0).getShortestEdgeTo(nodeList.get(1)));
+			try {
+				this.append(nodeList.get(0).getShortestEdgeTo(nodeList.get(1), edgesToAvoidIn));
+			} catch (LotPathException e) {
+				throw new LotPathException("Node list given is not continuous. Inner Error: " + e.getMessage());
+			}
 			nodeList.removeFirst();
 		}
-	}//setPathWithNodes(Collection<LotNode>)
-	
+	}
+
 	/**
 	 * Gets the metric for traveling the whole path.
 	 * 

@@ -607,9 +607,15 @@ public class LotNode{
 	 * 
 	 * @param toNode	The node to get the shortest edge to.
 	 * @return	The shortest edge to the given node.
+	 * @throws LotPathException If there are no edges.
 	 */
-	public LotEdge getShortestEdgeTo(LotNode toNode){
-		LotEdge shortestEdge = new LotEdge("",null,Double.POSITIVE_INFINITY, null);
+	public LotEdge getShortestEdgeTo(LotNode toNode) throws LotPathException{
+		if(!this.hasEdgeTo(toNode)){
+			throw new LotPathException("This node has no edge to the given node.");
+		}
+		LotEdge infSizeEdge = new LotEdge("",null,Double.POSITIVE_INFINITY, null);
+		infSizeEdge.infSizeFlag = true;
+		LotEdge shortestEdge = new LotEdge(infSizeEdge);
 		for(LotEdge curEdge : this.getEdgesTo(toNode)){
 			if(shortestEdge.isLonger(curEdge)){
 				shortestEdge = curEdge;
@@ -623,13 +629,71 @@ public class LotNode{
 	 * 
 	 * @param toNodeId	The id of the node to get the shortest edge to.
 	 * @return	The shortest edge to the given node.
+	 * @throws LotPathException If there are no edges.
 	 */
-	public LotEdge getShortestEdgeTo(String toNodeId){
-		LotEdge shortestEdge = new LotEdge("",null,Double.POSITIVE_INFINITY, null);
+	public LotEdge getShortestEdgeTo(String toNodeId) throws LotPathException{
+		if(!this.hasEdgeTo(toNodeId)){
+			throw new LotPathException("This node has no edge to the given node.");
+		}
+		LotEdge infSizeEdge = new LotEdge("",null,Double.POSITIVE_INFINITY, null);
+		infSizeEdge.infSizeFlag = true;
+		LotEdge shortestEdge = new LotEdge(infSizeEdge);
 		for(LotEdge curEdge : this.getEdgesTo(toNodeId)){
 			if(shortestEdge.isLonger(curEdge)){
 				shortestEdge = curEdge;
 			}
+		}
+		return shortestEdge;
+	}//getShortestEdgeTo(String)
+	
+	/**
+	 * Gets the edge with the shortest metric to a specified node, excluding edges in the given set.
+	 * 
+	 * @param toNode	The destination node
+	 * @param edgesToAvoid	Edges not to include.
+	 * @return	The shortest edge to the given node.
+	 * @throws LotPathException If there are no edges.
+	 */
+	public LotEdge getShortestEdgeTo(LotNode toNode, Collection<LotEdge> edgesToAvoid) throws LotPathException{
+		if(!this.hasEdgeTo(toNode)){
+			throw new LotPathException("This node has no edge to the given node.");
+		}
+		LotEdge infSizeEdge = new LotEdge("",null,Double.POSITIVE_INFINITY, null);
+		infSizeEdge.infSizeFlag = true;
+		LotEdge shortestEdge = new LotEdge(infSizeEdge);
+		for(LotEdge curEdge : this.getEdgesTo(toNode)){
+			if(shortestEdge.isLonger(curEdge) && !edgesToAvoid.contains(curEdge)){
+				shortestEdge = curEdge;
+			}
+		}
+		if(shortestEdge == infSizeEdge){
+			throw new LotPathException("No edges to the given node that aren't in the given set to ignore.");
+		}
+		return shortestEdge;
+	}
+	
+	/**
+	 * Gets the edge with the shortest metric to a specified node, excluding edges in the given set.
+	 * 
+	 * @param toNodeId	The destination node
+	 * @param edgesToAvoid	Edges not to include.
+	 * @return	The shortest edge to the given node.
+	 * @throws LotPathException If there are no edges.
+	 */
+	public LotEdge getShortestEdgeTo(String toNodeId, Collection<LotEdge> edgesToAvoid) throws LotPathException{
+		if(!this.hasEdgeTo(toNodeId)){
+			throw new LotPathException("This node has no edge to the given node.");
+		}
+		LotEdge infSizeEdge = new LotEdge("",null,Double.POSITIVE_INFINITY, null);
+		infSizeEdge.infSizeFlag = true;
+		LotEdge shortestEdge = new LotEdge(infSizeEdge);
+		for(LotEdge curEdge : this.getEdgesTo(toNodeId)){
+			if(shortestEdge.isLonger(curEdge) && !edgesToAvoid.contains(curEdge)){
+				shortestEdge = curEdge;
+			}
+		}
+		if(shortestEdge == infSizeEdge){
+			throw new LotPathException("No edges to the given node that aren't in the given set to ignore.");
 		}
 		return shortestEdge;
 	}

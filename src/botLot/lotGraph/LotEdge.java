@@ -33,6 +33,7 @@ public class LotEdge{
      */
     public LotEdge(LotEdge edgeIn){
     	this(edgeIn.getId(), edgeIn.getEndNode(), edgeIn.getMetric(), edgeIn.getAtts());
+    	this.infSizeFlag = edgeIn.infSizeFlag;
     }//LotEdge(LotEdge)
     
     /**
