@@ -28,7 +28,6 @@ public class BotLot{
 	/** The current path to the node we are trying to get to.*/
 	private LotPath curPath;
 	
-	
     //=========================================================================
     //    Constructors
     //region Constructors
