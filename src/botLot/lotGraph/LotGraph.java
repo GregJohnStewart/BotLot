@@ -1835,6 +1835,119 @@ public class LotGraph {
 	}
 	
 	/**
+	 * Gets a list of edges with a particular attribute, no matter the value.
+	 * 
+	 * @param attKeyIn	The attribute key to check for.
+	 * @return	A list of edges with the given attribute key.
+	 */
+	public ArrayList<LotEdge> getEdgesWithAtt(String attKeyIn){
+		ArrayList<LotEdge> edgeList = this.getEdgeList();
+		for(int i = 0; i < edgeList.size(); i++){
+			if(!edgeList.get(i).hasAtt(attKeyIn)){
+				edgeList.remove(i);
+			}
+		}
+		return edgeList;
+	}//getEdgesWithAtt(String)
+	
+	/**
+	 * Gets a list of edges with a particular key-value pair.
+	 * 
+	 * @param attKeyIn	The attribute key.
+	 * @param attValIn	The attribute value.
+	 * @return	A list of edges with the given attribute value pair.
+	 */
+	public ArrayList<LotEdge> getEdgesWithAtt(String attKeyIn, String attValIn){
+		ArrayList<LotEdge> edgeList = this.getEdgeList();
+		for(int i = 0; i < edgeList.size(); i++){
+			if(!edgeList.get(i).hasAtt(attKeyIn, attValIn)){
+				edgeList.remove(i);
+			}
+		}
+		return edgeList;
+	}//getEdgesWithAtt(String, String)
+	
+	/**
+	 * Gets a list of nodes with a particular attribute, no matter the value.
+	 * 
+	 * @param attKeyIn	The key of the attribute.
+	 * @return	A list of nodes with the given attribute.
+	 */
+	public ArrayList<LotNode> getNodesWithAtt(String attKeyIn){
+		ArrayList<LotNode> nodeList = this.getNodes();
+		for(int i = 0; i < nodeList.size(); i++){
+			if(!nodeList.get(i).hasAtt(attKeyIn)){
+				nodeList.remove(i);
+			}
+		}
+		return nodeList;
+	}//getNodesWithAtt(String)
+	
+	/**
+	 * Gets a list of nodes with a particular attribute key-value pair.
+	 * 
+	 * @param attKeyIn	The key of the attribute.
+	 * @param attValIn	The value of the attribute.
+	 * @return	A list of nodes with a particular attribute key-value pair.
+	 */
+	public ArrayList<LotNode> getNodesWithAtt(String attKeyIn, String attValIn){
+		ArrayList<LotNode> nodeList = this.getNodes();
+		for(int i = 0; i < nodeList.size(); i++){
+			if(!nodeList.get(i).hasAtt(attKeyIn, attValIn)){
+				nodeList.remove(i);
+			}
+		}
+		return nodeList;
+	}//getNodesWithAtt(String, String)
+	
+	/**
+	 * Gets a list of edges going to nodes with a particular attribute no matter the value.
+	 * 
+	 * @param attKeyIn	The key of the attribute.
+	 * @return	A list of edges going to nodes with a particular attribute no matter the value.
+	 */
+	public ArrayList<LotEdge> getEdgesToNodesWithAtt(String attKeyIn){
+		ArrayList<LotNode> nodeList = this.getNodesWithAtt(attKeyIn);
+		ArrayList<LotEdge> edgeList = new ArrayList<LotEdge>();
+		for(LotNode curNode : nodeList){
+			try {
+				edgeList.addAll(this.getEdgesToNode(curNode));
+			} catch (LotGraphException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				System.out.println("FATAL ERROR- This should not happen. Error: " + e.getMessage());
+				System.exit(1);
+			}
+		}
+		
+		return edgeList;
+	}//getEdgesToNodesWithAtt(String)
+	
+	/**
+	 * Gets a list of edges going to nodes with a particular attribute key-value pair.
+	 * 
+	 * @param attKeyIn	The key of the attribute.
+	 * @param attValIn	The value of the attribute.
+	 * @return	A list of edges going to nodes with a particular attribute key-value pair.
+	 */
+	public ArrayList<LotEdge> getEdgesToNodesWithAtt(String attKeyIn, String attValIn){
+		ArrayList<LotNode> nodeList = this.getNodesWithAtt(attKeyIn, attValIn);
+		ArrayList<LotEdge> edgeList = new ArrayList<LotEdge>();
+		for(LotNode curNode : nodeList){
+			try {
+				edgeList.addAll(this.getEdgesToNode(curNode));
+			} catch (LotGraphException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				System.out.println("FATAL ERROR- This should not happen. Error: " + e.getMessage());
+				System.exit(1);
+			}
+		}
+		
+		return edgeList;
+	}//getEdgesToNodesWithAtt(String, String)
+	
+	/**
 	 * Checks to see if the node list is empty
 	 * 
 	 * @return If the node list is empty
@@ -2247,6 +2360,4 @@ public class LotGraph {
 	}// idIsUnique(char, String)
 
 	// endregion
-
-
 }// class LotGraph
