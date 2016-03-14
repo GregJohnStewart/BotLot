@@ -21,7 +21,7 @@
   </class>  
   <class id="3" language="java" name="botLot.lotGraph.LotGraph" project="BotLot" 
     file="/BotLot/src/botLot/lotGraph/LotGraph.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="142" y="649"/>    
+    <position height="-1" width="-1" x="139" y="652"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
