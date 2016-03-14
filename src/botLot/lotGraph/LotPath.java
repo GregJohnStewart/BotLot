@@ -302,8 +302,18 @@ public class LotPath {
 	 * @return	If this path is shorter than the path given.
 	 */
 	public boolean isShorter(LotPath pathIn){
-		if(this.getPathMetric() < pathIn.getPathMetric() || pathIn.infSizeFlag){
+		if(this.infSizeFlag){
+			return false;
+		}
+		if(pathIn.infSizeFlag){
 			return true;
+		}
+		if(this.getPathMetric() < pathIn.getPathMetric()){
+			return true;
+		}else if(this.getPathMetric() == pathIn.getPathMetric()){
+			if(this.size() < pathIn.size()){
+				return true;
+			}
 		}
 		return false;
 	}//isShorter(LotPath)
