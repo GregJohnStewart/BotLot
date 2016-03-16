@@ -1000,6 +1000,41 @@ public class BotLot{
 		return false;//to make errors go away
 	}//setClosestNotCompleteNode()
 	
+	public ArrayList<LotNode> getConnectedEdges(){
+		
+	}
+	
+	public ArrayList<LotNode> getConnectedEdges(Collection<LotEdge> edgesToAvoid){
+		
+	}
+	
+	public ArrayList<LotEdge> getConnectedNodes(){
+		
+	}
+	
+	public ArrayList<LotEdge> getConnectedNodes(Collection<LotEdge> edgesToAvoid){
+		
+	}
+	
+	/**
+	 * Gets the ratio of connected nodes to edges (connected to curNode), excluding the edges given.
+	 * 
+	 * @param edgesToAvoid
+	 * @return	The ratio of connected nodes to edges (connected to curNode), excluding the edges given.
+	 */
+	public double getConnectedNodeEdgeRatio(Collection<LotEdge> edgesToAvoid){
+		return ((double)this.getConnectedNodes(edgesToAvoid).size() / (double)this.getConnectedEdges(edgesToAvoid).size());
+	}
+	
+	/**
+	 * Gets the ratio of connected nodes to edges (connected to curNode).
+	 * 
+	 * @return	The ratio of connected nodes/edges to curNode 
+	 */
+	public double getConnectedNodeEdgeRatio(){
+		return this.getConnectedNodeEdgeRatio(new ArrayList<LotEdge>());
+	}
+	
 	@Override
 	public String toString() {
 		return "BotLot [mainGraph=" + mainGraph + ", curNode=" + curNode + ", curPath=" + curPath + "]";

@@ -279,6 +279,17 @@ public class LotGraph {
 	}
 	
 	/**
+	 * Creates an edge going out from a given node, and returns the index of it.
+	 * 
+	 * @param fromNode	The node this edge goes out from.
+	 * @return	The index of the new edge in the generated edge list.
+	 * @throws LotGraphException	If the fromNode is not in the graph. 
+	 */
+	public int createEdgeGiveIndex(LotNode fromNode) throws LotGraphException{
+		return this.getEdgeIndex(this.createEdge(fromNode));
+	}
+	
+	/**
 	 * Creates an edge going out from a given node.
 	 * 
 	 * @param fromNodeId	The id of the node the edges is going out from.
@@ -307,6 +318,17 @@ public class LotGraph {
 	}
 	
 	/**
+	 * Creates an edge going out from a given node, and returns the index of it.
+	 * 
+	 * @param fromNodeId	The ID of the node this edge goes out from.
+	 * @return	The index of the new edge in the generated edge list.
+	 * @throws LotGraphException	If the fromNode is not in the graph. 
+	 */
+	public int createEdgeGiveIndex(String fromNodeId) throws LotGraphException{
+		return this.getEdgeIndex(this.createEdge(fromNodeId));
+	}
+	
+	/**
 	 * Creates an edge going out from a given node.
 	 * 
 	 * @param fromNodeIndex	The index of the node in the structure that the new edge will start at.
@@ -332,6 +354,17 @@ public class LotGraph {
 	 */
 	public String createEdgeGiveId(int fromNodeIndex) throws LotGraphException{
 		return this.createEdge(fromNodeIndex).getId();
+	}
+	
+	/**
+	 * Creates an edge going out from a given node, and returns the index of it.
+	 * 
+	 * @param fromNodeIndex	The node this edge goes out from.
+	 * @return	The index of the new edge in the generated edge list.
+	 * @throws LotGraphException	If the fromNode is not in the graph. 
+	 */
+	public int createEdgeGiveIndex(int fromNodeIndex) throws LotGraphException{
+		return this.getEdgeIndex(this.createEdge(fromNodeIndex));
 	}
 	
 	/**
@@ -374,7 +407,19 @@ public class LotGraph {
 	public String createEdgeGiveId(LotNode fromNode, LotNode toNode) throws LotGraphException {
 		return this.createEdge(fromNode, toNode).getId();
 	}// createEdgeGiveId(LotNode, LotNode)
-
+	
+	/**
+	 * Creates an edge going out from a given node, and returns the index of it.
+	 * 
+	 * @param fromNode	The node this edge goes out from.
+	 * @param toNode	The node this edge goes to.
+	 * @return	The index of the new edge in the generated edge list.
+	 * @throws LotGraphException	If the fromNode or toNode is not in the graph. 
+	 */
+	public int createEdgeGiveIndex(LotNode fromNode, LotNode toNode) throws LotGraphException{
+		return this.getEdgeIndex(this.createEdge(fromNode, toNode));
+	}
+	
 	/**
 	 * Creates a new edge, adds it between two nodes, and
 	 * returns the new edge.
@@ -415,6 +460,18 @@ public class LotGraph {
 	public String createEdgeGiveId(String fromNodeId, String toNodeId) throws LotGraphException {
 		return this.createEdge(fromNodeId, toNodeId).getId();
 	}// createEdgeGiveId(String,String)
+	
+	/**
+	 * Creates an edge going out from a given node, and returns the index of it.
+	 * 
+	 * @param fromNodeId	The Id of the node this edge goes out from.
+	 * @param toNodeId	The Id of the node this edge goes to.
+	 * @return	The index of the new edge in the generated edge list.
+	 * @throws LotGraphException	If the fromNode or toNode is not in the graph. 
+	 */
+	public int createEdgeGiveIndex(String fromNodeId, String toNodeId) throws LotGraphException{
+		return this.getEdgeIndex(this.createEdge(fromNodeId, toNodeId));
+	}
 
 	/**
 	 * Creates an edge, puts it between two nodes, and
@@ -456,6 +513,18 @@ public class LotGraph {
 	public String createEdgeGiveId(int fromNodeIndex, int toNodeIndex) throws LotGraphException {
 		return this.createEdge(fromNodeIndex, toNodeIndex).getId();
 	}// createEdgeGiveId(int,int)
+	
+	/**
+	 * Creates an edge going out from a given node, and returns the index of it.
+	 * 
+	 * @param fromNodeIndex	The index of the node this edge goes out from.
+	 * @param toNodeIndex	The index of the node this edge goes to.
+	 * @return	The index of the new edge in the generated edge list.
+	 * @throws LotGraphException	If the fromNode or toNode is not in the graph. 
+	 */
+	public int createEdgeGiveIndex(int fromNodeIndex, int toNodeIndex) throws LotGraphException{
+		return this.getEdgeIndex(this.createEdge(fromNodeIndex, toNodeIndex));
+	}
 
 	/**
 	 * Removes the edge given.
@@ -713,6 +782,17 @@ public class LotGraph {
 		// System.out.println("Creating node and giving ID");
 		return this.createNode().getId();
 	}// createNodeGiveString()
+	
+	/**
+	 * Creates a new node, adds it to {@link #nodes}.
+	 * <p>
+	 * Wrapper for {@link #createNode()}
+	 * 
+	 * @return	The index of this new node in the node list.
+	 */
+	public int createNodeGiveIndex(){
+		return this.getNodeIndex(this.createNode());
+	}
 
 	/**
 	 * Removes the given node from {@link #nodes}. Goes through all edges, nulling the head nodes where they are this node.
@@ -1937,7 +2017,6 @@ public class LotGraph {
 			try {
 				edgeList.addAll(this.getEdgesToNode(curNode));
 			} catch (LotGraphException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				System.out.println("FATAL ERROR- This should not happen. Error: " + e.getMessage());
 				System.exit(1);
