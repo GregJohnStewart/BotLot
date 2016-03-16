@@ -2026,6 +2026,111 @@ public class LotGraph {
 		return edgeList;
 	}//getEdgesToNodesWithAtt(String, String)
 	
+
+	/**
+	 * Gets a list of connected edges.
+	 * 
+	 * @param curNode	The node we are currently at.
+	 * @return	A list of connected edges.
+	 */
+	public ArrayList<LotEdge> getConnectedEdges(LotNode curNode){
+		return this.getConnectedEdges(curNode, new ArrayList<LotEdge>());
+	}
+	
+	/**
+	 * Gets a list of connected edges, not considering the ones in the given collection.
+	 * 
+	 * @param curNode	The node we are currently at.
+	 * @param edgesToAvoid	A list of edges to ignore.
+	 * @return	A list of connected edges, not considering the ones in the given collection.
+	 */
+	public ArrayList<LotEdge> getConnectedEdges(LotNode curNode, Collection<LotEdge> edgesToAvoid){
+		ArrayList<LotNode> connectedNodeList = this.getConnectedNodes(curNode, edgesToAvoid);
+		ArrayList<LotEdge> connectedEdgeList = new ArrayList<LotEdge>();
+		ArrayList<LotEdge> tempEdgeList = null;
+		for(LotNode currentNode : connectedNodeList){
+			for(LotNode innerCurNode : connectedNodeList){
+				tempEdgeList = new ArrayList<LotEdge>();
+				tempEdgeList.addAll(currentNode.getEdgesTo(innerCurNode));
+				tempEdgeList.removeAll(edgesToAvoid);
+				for(LotEdge curTempEdge : tempEdgeList){
+					if(!connectedEdgeList.contains(curTempEdge)){
+						connectedEdgeList.add(curTempEdge);
+					}
+				}
+			}
+		}// for each connected node
+		return connectedEdgeList;
+	}
+	
+	/**
+	 * Gets a list of nodes that are connected to the curNode.
+	 * 
+	 * @param	curNode	The node we are currently at.
+	 * @return	A list of nodes that are connected to the curNode.
+	 */
+	public ArrayList<LotNode> getConnectedNodes(LotNode curNode){
+		return this.getConnectedNodes(curNode, new ArrayList<LotEdge>());
+	}
+	
+	/**
+	 * Gets a list of nodes that are connected to the curNode.
+	 * 
+	 * @param curNode	The node we are currently at.
+	 * @param edgesToAvoid	A list of edges to avoid going down.
+	 * @return	A list of nodes that are connected to the curNode.
+	 */
+	public ArrayList<LotNode> getConnectedNodes(LotNode curNode, Collection<LotEdge> edgesToAvoid){
+		ArrayList<LotNode> nodesConnected = new ArrayList<LotNode>();//nodes that are connected to the curNode (and nodes subsequently attatched to them, and so on...)
+		nodesConnected.add(curNode);
+		ArrayList<LotNode> tempList = new ArrayList<LotNode>();//temporary list of connected nodes
+		ArrayList<LotNode> workingList = new ArrayList<LotNode>();//temporary list of connected nodes
+		ArrayList<LotNode> nodesFinished = new ArrayList<LotNode>();//nodes we have hit in the past, to not go in circles
+		LotNode workingNode = null;
+		
+		while(true){
+			while(nodesConnected.size() != 0){
+				workingNode = nodesConnected.get(0);
+				workingList = workingNode.getConnectedNodes();
+				
+				for(LotNode tempNode : workingList){
+					if(!nodesFinished.contains(tempNode) && !nodesConnected.contains(tempNode) && !tempList.contains(tempNode)){
+						tempList.add(tempNode);
+					}
+				}
+				nodesFinished.add(nodesConnected.remove(0));
+			}//for each in nodes connected
+			if(tempList.size() == 0){
+				return nodesFinished;
+			}else{//else we move nodes we have connected from tempList to nodesConnected
+				nodesConnected = new ArrayList<LotNode>(tempList);
+				tempList = new ArrayList<LotNode>();
+			}
+		}//main loop
+	}
+	
+	/**
+	 * Gets the ratio of connected nodes to edges (connected to curNode), excluding the edges given.
+	 * 
+	 * @param	curNode	The node we are currently at.
+	 * @param edgesToAvoid	A list of edges not to consider.
+	 * @return	The ratio of connected nodes to edges (connected to curNode), excluding the edges given.
+	 */
+	public double getConnectedNodeEdgeRatio(LotNode curNode, Collection<LotEdge> edgesToAvoid){
+		return ((double)this.getConnectedNodes(curNode, edgesToAvoid).size() / (double)this.getConnectedEdges(curNode, edgesToAvoid).size());
+	}
+	
+	/**
+	 * Gets the ratio of connected nodes to edges (connected to curNode).
+	 * 
+	 * @param	curNode	The node we are currently at.
+	 * @return	The ratio of connected nodes/edges to curNode 
+	 */
+	public double getConnectedNodeEdgeRatio(LotNode curNode){
+		return this.getConnectedNodeEdgeRatio(curNode, new ArrayList<LotEdge>());
+	}
+	
+	
 	/**
 	 * Checks to see if the node list is empty
 	 * 

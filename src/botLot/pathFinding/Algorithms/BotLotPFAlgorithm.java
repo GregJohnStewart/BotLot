@@ -67,7 +67,7 @@ public abstract class BotLotPFAlgorithm {
 	 * @param graphIn	The graph to use.
 	 * @param curNodeIn	The node we are starting at.
 	 * @param destNodeIn	The node we are going to.
-	 * @throws BotLotPFException  If curNode and/or destNode cannot be set.
+	 * @throws BotLotPFAlgException  If curNode and/or destNode cannot be set.
 	 */
 	public BotLotPFAlgorithm(LotGraph graphIn, LotNode curNodeIn, LotNode destNodeIn) throws BotLotPFAlgException{
 		this();
@@ -81,7 +81,7 @@ public abstract class BotLotPFAlgorithm {
 	 * @param curNodeIn	The node we are starting at.
 	 * @param destNodeIn	The node we are going to.
 	 * @param edgesToAvoidIn	Edges to not go down ever.
-	 * @throws BotLotPFException	If curNode and/or destNode cannot be set.
+	 * @throws BotLotPFAlgException	If curNode and/or destNode cannot be set.
 	 */
 	public BotLotPFAlgorithm(LotGraph graphIn, LotNode curNodeIn, LotNode destNodeIn, Collection<LotEdge> edgesToAvoidIn) throws BotLotPFAlgException{
 		this(graphIn, curNodeIn, destNodeIn);
@@ -93,8 +93,9 @@ public abstract class BotLotPFAlgorithm {
 	 * <p>
 	 * DO NOT CALL THIS FROM ANY OTHER CLASS THAN THE SUB CLASS YOU IMPLEMENTED THIS IN
 	 * <p>
-	 * Only reason this is not a private method is because abstract methods cant be private.
-	 * @throws BotLotPFAlgException 
+	 * Only reason this is not a private method is because abstract methods can't be private.
+	 * @return A path from the curNode to the destNode through the graph.
+	 * @throws BotLotPFAlgException If something goes wrong in path finding.
 	 */
 	protected abstract LotPath calculatePath() throws BotLotPFAlgException;
 	
@@ -102,9 +103,9 @@ public abstract class BotLotPFAlgorithm {
 	 * Executes this method of path finding. Checks for object readiness.
 	 * 
 	 * @return	A path from the cur node to the destination node.
-	 * @throws BotLotPFException	If the object does not have the data it needs, or if something goes wrong.
+	 * @throws BotLotPFAlgException	If the object does not have the data it needs, or if something goes wrong.
 	 */
-	public LotPath findPath() throws BotLotPFAlgException, BotLotPFException{
+	public LotPath findPath() throws BotLotPFAlgException{
 		if(this.ready()){
 			//System.out.println("in findPath()...");
 			if(this.addTrapOnFind){
@@ -122,10 +123,9 @@ public abstract class BotLotPFAlgorithm {
 	 * 
 	 * @param lotIn	The BotLot object to use to set data.
 	 * @return	A path from the cur node to the destination node.
-	 * @throws BotLotPFException	If the object does not have the data it needs, or if something goes wrong.
 	 * @throws BotLotPFAlgException If the object does not have the data it needs, or if something goes wrong.
 	 */
-	public LotPath findPath(BotLot lotIn) throws BotLotPFException, BotLotPFAlgException{
+	public LotPath findPath(BotLot lotIn) throws BotLotPFAlgException{
 		this.setAll(lotIn);
 		return this.findPath();
 	}//findPAth(BotLot)
@@ -167,7 +167,8 @@ public abstract class BotLotPFAlgorithm {
 	 * @param graphIn	The graph to set.
 	 * @param curNodeIn	The curNode to be at.
 	 * @param destNodeIn	The node we are trying to get to.
-	 * @throws BotLotPFException If curNode and/or destNode cannot be set.
+	 * @return This object.
+	 * @throws BotLotPFAlgException If curNode and/or destNode cannot be set.
 	 */
 	public BotLotPFAlgorithm setAll(LotGraph graphIn, LotNode curNodeIn, LotNode destNodeIn) throws BotLotPFAlgException{
 		this.setGraph(graphIn);
@@ -207,7 +208,7 @@ public abstract class BotLotPFAlgorithm {
 	 * 
 	 * @param nodeIn	The node we are setting to the curNode
 	 * @return	This object.
-	 * @throws BotLotPFException	If the node given is not in the graph data.
+	 * @throws BotLotPFAlgException	If the node given is not in the graph data.
 	 */
 	public BotLotPFAlgorithm setCurNode(LotNode nodeIn) throws BotLotPFAlgException{
 		if(this.getGraph() != null){
@@ -238,7 +239,7 @@ public abstract class BotLotPFAlgorithm {
 	 * 
 	 * @param nodeIn	The node we are setting to the destination node.
 	 * @return	This object.
-	 * @throws BotLotPFException	If the node given is not in the graph data.
+	 * @throws BotLotPFAlgException	If the node given is not in the graph data.
 	 */
 	public BotLotPFAlgorithm setDestNode(LotNode nodeIn) throws BotLotPFAlgException{
 		if(this.hasGraph()){
@@ -362,11 +363,15 @@ public abstract class BotLotPFAlgorithm {
 	 * Uses the worker class to add trapping edges to the list of egdes not to go down.
 	 * 
 	 * @return	This object.
-	 * @throws BotLotPFException	If something is not ready or goes wrong.
+	 * @throws BotLotPFAlgException	If something is not ready or goes wrong.
 	 */
-	public BotLotPFAlgorithm addTrapEdges() throws BotLotPFException{
+	public BotLotPFAlgorithm addTrapEdges() throws BotLotPFAlgException{
 		if(this.addTrapOnFind){
-			BotLotPFWorkers.addTrapEdges(this);
+			try {
+				BotLotPFWorkers.addTrapEdges(this);
+			} catch (BotLotPFException e) {
+				throw new BotLotPFAlgException(e.getMessage());
+			}
 			this.addTrapOnFind = false;
 		}
 		return this;

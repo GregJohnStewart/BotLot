@@ -58,7 +58,7 @@ public class BotLotPFRandom extends BotLotPFAlgorithm implements BotLotPFAlgInte
 	 * @param graphIn	The graph to use.
 	 * @param curNodeIn	The node we are starting at.
 	 * @param destNodeIn	The node we are going to.
-	 * @throws BotLotPFException  If curNode and/or destNode cannot be set.
+	 * @throws BotLotPFAlgException  If curNode and/or destNode cannot be set.
 	 */
 	public BotLotPFRandom(LotGraph graphIn, LotNode curNodeIn, LotNode destNodeIn) throws BotLotPFAlgException {
 		super(graphIn, curNodeIn, destNodeIn);
@@ -71,7 +71,7 @@ public class BotLotPFRandom extends BotLotPFAlgorithm implements BotLotPFAlgInte
 	 * @param curNodeIn	The node we are starting at.
 	 * @param destNodeIn	The node we are going to.
 	 * @param edgesToAvoidIn	Edges to not go down ever.
-	 * @throws BotLotPFException	If curNode and/or destNode cannot be set.
+	 * @throws BotLotPFAlgException	If curNode and/or destNode cannot be set.
 	 */
 	public BotLotPFRandom(LotGraph graphIn, LotNode curNodeIn, LotNode destNodeIn, ArrayList<LotEdge> edgesToAvoidIn) throws BotLotPFAlgException {
 		super(graphIn, curNodeIn, destNodeIn, edgesToAvoidIn);

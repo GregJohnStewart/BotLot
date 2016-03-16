@@ -35,7 +35,7 @@ public class BotLotPF {
 	 * @param edgesToAvoid	Edges to never deal with.
 	 * @return	A path between the current nod and the destination node.
 	 * @throws BotLotPFException	If something is not set right.
-	 * @throws BotLotPFAlgException 
+	 * @throws BotLotPFAlgException If something went wrong with the path finding.
 	 */
 	public static LotPath getShortestPath(LotGraph graphIn, LotNode curNode, LotNode destNode, ArrayList<LotEdge> edgesToAvoid) throws BotLotPFException, BotLotPFAlgException{
 		if(!BotLotPFWorkers.readyCheck(graphIn, curNode, destNode, true)){
@@ -44,8 +44,8 @@ public class BotLotPF {
 		LotPath pathFound = new LotPath();
 		pathFound.infSizeFlag = true;
 		//determine what algorithm to use.....
-		//System.out.println("\tnode/edge ratio: " + graphIn.getNodeEdgeRatio() + "\n\tThreshhold: " + ratioThreshHold);
-		if(graphIn.getNodeEdgeRatio() >= ratioThreshHold){
+		//System.out.println("\tnode/edge ratio: " + graphIn.getConnectedNodeEdgeRatio(curNode, edgesToAvoid) + "\n\tThreshhold: " + ratioThreshHold);
+		if(graphIn.getConnectedNodeEdgeRatio(curNode, edgesToAvoid) >= ratioThreshHold){
 		//if(true){//testing
 			//System.out.println("\tRatio within bounds. Doing random path gen.");
 			/*If about the same amount of nodes to edges, get best of a few random path gens
@@ -79,7 +79,7 @@ public class BotLotPF {
 	 * @param destNode	The node we are trying to get to.
 	 * @return	A path between the current nod and the destination node.
 	 * @throws BotLotPFException	If something is not set right.
-	 * @throws BotLotPFAlgException 
+	 * @throws BotLotPFAlgException If something went wrong with the path finding.
 	 */
 	public static LotPath getShortestPath(LotGraph graphIn, LotNode curNode, LotNode destNode) throws BotLotPFException, BotLotPFAlgException{
 		return getShortestPath(graphIn, curNode, destNode, new ArrayList<LotEdge>());
@@ -92,7 +92,7 @@ public class BotLotPF {
 	 * @param edgesToAvoid	Edges to never deal with.
 	 * @return	A path between the current nod and the destination node.
 	 * @throws BotLotPFException	If something is not set right.
-	 * @throws BotLotPFAlgException 
+	 * @throws BotLotPFAlgException If something went wrong with the path finding.
 	 */
 	public static LotPath getShortestPath(BotLot lotIn, ArrayList<LotEdge> edgesToAvoid) throws BotLotPFException, BotLotPFAlgException{
 		return getShortestPath(lotIn.mainGraph, lotIn.getCurNode(), lotIn.getDestNode(), edgesToAvoid);
@@ -104,7 +104,7 @@ public class BotLotPF {
 	 * @param lotIn	The BotLot structure to deal with.
 	 * @return	A path between the current nod and the destination node.
 	 * @throws BotLotPFException	If something is not set right.
-	 * @throws BotLotPFAlgException 
+	 * @throws BotLotPFAlgException If something went wrong with the path finding.
 	 */
 	public static LotPath getShortestPath(BotLot lotIn) throws BotLotPFException, BotLotPFAlgException{
 		return getShortestPath(lotIn.mainGraph, lotIn.getCurNode(), lotIn.getDestNode());

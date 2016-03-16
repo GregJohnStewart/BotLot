@@ -1000,26 +1000,48 @@ public class BotLot{
 		return false;//to make errors go away
 	}//setClosestNotCompleteNode()
 	
-	public ArrayList<LotNode> getConnectedEdges(){
-		
+	/**
+	 * Gets a list of connected edges 
+	 * 
+	 * @return	A lost of edges that are connected to the current node.
+	 */
+	public ArrayList<LotEdge> getConnectedEdges(){
+		return this.mainGraph.getConnectedEdges(this.getCurNode());
 	}
 	
-	public ArrayList<LotNode> getConnectedEdges(Collection<LotEdge> edgesToAvoid){
-		
+	/**
+	 * Gets a list of connected edges, not considering the ones in the given collection.
+	 * 
+	 * @param edgesToAvoid	A list of edges to ignore.
+	 * @return	A lost of edges that are connected to the current node.
+	 */
+	public ArrayList<LotEdge> getConnectedEdges(Collection<LotEdge> edgesToAvoid){
+		return this.mainGraph.getConnectedEdges(this.getCurNode(), edgesToAvoid);
 	}
 	
-	public ArrayList<LotEdge> getConnectedNodes(){
-		
+	/**
+	 * Gets a list of nodes that are connected to the curNode.
+	 * 
+	 * @return	A list of nodes that are connected to the curNode.
+	 */
+	public ArrayList<LotNode> getConnectedNodes(){
+		return this.mainGraph.getConnectedNodes(this.getCurNode());
 	}
 	
-	public ArrayList<LotEdge> getConnectedNodes(Collection<LotEdge> edgesToAvoid){
-		
+	/**
+	 * Gets a list of nodes that are connected to the curNode.
+	 * 
+	 * @param edgesToAvoid	A list of edges to avoid going down.
+	 * @return	A list of nodes that are connected to the curNode.
+	 */
+	public ArrayList<LotNode> getConnectedNodes(Collection<LotEdge> edgesToAvoid){
+		return this.mainGraph.getConnectedNodes(this.getCurNode(), edgesToAvoid);
 	}
 	
 	/**
 	 * Gets the ratio of connected nodes to edges (connected to curNode), excluding the edges given.
 	 * 
-	 * @param edgesToAvoid
+	 * @param edgesToAvoid	Edges to be avoided going down.
 	 * @return	The ratio of connected nodes to edges (connected to curNode), excluding the edges given.
 	 */
 	public double getConnectedNodeEdgeRatio(Collection<LotEdge> edgesToAvoid){
@@ -1029,7 +1051,7 @@ public class BotLot{
 	/**
 	 * Gets the ratio of connected nodes to edges (connected to curNode).
 	 * 
-	 * @return	The ratio of connected nodes/edges to curNode 
+	 * @return	The ratio of connected nodes/edges to curNode.
 	 */
 	public double getConnectedNodeEdgeRatio(){
 		return this.getConnectedNodeEdgeRatio(new ArrayList<LotEdge>());

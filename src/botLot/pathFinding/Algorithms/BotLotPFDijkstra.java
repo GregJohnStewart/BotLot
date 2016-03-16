@@ -63,11 +63,11 @@ public class BotLotPFDijkstra extends BotLotPFAlgorithm implements BotLotPFAlgIn
 	/**
 	 * Constructor taking in all the things needed for the thing to work.
 	 * 
-	 * @param graphIn
-	 * @param curNodeIn
-	 * @param destNodeIn
-	 * @param edgesToAvoidIn
-	 * @throws BotLotPFAlgException
+	 * @param graphIn	The graph object we are dealing with.
+	 * @param curNodeIn	The current node we are at.
+	 * @param destNodeIn	The node we are trying to get to.
+	 * @param edgesToAvoidIn	Edges we want to avoid going down.
+	 * @throws BotLotPFAlgException	If something went wrong setting values.
 	 */
 	public BotLotPFDijkstra(LotGraph graphIn, LotNode curNodeIn, LotNode destNodeIn, Collection<LotEdge> edgesToAvoidIn) throws BotLotPFAlgException{
 		super(graphIn, curNodeIn, destNodeIn, edgesToAvoidIn);
@@ -105,7 +105,7 @@ public class BotLotPFDijkstra extends BotLotPFAlgorithm implements BotLotPFAlgIn
 	 * Function for Dijkstra's Algorithm.
 	 * TODO:: describe this
 	 * 
-	 * @param node
+	 * @param node	The node to get minimal distances to?
 	 */
 	private void findMinimalDistances(LotNode node) {
 		List<LotNode> adjacentNodes = getNeighbors(node);
@@ -124,8 +124,8 @@ public class BotLotPFDijkstra extends BotLotPFAlgorithm implements BotLotPFAlgIn
 	 * Function for Dijktra's algorithm.
 	 * TODO:: describe this
 	 * 
-	 * @param node	
-	 * @param target
+	 * @param node	The starting node.
+	 * @param target	The node we are trying to get to.
 	 * @return	The distance from the first node to the second node.
 	 */
 	private double getDistance(LotNode node, LotNode target) {
