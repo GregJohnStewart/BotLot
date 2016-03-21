@@ -22,7 +22,7 @@ public class BotLotPF {
 	/** The string passed to the BotLotPFException when the BotLot object given is not ready. */
 	public static final String notReadyString = "The BotLot Object is either not ready, or has no path between current location and destination.";
 	/** The minimum ratio value to do random path generation in {@link #getShortestPath(BotLot)} */
-	public static final float ratioThreshHold = (float) 0.75;
+	public float ratioThreshHold = (float) 0.75;
 	/** The number of times to do the random generation to attempt a shortest path */
 	private static final int numTimesToDoRand = 5;
 	
@@ -113,7 +113,7 @@ public class BotLotPF {
 	/**
 	 * Figures out which not complete node is closest to the curNode in the BotLot object. 
 	 * <p>
-	 * TODO:: review this
+	 * TODO:: do this to other standards (edges to avoid list)
 	 * 
 	 * @param lotIn	The BotLot object to deal with.
 	 * @return	The closest incomplete node. Null if the graph is complete.
