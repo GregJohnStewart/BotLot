@@ -23,7 +23,7 @@ import botLot.pathFinding.BotLotPFWorkers;
  * TODO:: rewrite to ignore edges to avoid.
  * 
  * @author Greg Stewart
- * @version	1.0 3/7/16
+ * @version	1.0 3/29/16
  */
 public class BotLotPFRandom extends BotLotPFAlgorithm implements BotLotPFAlgInterface {	
 	/**
@@ -73,7 +73,7 @@ public class BotLotPFRandom extends BotLotPFAlgorithm implements BotLotPFAlgInte
 	 * @param edgesToAvoidIn	Edges to not go down ever.
 	 * @throws BotLotPFAlgException	If curNode and/or destNode cannot be set.
 	 */
-	public BotLotPFRandom(LotGraph graphIn, LotNode curNodeIn, LotNode destNodeIn, ArrayList<LotEdge> edgesToAvoidIn) throws BotLotPFAlgException {
+	public BotLotPFRandom(LotGraph graphIn, LotNode curNodeIn, LotNode destNodeIn, Collection<LotEdge> edgesToAvoidIn) throws BotLotPFAlgException {
 		super(graphIn, curNodeIn, destNodeIn, edgesToAvoidIn);
 	}
 

@@ -1993,7 +1993,6 @@ public class LotGraph {
 			try {
 				edgeList.addAll(this.getEdgesToNode(curNode));
 			} catch (LotGraphException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				System.out.println("FATAL ERROR- This should not happen. Error: " + e.getMessage());
 				System.exit(1);

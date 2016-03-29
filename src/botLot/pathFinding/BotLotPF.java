@@ -1,5 +1,6 @@
 package botLot.pathFinding;
 import java.util.ArrayList;//for dealing with the graph structure itself.
+import java.util.Collection;
 
 import botLot.BotLot;
 import botLot.BotLotException;
@@ -16,13 +17,13 @@ import botLot.pathFinding.Algorithms.BotLotPFRandom;
  * Started: 11/7/15
  * 
  * @author Greg Stewart
- * @version	1.0 3/7/16
+ * @version	1.0 3/29/16
  */
 public class BotLotPF {
 	/** The string passed to the BotLotPFException when the BotLot object given is not ready. */
 	public static final String notReadyString = "The BotLot Object is either not ready, or has no path between current location and destination.";
 	/** The minimum ratio value to do random path generation in {@link #getShortestPath(BotLot)} */
-	public float ratioThreshHold = (float) 0.75;
+	public static float ratioThreshHold = (float) 0.75;
 	/** The number of times to do the random generation to attempt a shortest path */
 	private static final int numTimesToDoRand = 5;
 	
@@ -37,7 +38,7 @@ public class BotLotPF {
 	 * @throws BotLotPFException	If something is not set right.
 	 * @throws BotLotPFAlgException If something went wrong with the path finding.
 	 */
-	public static LotPath getShortestPath(LotGraph graphIn, LotNode curNode, LotNode destNode, ArrayList<LotEdge> edgesToAvoid) throws BotLotPFException, BotLotPFAlgException{
+	public static LotPath getShortestPath(LotGraph graphIn, LotNode curNode, LotNode destNode, Collection<LotEdge> edgesToAvoid) throws BotLotPFException, BotLotPFAlgException{
 		if(!BotLotPFWorkers.readyCheck(graphIn, curNode, destNode, true)){
 			throw new BotLotPFException(notReadyString);
 		}
@@ -111,6 +112,50 @@ public class BotLotPF {
 	}
 	
 	/**
+	 * Gets the closest not complete node to the current node given.
+	 * 
+	 * @param graphIn	The graph to operate on.
+	 * @param curNode	The node we are currently at.
+	 * @param edgesToAvoid	A list of edges to avoid when processing.
+	 * @return	The closest incomplete node.
+	 */
+	public static LotNode getClosestIncompleteNode(LotGraph graphIn, LotNode curNode, Collection<LotEdge> edgesToAvoid){
+		ArrayList<LotNode> notCompleteNodes = graphIn.getIncompleteNodes();
+		if(notCompleteNodes.size() == 0){
+			return null;
+		}
+		LotNode curClosestNode = null;
+		LotPath curClosestNodePath = null;
+		LotPath tempPath = null;
+		for(LotNode destNode : notCompleteNodes){
+			if(curClosestNode == null){
+				curClosestNode = destNode;
+				try {
+					curClosestNodePath = getShortestPath(graphIn, curNode, destNode, edgesToAvoid);
+				} catch (BotLotPFException | BotLotPFAlgException e) {
+					curClosestNode = null;
+					curClosestNodePath = null;
+				}
+				continue;
+			}
+			
+			try {
+				tempPath = getShortestPath(graphIn, curNode, destNode, edgesToAvoid);
+			} catch (BotLotPFException | BotLotPFAlgException e) {
+				tempPath = null;
+				continue;
+			}
+			
+			if(tempPath.isShorter(curClosestNodePath)){
+				curClosestNode = destNode;
+				curClosestNodePath = tempPath;
+			}
+			tempPath = null;
+		}
+		return curClosestNode;
+	}//getClosestNotCompleteNode
+	
+	/**
 	 * Figures out which not complete node is closest to the curNode in the BotLot object. 
 	 * <p>
 	 * TODO:: do this to other standards (edges to avoid list)
@@ -118,54 +163,51 @@ public class BotLotPF {
 	 * @param lotIn	The BotLot object to deal with.
 	 * @return	The closest incomplete node. Null if the graph is complete.
 	 */
-	public static LotNode getClosestNotCompleteNode(BotLot lotIn){
-		LotNode destNodeHold = lotIn.getDestNode();
-		LotNode closestNotCompleteNode = null;
-		if(!lotIn.mainGraph.graphIsComplete()){
-			ArrayList<LotNode> nodesNotComplete = lotIn.mainGraph.getIncompleteNodes();
-			double curBestMetric = Double.POSITIVE_INFINITY;
-			LotPath tempPath = null; 
-			//TODO:: figure out how to multithread this
-			for(LotNode curNode : nodesNotComplete){
-				try {
-					lotIn.setDestNode(curNode);
-					tempPath = getShortestPath(lotIn);
-					if(tempPath.getPathMetric() < curBestMetric){
-						closestNotCompleteNode = curNode;
-						curBestMetric = tempPath.getPathMetric();
-					}
-				} catch (BotLotException e) {
-					System.out.println("FATAL ERR- getClosestNotCompleteNode(BotLot)- This should not happen. Error: " + e.getMessage());
-					System.exit(1);
-				} catch (BotLotPFException e) {
-					//ignore if no path exists
-				} catch (BotLotPFAlgException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		}
-		try {
-			lotIn.setDestNode(destNodeHold);
-		} catch (BotLotException e) {
-			System.out.println("FATAL ERR- setClosestNotCompleteNode(BotLot)- This should not happen. Error: " + e.getMessage());
-			System.exit(1);
-		}
-		return  closestNotCompleteNode;
+	public static LotNode getClosestIncompleteNode(BotLot lotIn){
+		return getClosestIncompleteNode(lotIn.mainGraph, lotIn.getCurNode(), new ArrayList<LotEdge>());
 	}//getClosestNotCompleteNode(BotLot)
 
 	/**
-	 * Wrapper for {@link #getClosestNotCompleteNode(BotLot)} to just set that closest node to the destNode of the BotLot object.
+	 * Wrapper for {@link #getClosestIncompleteNode(BotLot)} to just set that closest node to the destNode of the BotLot object.
 	 * 
 	 * @param lotIn	The BotLot object to deal with.
 	 */
-	public static void setClosestNotCompleteNode(BotLot lotIn){
+	public static void setClosestIncompleteNode(BotLot lotIn){
 		try {
-			lotIn.setDestNode(getClosestNotCompleteNode(lotIn));
+			lotIn.setDestNode(getClosestIncompleteNode(lotIn));
 		} catch (BotLotException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 			System.out.println("FATAL ERR- setClosestNotCompleteNode(BotLot)- This should not happen. Error: " + e.getMessage());
 			System.exit(1);
 		}
 	}//setClosestNotCompleteNode(BotLot)
+	
+	/**
+	 * Gets the closest not complete node to the current node given.
+	 * 
+	 * @param lotIn	The BotLot object to take from.
+	 * @param edgesToAvoid	Edges to not consider while processing.
+	 * @return	The closest not complete node to the current node given.
+	 */
+	public static LotNode getClosestIncompleteNode(BotLot lotIn, Collection<LotEdge> edgesToAvoid){
+		return getClosestIncompleteNode(lotIn.mainGraph, lotIn.getCurNode(), edgesToAvoid);
+	}//getClosestNotCompleteNode(BotLot, Collection<LotEdge>)
+	
+	/**
+	 * Sets the destNode in the given BotLot to the closest not complete node to the current node given.
+	 * 
+	 * @param lotIn	The BotLot object to work off of.
+	 * @param edgesToAvoid	Edges to not consider in processing.
+	 */
+	public static void setClosestIncompleteNode(BotLot lotIn, Collection<LotEdge> edgesToAvoid){
+		try {
+			lotIn.setDestNode(getClosestIncompleteNode(lotIn, edgesToAvoid));
+		} catch (BotLotException e) {
+			e.printStackTrace();
+			System.out.println("FATAL ERR- setClosestNotCompleteNode(BotLot)- This should not happen. Error: " + e.getMessage());
+			System.exit(1);
+		}
+	}//setClosestNotCompleteNode(BotLot, Collection<LotEdge>)
 	
 }//class BotLotWorkers
