@@ -1,0 +1,6 @@
+List of things to do to make sure this will run:
+
+1) install the Ditty Borg software, recommend have the examples from their website running before attempting this one.
+
+2) install the Py4J Python module( pip install py4j ) 
+

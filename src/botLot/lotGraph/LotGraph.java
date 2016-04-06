@@ -2253,10 +2253,9 @@ public class LotGraph {
 	}//getIncompleteNodes()
 	
 	/**
-	 * Returns an ASCII representation of the graph, with 1's representing
-	 * filled edges, and 0's representing empty edges.
+	 * Returns an ASCII representation of the graph in an adjacency matrix format. 
 	 * 
-	 * @param outputCounts Whether ort not to output the counts of nodes and edges at the top of the graph.
+	 * @param outputCounts Whether or not to output the counts of nodes and edges at the top of the graph.
 	 * @param outputNodeList Whether or not to add the node list after the graph.
 	 * @return An ASCII representation of the graph.
 	 */
@@ -2264,10 +2263,10 @@ public class LotGraph {
 		int numNodes = this.getNumNodes();
 		int maxDigits = String.valueOf(numNodes).length();
 		String[][] outputArray = new String[numNodes + 2][ numNodes + 2];
-		String outputStr = "";
+		String outputStr = "\n";
 		
 		if(outputCounts){
-			outputStr += "# Nodes: " + this.getNumNodes() + "\n# Edges: " + this.getNumEdges() + "\n  Ratio: " + this.getNodeEdgeRatio() + "\n";
+			outputStr += "# Nodes: " + this.getNumNodes() + "\n# Edges: " + this.getNumEdges() + "\n  Ratio: " + this.getNodeEdgeRatio() + "\n\n";
 		}
 		
 		//null out graph

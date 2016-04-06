@@ -16,7 +16,7 @@ public class StartServer {
 		navigator = new BotLot();
 	}
 	
-	public Stack getNav() {
+	public BotLot getNav() {
 		return navigator;
 	}
 

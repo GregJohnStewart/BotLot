@@ -4,8 +4,8 @@
 
 # compile and run server
 cd StartPy4JServer/
-javac -classpath "../../../dist/BotLot.jar" StartServer.java
-java -classpath "../../../dist/BotLot.jar" StartPy4JServer/StartServer
+javac -classpath "../../dist/BotLot.jar" StartServer.java
+java -classpath "../../dist/BotLot.jar" StartPy4JServer/StartServer
 cd ..
 
 echo "NOTE:: if you ran this before w/o restarting the pi, the server might not start correctly.... but the one from before will still be running. So it's okay.";
