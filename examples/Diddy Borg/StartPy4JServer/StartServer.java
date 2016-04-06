@@ -19,7 +19,7 @@ public class StartServer {
 	public BotLot getNav() {
 		return navigator;
 	}
-
+	
 	public static void main(String[] args) {
 		GatewayServer gatewayServer = new GatewayServer(new StartServer());
 		gatewayServer.start();
