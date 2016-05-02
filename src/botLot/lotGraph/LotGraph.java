@@ -19,7 +19,7 @@ import java.util.Collection;
  * TODO:: review methods for cleanliness and best practice
  * 
  * @author Greg Stewart
- * @version 1.0 12/7/15
+ * @version 1.0 5/2/16
  */
 public class LotGraph {
 	/**
@@ -34,11 +34,11 @@ public class LotGraph {
 	/** Random number generator for making new id's */
 	private Random rand;
 	/** The predicate of new edge id's. */
-	private final String edgeIdPred = "BOTLOTEDGE";
+	private final static String edgeIdPred = "BOTLOTEDGE";
 	/** The predicate of new node id's. */
-	private final String nodeIdPred = "BOTLOTNODE";
+	private final static String nodeIdPred = "BOTLOTNODE";
 	/** The max value of new ids' salts. */
-	private final int idSaltRange = Integer.MAX_VALUE;
+	private final static int idSaltRange = Integer.MAX_VALUE;
 
 	// =========================================================================
 	// Constructors
@@ -2377,43 +2377,6 @@ public class LotGraph {
 		result = prime * result + ((rand == null) ? 0 : rand.hashCode());
 		return result;
 	}//hashCode()
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		LotGraph other = (LotGraph) obj;
-		if (edgeIdPred == null) {
-			if (other.edgeIdPred != null)
-				return false;
-		} else if (!edgeIdPred.equals(other.edgeIdPred))
-			return false;
-		if (idSaltRange != other.idSaltRange)
-			return false;
-		if (nodeIdPred == null) {
-			if (other.nodeIdPred != null)
-				return false;
-		} else if (!nodeIdPred.equals(other.nodeIdPred))
-			return false;
-		if (nodes == null) {
-			if (other.nodes != null)
-				return false;
-		} else if (!nodes.equals(other.nodes))
-			return false;
-		if (rand == null) {
-			if (other.rand != null)
-				return false;
-		} else if (!rand.equals(other.rand))
-			return false;
-		return true;
-	}//equals(Object)
 
 	// endregion
 
