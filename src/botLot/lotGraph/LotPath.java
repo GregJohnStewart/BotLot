@@ -161,6 +161,15 @@ public class LotPath {
 	}//size()
 	
 	/**
+	 * Gets the node at the end of the path.
+	 * 
+	 * @return The node at the end of the path.
+	 */
+	public LotNode getEndNode(){
+		return this.path.getLast().getEndNode();
+	}//getEndNode();
+	
+	/**
 	 * Removes all loops from the path.
 	 */
 	public void removeLoops(){

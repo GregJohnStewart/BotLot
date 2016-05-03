@@ -17,6 +17,8 @@ import java.util.Collection;
  * 		Keep a list of paths for later use, use ID's to keep track of them, etc.
  * <p>
  * TODO:: review methods for cleanliness and best practice
+ * TODO:: add methods to operate on node(s)/edge(s) with particular att/val?
+ * TODO:: get set of nodes/edges by !att/val (! the current att get) 
  * 
  * @author Greg Stewart
  * @version 1.0 5/2/16

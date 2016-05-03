@@ -26,7 +26,7 @@ public class BotLotPF {
 	public static float ratioThreshHold = (float) 0.75;
 	/** The number of times to do the random generation to attempt a shortest path */
 	private static final int numTimesToDoRand = 5;
-	
+
 	/**
 	 * Determines which path taking algorithm is probably best to use, and does it.
 	 * 
@@ -112,6 +112,42 @@ public class BotLotPF {
 	}
 	
 	/**
+	 * Gets a path leading to the closest node in the set given.
+	 * <p>
+	 * Use LotPath.getEndNode() to get the actual end node
+	 * <p>
+	 * TODO:: for the other input standards
+	 * 
+	 * @param graphIn	The LotGraph object to deal with.
+	 * @param curNode	The node we are currently at.
+	 * @param destNodesIn	The list of nodes we are determining is closest.
+	 * @param edgesToAvoid	A list of edges to avoid in processing.
+	 * @return	A path to the closest node, null if no paths found.
+	 */
+	public static LotPath getPathToClosestNode(LotGraph graphIn, LotNode curNode, Collection<LotNode> destNodesIn, Collection<LotEdge> edgesToAvoid){
+		LotPath curPath = null;
+		LotPath pathOut = new LotPath();
+		pathOut.infSizeFlag = true;
+		
+		for(LotNode curDestNode : destNodesIn){
+			try {
+				curPath = getShortestPath(graphIn, curNode, curDestNode, edgesToAvoid);
+			} catch (BotLotPFException | BotLotPFAlgException e) {
+				continue;
+			}
+			if(curPath.isShorter(pathOut)){
+				pathOut = curPath;
+			}
+		}
+		
+		if(pathOut.infSizeFlag){
+			return null;
+		}
+		return pathOut; 
+	}// getNodeWithShortestPath(LotGraph, LotNode, Collection<LotNode>, Collection<LotEdge>)
+	
+	
+	/**
 	 * Gets the closest not complete node to the current node given.
 	 * 
 	 * @param graphIn	The graph to operate on.
@@ -124,41 +160,11 @@ public class BotLotPF {
 		if(notCompleteNodes.size() == 0){
 			return null;
 		}
-		LotNode curClosestNode = null;
-		LotPath curClosestNodePath = null;
-		LotPath tempPath = null;
-		for(LotNode destNode : notCompleteNodes){
-			if(curClosestNode == null){
-				curClosestNode = destNode;
-				try {
-					curClosestNodePath = getShortestPath(graphIn, curNode, destNode, edgesToAvoid);
-				} catch (BotLotPFException | BotLotPFAlgException e) {
-					curClosestNode = null;
-					curClosestNodePath = null;
-				}
-				continue;
-			}
-			
-			try {
-				tempPath = getShortestPath(graphIn, curNode, destNode, edgesToAvoid);
-			} catch (BotLotPFException | BotLotPFAlgException e) {
-				tempPath = null;
-				continue;
-			}
-			
-			if(tempPath.isShorter(curClosestNodePath)){
-				curClosestNode = destNode;
-				curClosestNodePath = tempPath;
-			}
-			tempPath = null;
-		}
-		return curClosestNode;
+		return getPathToClosestNode(graphIn, curNode, notCompleteNodes, edgesToAvoid).getEndNode();
 	}//getClosestNotCompleteNode
 	
 	/**
-	 * Figures out which not complete node is closest to the curNode in the BotLot object. 
-	 * <p>
-	 * TODO:: do this to other standards (edges to avoid list)
+	 * Figures out which not complete node is closest to the curNode in the BotLot object.
 	 * 
 	 * @param lotIn	The BotLot object to deal with.
 	 * @return	The closest incomplete node. Null if the graph is complete.
@@ -176,7 +182,6 @@ public class BotLotPF {
 		try {
 			lotIn.setDestNode(getClosestIncompleteNode(lotIn));
 		} catch (BotLotException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			System.out.println("FATAL ERR- setClosestNotCompleteNode(BotLot)- This should not happen. Error: " + e.getMessage());
 			System.exit(1);

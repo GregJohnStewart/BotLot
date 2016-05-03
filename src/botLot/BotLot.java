@@ -817,6 +817,18 @@ public class BotLot{
 	}//curPathIsValid()
 	
 	/**
+	 * Gets the next edge to traverse in the path.
+	 * 
+	 * @return The next edge to traverse in the path. Null if no path.
+	 */
+	public LotEdge getNextEdge(){
+		if(this.hasPath()){
+			this.getCurPath().path.get(0);
+		}
+		return null;
+	}//getNextEdge()
+	
+	/**
 	 * Determines if we have a path or not.
 	 * <p>
 	 * We assume that any path that we have is valid (checks happen on the setters).
