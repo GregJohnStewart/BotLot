@@ -17,8 +17,8 @@ import java.util.Collection;
  * 		Keep a list of paths for later use, use ID's to keep track of them, etc.
  * <p>
  * TODO:: review methods for cleanliness and best practice
+ * 
  * TODO:: add methods to operate on node(s)/edge(s) with particular att/val?
- * TODO:: get set of nodes/edges by !att/val (! the current att get) 
  * 
  * @author Greg Stewart
  * @version 1.0 5/2/16
@@ -2026,7 +2026,93 @@ public class LotGraph {
 		
 		return edgeList;
 	}//getEdgesToNodesWithAtt(String, String)
+
+	/**
+	 * Gets a list of edges without the specified attribute key.
+	 * @param attKeyIn The key for attributes not to have in them.
+	 * @return A list of edges without the specified attribute key.
+	 */
+	public ArrayList<LotEdge> getEdgesWithOutAtt(String attKeyIn){
+		ArrayList<LotEdge> edgeList = this.getEdgeList();
+		edgeList.removeAll(this.getEdgesWithAtt(attKeyIn));
+		return edgeList;
+	}
 	
+	/**
+	 * Gets a list of edges without the specified attribute key/value pair.
+	 * @param attKeyIn The key for attributes not to have in them.
+	 * @param attValIn The value associated with the key for attributes not to have in them.
+	 * @return A list of edges without the specified attribute key/value pair.
+	 */
+	public ArrayList<LotEdge> getEdgesWithOutAtt(String attKeyIn, String attValIn){
+		ArrayList<LotEdge> edgeList = this.getEdgeList();
+		edgeList.removeAll(this.getEdgesWithAtt(attKeyIn, attValIn));
+		return edgeList;
+	}
+	
+	/**
+	 * Gets a list of nodes without the given attribute key.
+	 * @param attKeyIn The key for the nodes not to have.
+	 * @return A list of nodes without the given attribute key.
+	 */
+	public ArrayList<LotNode> getNodesWithOutAtt(String attKeyIn){
+		ArrayList<LotNode> nodeList = new ArrayList<LotNode>(this.nodes);//new one to not remove portions of the main node list
+		nodeList.removeAll(this.getNodesWithAtt(attKeyIn));
+		return nodeList;
+	}
+	
+	/**
+	 * Gets a list of nodes without the given attribute key/value pair.
+	 * @param attKeyIn The key for the nodes not to have.
+	 * @param attValIn The value associated with the key for attributes not to have in them.
+	 * @return A list of nodes without the given attribute key/value pair.
+	 */
+	public ArrayList<LotNode> getNodesWithOutAtt(String attKeyIn, String attValIn){
+		ArrayList<LotNode> nodeList = new ArrayList<LotNode>(this.nodes);//new one to not remove portions of the main node list
+		nodeList.removeAll(this.getNodesWithAtt(attKeyIn, attValIn));
+		return nodeList;
+	}
+	
+	/**
+	 * Gets a list of edges that point to nodes that don't have a specified attribute key.
+	 * @param attKeyIn The key to not have in the nodes to get edges for.
+	 * @return A list of edges that point to nodes that don't have a specified attribute key.
+	 */
+	public ArrayList<LotEdge> getEdgesToNodesWithOutAtt(String attKeyIn){
+		ArrayList<LotNode> nodeList = this.getNodesWithOutAtt(attKeyIn);
+		ArrayList<LotEdge> edgeList = new ArrayList<LotEdge>();
+		for(LotNode curNode : nodeList){
+			try {
+				edgeList.addAll(this.getEdgesToNode(curNode));
+			} catch (LotGraphException e) {
+				e.printStackTrace();
+				System.out.println("FATAL ERROR- This should not happen. Error: " + e.getMessage());
+				System.exit(1);
+			}
+		}
+		return edgeList;
+	}
+	
+	/**
+	 * Gets a list of edges that point to nodes that don't have a specified attribute key/value pair.
+	 * @param attKeyIn The key to not have in the nodes to get edges for.
+	 * @param attValIn The value associated with the key.
+	 * @return A list of edges that point to nodes that don't have a specified attribute key/value pair.
+	 */
+	public ArrayList<LotEdge> getEdgesToNodesWithOutAtt(String attKeyIn, String attValIn){
+		ArrayList<LotNode> nodeList = this.getNodesWithOutAtt(attKeyIn, attValIn);
+		ArrayList<LotEdge> edgeList = new ArrayList<LotEdge>();
+		for(LotNode curNode : nodeList){
+			try {
+				edgeList.addAll(this.getEdgesToNode(curNode));
+			} catch (LotGraphException e) {
+				e.printStackTrace();
+				System.out.println("FATAL ERROR- This should not happen. Error: " + e.getMessage());
+				System.exit(1);
+			}
+		}
+		return edgeList;
+	}
 
 	/**
 	 * Gets a list of connected edges.
