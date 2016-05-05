@@ -17,7 +17,7 @@ import botLot.pathFinding.Algorithms.BotLotPFRandom;
  * Started: 11/7/15
  * 
  * @author Greg Stewart
- * @version	1.0 3/29/16
+ * @version	1.0 5/4/16
  */
 public class BotLotPF {
 	/** The string passed to the BotLotPFException when the BotLot object given is not ready. */

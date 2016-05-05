@@ -1,4 +1,4 @@
-package botLot;
+package botLot.dataSource;
 /**
  * BotLotDataSourceException.java
  * <p>

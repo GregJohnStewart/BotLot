@@ -1,4 +1,4 @@
-package botLot;
+package botLot.dataSource;
 //import java.sql.*;//for SQL connections
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,6 +27,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import botLot.BotLotException;
 import botLot.lotGraph.*;
 
 import java.io.File;
@@ -250,6 +251,7 @@ public class BotLotDS {
 	        //get in all nodes
 	        System.out.println("Getting Nodes...");
 	        Element curNode = (Element)rootElement.getFirstChild();
+	        System.out.println("------ NAME OF NODE ELEMENT:" + curNode.getNodeName());
 	        while(curNode != null){
 	        	LotNode newNode = new LotNode();
 				//get ID

@@ -3,6 +3,8 @@ import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
 
 import botLot.*;
+import botLot.dataSource.BotLotDS;
+import botLot.dataSource.BotLotDSException;
 import botLot.pathFinding.BotLotPFWorkers;
 
 public class testDriver {

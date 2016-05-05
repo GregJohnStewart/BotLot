@@ -1,6 +1,8 @@
 import java.util.Scanner;
 
 import botLot.*;
+import botLot.dataSource.BotLotDS;
+import botLot.dataSource.BotLotDSException;
 import botLot.lotGraph.*;
 
 public class simpleNavigator {
