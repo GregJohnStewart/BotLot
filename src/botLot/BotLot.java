@@ -1074,7 +1074,7 @@ public class BotLot{
 	
 	@Override
 	public String toString() {
-		return "BotLot [mainGraph=" + mainGraph + ", curNode=" + curNode + ", destNode=" + destNode + ", curPath="
+		return "BotLot [mainGraph=" + mainGraph + ", curNode=" + curNode.getId() + ", destNode=" + destNode.getId() + ", curPath="
 				+ curPath + "]";
 	}
 
@@ -1097,22 +1097,13 @@ public class BotLot{
 		if (getClass() != obj.getClass())
 			return false;
 		BotLot other = (BotLot) obj;
-		if (curNode == null) {
-			if (other.curNode != null)
-				return false;
-		} else if (!curNode.equals(other.curNode))
-			return false;
-		if (curPath == null) {
-			if (other.curPath != null)
-				return false;
-		} else if (!curPath.equals(other.curPath))
-			return false;
-		if (mainGraph == null) {
-			if (other.mainGraph != null)
-				return false;
-		} else if (!mainGraph.equals(other.mainGraph))
-			return false;
-		return true;
+		//System.out.println("-------------------");
+		//System.out.println(this.toString());
+		//System.out.println("-------------------");
+		//System.out.println(other.toString());
+		//System.out.println("-------------------");
+		
+		return this.toString().equals(other.toString());
 	}
 	
 	//endregion

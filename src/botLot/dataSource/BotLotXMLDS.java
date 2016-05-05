@@ -232,6 +232,7 @@ public class BotLotXMLDS extends BotLotDataSource implements BotLotDataSourceInt
 						pathIn.append(lotOut.mainGraph.getEdge(curEdge.getAttribute("id")));
 					}
 					lotOut.setCurPath(pathIn);
+					break;
 				}//get path
 				
 			}//if got enought for a path to exist
@@ -325,7 +326,7 @@ public class BotLotXMLDS extends BotLotDataSource implements BotLotDataSourceInt
 			}
 			
 			if(lotIn.hasPath()){
-				Element path = doc.createElement("destNode");
+				Element path = doc.createElement("path");
 				if(lotIn.getCurPath().infSizeFlag){
 					path.setAttribute("infSizeFlag", "true");
 				}else{
