@@ -1,0 +1,15 @@
+WINDOWS::
+
+	1) open command prompt, navigate to the folder where the test is
+	2) run by typing "compileAndRunWIN.cmd" and press ENTER
+	
+	If failed, check to ensure java/jdk is setup properly (check the "compileAndRunWIN.cmd" file for some help)
+	
+BASH ENVIRONMENTS (Linux & Mac):
+	
+	1) open terminal, navigate to the folder where the test is
+	2) run by typing "./compileAndRunBASH.sh" and hit ENTER
+	
+	If failed:
+		-check to ensure java/jdk is setup properly
+		-check to ensure the file is set as executable ("chmod +x compileAndRunBASH.sh")
