@@ -1927,6 +1927,7 @@ public class LotGraph {
 		for(int i = 0; i < edgeList.size(); i++){
 			if(!edgeList.get(i).hasAtt(attKeyIn)){
 				edgeList.remove(i);
+				i--;
 			}
 		}
 		return edgeList;
@@ -1944,10 +1945,42 @@ public class LotGraph {
 		for(int i = 0; i < edgeList.size(); i++){
 			if(!edgeList.get(i).hasAtt(attKeyIn, attValIn)){
 				edgeList.remove(i);
+				i--;
 			}
 		}
 		return edgeList;
 	}//getEdgesWithAtt(String, String)
+	
+	/**
+	 * Gets the first occurrence of an edge with the given attribute key.
+	 * 
+	 * @param attKeyIn	The attribute key to search for.
+	 * @return	The first occurrence of an edge with the given attribute key. Null if none found.
+	 */
+	public LotEdge getEdgeWithAtt(String attKeyIn){
+		for(LotEdge curEdge : this.getEdgeList()){
+			if(!curEdge.hasAtt(attKeyIn)){
+				return curEdge;
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * Gets the first occurrence of an edge with the given attribute key/value pair.
+	 * 
+	 * @param attKeyIn	The attribute key to search for.
+	 * @param attValIn	The attribute value to search for.
+	 * @return	The first occurrence of an edge with the given attribute key/value pair. Null if none found.
+	 */
+	public LotEdge getEdgeWithAtt(String attKeyIn, String attValIn){
+		for(LotEdge curEdge : this.getEdgeList()){
+			if(!curEdge.hasAtt(attKeyIn, attValIn)){
+				return curEdge;
+			}
+		}
+		return null;
+	}
 	
 	/**
 	 * Gets a list of nodes with a particular attribute, no matter the value.
@@ -1960,6 +1993,7 @@ public class LotGraph {
 		for(int i = 0; i < nodeList.size(); i++){
 			if(!nodeList.get(i).hasAtt(attKeyIn)){
 				nodeList.remove(i);
+				i--;
 			}
 		}
 		return nodeList;
@@ -1977,10 +2011,40 @@ public class LotGraph {
 		for(int i = 0; i < nodeList.size(); i++){
 			if(!nodeList.get(i).hasAtt(attKeyIn, attValIn)){
 				nodeList.remove(i);
+				i--;
 			}
 		}
 		return nodeList;
 	}//getNodesWithAtt(String, String)
+	
+	/**
+	 * Gets the first occurrence of a node with the given attribute key.
+	 * @param attKeyIn	The key to search for.
+	 * @return	The first occurrence of a node with the given attribute key. Null if none found.
+	 */
+	public LotNode getNodeWithAtt(String attKeyIn){
+		for(LotNode curNode: this.getNodes()){
+			if(!curNode.hasAtt(attKeyIn)){
+				return curNode;
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * Gets the first occurrence of a node with the given attribute key/value pair.
+	 * @param attKeyIn	The key to search for.
+	 * @param attValIn	The value to search for.
+	 * @return	The first occurrence of a node with the given attribute key/value pair. Null if none found.
+	 */
+	public LotNode getNodeWithAtt(String attKeyIn, String attValIn){
+		for(LotNode curNode: this.getNodes()){
+			if(!curNode.hasAtt(attKeyIn, attValIn)){
+				return curNode;
+			}
+		}
+		return null;
+	}
 	
 	/**
 	 * Gets a list of edges going to nodes with a particular attribute no matter the value.
@@ -2342,6 +2406,8 @@ public class LotGraph {
 	
 	/**
 	 * Returns an ASCII representation of the graph in an adjacency matrix format. 
+	 * 
+	 * TODO:: create version that takes in cur and dest node to highlight them somehow
 	 * 
 	 * @param outputCounts Whether or not to output the counts of nodes and edges at the top of the graph.
 	 * @param outputNodeList Whether or not to add the node list after the graph.
