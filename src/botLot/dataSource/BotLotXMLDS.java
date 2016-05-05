@@ -371,7 +371,12 @@ public class BotLotXMLDS extends BotLotDataSource implements BotLotDataSourceInt
 				return true;
 			}
 		}else{
-			f = new File(f.getParent());
+			String dirToUse = f.getParent();
+			if(dirToUse == null){
+				dirToUse = System.getProperty("user.dir");
+			}
+			//System.out.println(dirToUse);
+			f = new File(dirToUse);
 			if(f.exists() && f.isDirectory()) { 
 				return true;
 			}

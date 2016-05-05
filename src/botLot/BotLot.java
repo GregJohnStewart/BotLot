@@ -81,6 +81,7 @@ public class BotLot{
 		this.setGraph(new LotGraph());
 		this.clearCurPath();
 		this.clearCurNode();
+		this.clearDestNode();
 	}//BotLot()
 	
 	//endregion
@@ -685,7 +686,7 @@ public class BotLot{
 	 * @return	If {@link #curNode} is set or not.
 	 */
 	public boolean hasCurNode(){
-		if(this.getCurNode() != null){
+		if(this.getCurNode() != null && this.getCurNode() != new LotNode()){
 			return true;
 		}
 		return false;
@@ -770,7 +771,7 @@ public class BotLot{
 	 * @return	If {@link #destNode} is set.
 	 */
 	public boolean hasDestNode(){
-		if(this.getDestNode() != null){
+		if(this.getDestNode() != null && this.getDestNode() != new LotNode()){
 			return true;
 		}
 		return false;
@@ -838,10 +839,10 @@ public class BotLot{
 	 * @return	If we have a path.
 	 */
 	public boolean hasPath(){
-		if((this.getCurPath() == new LotPath()) || (this.getCurPath() == null)){
-			return false;
+		if((this.getCurPath() != new LotPath()) && (this.getCurPath() != null) && this.getCurPath().size() > 0){
+			return true;
 		}
-		return true;
+		return false;
 	}//hasPath()
 	
 	/**
@@ -1073,7 +1074,8 @@ public class BotLot{
 	
 	@Override
 	public String toString() {
-		return "BotLot [mainGraph=" + mainGraph + ", curNode=" + curNode + ", curPath=" + curPath + "]";
+		return "BotLot [mainGraph=" + mainGraph + ", curNode=" + curNode + ", destNode=" + destNode + ", curPath="
+				+ curPath + "]";
 	}
 
 	@Override

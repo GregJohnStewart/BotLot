@@ -65,10 +65,10 @@ public class BotLotPF {
 				}
 			}
 		}else{
-			System.out.println("\tToo complicated of a graph. Getting specific shortest path.");
+			//System.out.println("\tToo complicated of a graph. Getting specific shortest path.");
 			pathFound = new BotLotPFDijkstra(graphIn, curNode, destNode, edgesToAvoid).findPath();
 		}
-		System.out.println("Path: " + pathFound.toString());
+		//System.out.println("Path: " + pathFound.toString());
 		return pathFound;
 	}//getShortestPath(BotLot)
 	
