@@ -2516,7 +2516,7 @@ public class LotGraph {
 	
 	/**
 	 * Gets the seed for the random number generator.
-	 * @return
+	 * @return	The seed for the random number generator.
 	 */
 	public long getRandSeed(){
 		return randSeed;
