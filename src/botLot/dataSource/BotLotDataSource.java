@@ -10,7 +10,7 @@ package botLot.dataSource;
  * @author Greg
  * @version	1.0 5/4/16
  */
-abstract class BotLotDataSource {
+public abstract class BotLotDataSource {
 	
 	/**
 	 * Basic constructor.

@@ -12,7 +12,7 @@ import botLot.lotGraph.LotGraph;
  * @version	1.0 5/4/16
  */
 
-interface BotLotDataSourceInterface {
+public interface BotLotDataSourceInterface {
 	
 	/**
 	 * Method to check if the data source is ready to operate or not.
