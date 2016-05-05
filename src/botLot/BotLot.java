@@ -15,6 +15,8 @@ import botLot.pathFinding.Algorithms.BotLotPFAlgException;
  * <p>
  * Started: 10/7/15
  * 
+ * TODO:: make all exceptions be subclasses of the main BotLot exception
+ * 
  * @author Greg Stewart
  * @version	1.0 3/7/16
  */

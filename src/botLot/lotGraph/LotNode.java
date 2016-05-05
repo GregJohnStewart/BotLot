@@ -491,9 +491,9 @@ public class LotNode{
 	 * @return	The edge going to the given node. Null if not found.
 	 */
 	public LotEdge getEdgeTo(LotNode nodeIn){
-		for(int i = 0; i < this.getNumEdges(); i++){
-			if(this.getEdge(i).getEndNode() == nodeIn){
-				return this.getEdge(i);
+		for(LotEdge curEdge : this.getEdges()){
+			if(curEdge.getEndNode() == nodeIn){
+				return curEdge;
 			}
 		}
 		return null;
@@ -506,9 +506,9 @@ public class LotNode{
 	 * @return	The edge going to the specified node. Null if not found.
 	 */
 	public LotEdge getEdgeTo(String nodeIdIn){
-		for(int i = 0; i < this.getNumEdges(); i++){
-			if(this.getEdge(i).getEndNode().getId().equals(nodeIdIn)){
-				return this.getEdge(i);
+		for(LotEdge curEdge : this.getEdges()){
+			if(curEdge.getEndNode().getId() == nodeIdIn){
+				return curEdge;
 			}
 		}
 		return null;

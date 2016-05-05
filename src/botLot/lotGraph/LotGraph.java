@@ -1959,7 +1959,7 @@ public class LotGraph {
 	 */
 	public LotEdge getEdgeWithAtt(String attKeyIn){
 		for(LotEdge curEdge : this.getEdgeList()){
-			if(!curEdge.hasAtt(attKeyIn)){
+			if(curEdge.hasAtt(attKeyIn)){
 				return curEdge;
 			}
 		}
@@ -1975,7 +1975,7 @@ public class LotGraph {
 	 */
 	public LotEdge getEdgeWithAtt(String attKeyIn, String attValIn){
 		for(LotEdge curEdge : this.getEdgeList()){
-			if(!curEdge.hasAtt(attKeyIn, attValIn)){
+			if(curEdge.hasAtt(attKeyIn, attValIn)){
 				return curEdge;
 			}
 		}
@@ -2024,7 +2024,7 @@ public class LotGraph {
 	 */
 	public LotNode getNodeWithAtt(String attKeyIn){
 		for(LotNode curNode: this.getNodes()){
-			if(!curNode.hasAtt(attKeyIn)){
+			if(curNode.hasAtt(attKeyIn)){
 				return curNode;
 			}
 		}
@@ -2039,7 +2039,7 @@ public class LotGraph {
 	 */
 	public LotNode getNodeWithAtt(String attKeyIn, String attValIn){
 		for(LotNode curNode: this.getNodes()){
-			if(!curNode.hasAtt(attKeyIn, attValIn)){
+			if(curNode.hasAtt(attKeyIn, attValIn)){
 				return curNode;
 			}
 		}
