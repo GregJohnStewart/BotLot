@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Map.Entry;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -84,7 +85,7 @@ public class BotLotXMLDS extends BotLotDataSource implements BotLotDataSourceInt
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		factory.setValidating(true);
 		factory.setIgnoringElementContentWhitespace(true);
-		System.out.println("Done");
+		//System.out.println("Done");
 		try {
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			File file = new File(this.getFileLocation());
@@ -96,7 +97,7 @@ public class BotLotXMLDS extends BotLotDataSource implements BotLotDataSourceInt
 			Element rootElement = doc.getDocumentElement();
 			
 			//get in all nodes
-			System.out.println("Getting Nodes...");
+			//System.out.println("Getting Nodes...");
 			Element curNode = (Element)rootElement.getFirstChild();
 			while(curNode != null){
 				if(curNode.getNodeName() != "node"){
@@ -119,11 +120,11 @@ public class BotLotXMLDS extends BotLotDataSource implements BotLotDataSourceInt
 					}
 				}
 				graphOut.addNode(newNode);
-				System.out.println("\tGot Node: " + newNode.toString());
+				//System.out.println("\tGot Node: " + newNode.toString());
 				curNode = (Element) curNode.getNextSibling();
 			}
 			//get in all edges
-			System.out.println("Getting Edges...");
+			//System.out.println("Getting Edges...");
 			curNode = (Element)rootElement.getFirstChild();
 			while(curNode != null){
 				if(curNode.getNodeName() != "node"){
@@ -149,12 +150,26 @@ public class BotLotXMLDS extends BotLotDataSource implements BotLotDataSourceInt
 							newEdge.setAtt(attrName, attr.getNodeValue());
 						}
 					}
-					System.out.println("\tGot Edge: " + newEdge.toString());
+					//System.out.println("\tGot Edge: " + newEdge.toString());
 					graphOut.setEdge(newEdge, curNode.getAttribute("id"));
 				}
-				System.out.println("Got all edges for " + curNode.getAttribute("id"));
+				//System.out.println("Got all edges for " + curNode.getAttribute("id"));
 				curNode = (Element)curNode.getNextSibling();
 			}
+			
+			//get the random seed
+			//System.out.println("Getting random seed...");
+			curNode = (Element)rootElement.getFirstChild();
+			while(curNode != null){
+				if(curNode.getNodeName() != "randSeed"){
+					curNode = (Element)curNode.getNextSibling();
+					continue;
+				}
+				graphOut.setRandSeed(Long.parseLong(curNode.getAttribute("val")));
+				//System.out.println("Found Seed: " + graphOut.getRandSeed());
+				break;
+			}
+			
 			return graphOut;
 		} catch (SAXException e) {
 			throw new BotLotDSException("" + e.getMessage());
@@ -176,6 +191,7 @@ public class BotLotXMLDS extends BotLotDataSource implements BotLotDataSourceInt
 		factory.setIgnoringElementContentWhitespace(true);
 		try{
 			DocumentBuilder builder = factory.newDocumentBuilder();
+			builder.setErrorHandler(null);
 			File file = new File(this.getFileLocation());
 			//builder.setErrorHandler();
 			Document doc = builder.parse(file);
@@ -188,6 +204,7 @@ public class BotLotXMLDS extends BotLotDataSource implements BotLotDataSourceInt
 					continue;
 				}
 				lotOut.setCurNode(curNode.getAttribute("id"));
+				break;
 			}//get curNode
 			
 			curNode = (Element)rootElement.getFirstChild();
@@ -197,6 +214,7 @@ public class BotLotXMLDS extends BotLotDataSource implements BotLotDataSourceInt
 					continue;
 				}
 				lotOut.setDestNode(curNode.getAttribute("id"));
+				break;
 			}//get destNode
 			
 			if(lotOut.ready(false)){
@@ -215,6 +233,7 @@ public class BotLotXMLDS extends BotLotDataSource implements BotLotDataSourceInt
 					}
 					lotOut.setCurPath(pathIn);
 				}//get path
+				
 			}//if got enought for a path to exist
 			
 		} catch (SAXException e) {
@@ -259,7 +278,7 @@ public class BotLotXMLDS extends BotLotDataSource implements BotLotDataSourceInt
 				LotNode curNode = graphToSave.getNode(i);
 				//add id, numEdges
 				newNode.setAttribute("id", curNode.getId());
-				newNode.setAttribute("numEdges", "" + curNode.getNumEdges());
+				newNode.setAttribute("numEdges", "" + curNode.getActNumEdges());
 				//add other attributes
 				Iterator<Entry<String, String>> nodeAttIterator = curNode.getAtts().entrySet().iterator();
 				while (nodeAttIterator.hasNext()) {
@@ -288,6 +307,10 @@ public class BotLotXMLDS extends BotLotDataSource implements BotLotDataSourceInt
 					newNode.appendChild(newEdge);
 				}//for each edge on that node
 			}//for each node in graph
+			
+			Element randSeed = doc.createElement("randSeed");
+			randSeed.setAttribute("val", Objects.toString(lotIn.mainGraph.getRandSeed(), null));
+			rootElement.appendChild(randSeed);
 			
 			if(lotIn.hasCurNode()){
 				Element newNode = doc.createElement("curNode");

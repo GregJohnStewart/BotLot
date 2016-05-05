@@ -33,8 +33,10 @@ public class LotGraph {
 	/*
 	 * stuff for id generation
 	 */
+	/** Seed for the random number generator. **/
+	private long randSeed = System.currentTimeMillis();
 	/** Random number generator for making new id's */
-	private Random rand;
+	private Random rand = new Random(randSeed);
 	/** The predicate of new edge id's. */
 	private final static String edgeIdPred = "BOTLOTEDGE";
 	/** The predicate of new node id's. */
@@ -61,7 +63,7 @@ public class LotGraph {
 			System.out.println("FATAL ERR- LotGraph(LotGraph)- This should not happen. Error: " + err.getMessage());
 			System.exit(1);
 		}
-		this.setRand(graphIn.getRand());
+		this.setRand(graphIn.getRand(), graphIn.getRandSeed());
 	}// LotGraph(LotGraph)
 
 	/**
@@ -71,12 +73,13 @@ public class LotGraph {
 	 *            The nodes to set the initial nodes to.
 	 * @param randIn
 	 *            The pre-instantiated random number generator.
+	 * @param seedIn	The seed of randIn.
 	 * @throws LotGraphException
 	 *             If the node list given is invalid.
 	 */
-	public LotGraph(Collection<LotNode> nodesIn, Random randIn) throws LotGraphException {
+	public LotGraph(Collection<LotNode> nodesIn, Random randIn, long seedIn) throws LotGraphException {
 		this(nodesIn);
-		this.setRand(randIn);
+		this.setRand(randIn, seedIn);
 	}// LotGraph(ArrayList<LotNode>, Random)
 
 	/**
@@ -96,10 +99,11 @@ public class LotGraph {
 	 * Constructor to set the random number generator.
 	 * 
 	 * @param randIn	The random number generator.
+	 * @param seedIn	The seed of randIn.
 	 */
-	public LotGraph(Random randIn){
+	public LotGraph(Random randIn, long seedIn){
 		this();
-		this.setRand(randIn);
+		this.setRand(randIn, seedIn);
 	}// LotGraph(LotNode)
 
 	/**
@@ -863,12 +867,25 @@ public class LotGraph {
 	 * 
 	 * @param randIn
 	 *            The new random number generator.
+	 * @param seedIn The seed for the associated random number generator.
      * @return	This graph.
 	 */
-	public LotGraph setRand(Random randIn) {
+	public LotGraph setRand(Random randIn, long seedIn) {
+		this.randSeed = seedIn;
 		this.rand = randIn;
 		return this;
 	}// setRand(Random)
+	
+	/**
+	 * Sets the random number generator's seed and re-instantiates the generator with that seed.
+	 * @param seedIn	The new random number generator seed.
+	 * @return	This graph.
+	 */
+	public LotGraph setRandSeed(long seedIn){
+		this.randSeed = seedIn;
+		this.rand = new Random(this.randSeed);
+		return this;
+	}
 
 	// =========================================================================
 	// Getters
@@ -2496,6 +2513,14 @@ public class LotGraph {
 	public Random getRand() {
 		return this.rand;
 	}// getRand()
+	
+	/**
+	 * Gets the seed for the random number generator.
+	 * @return
+	 */
+	public long getRandSeed(){
+		return randSeed;
+	}
 
 	/**
 	 * Gets the ratio of Nodes to edges.
@@ -2513,31 +2538,38 @@ public class LotGraph {
 	public String toString() {
 		final int maxLen = 10;
 		return "LotGraph [nodes=" + (nodes != null ? nodes.subList(0, Math.min(nodes.size(), maxLen)) : null)
-				+ ", rand=" + rand + ", edgeIdPred=" + edgeIdPred + ", nodeIdPred=" + nodeIdPred + ", idSaltRange="
+				+ ", edgeIdPred=" + edgeIdPred + ", nodeIdPred=" + nodeIdPred + ", idSaltRange="
 				+ idSaltRange + "]";
 	}//toString()
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((edgeIdPred == null) ? 0 : edgeIdPred.hashCode());
-		result = prime * result + idSaltRange;
-		result = prime * result + ((nodeIdPred == null) ? 0 : nodeIdPred.hashCode());
 		result = prime * result + ((nodes == null) ? 0 : nodes.hashCode());
-		result = prime * result + ((rand == null) ? 0 : rand.hashCode());
+		result = prime * result + (int) (randSeed ^ (randSeed >>> 32));
 		return result;
-	}//hashCode()
-
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		//System.out.println("Graphs have same clases.");
+		return this.toString().equals(obj.toString());
+	}
 	// endregion
 
 	// =========================================================================
 	// Workers
 	// region Workers
 	// =========================================================================
+
+
 
 	/**
 	 * Checks if the edges held by the node are valid.
