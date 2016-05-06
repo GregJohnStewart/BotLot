@@ -96,9 +96,14 @@ public class BotLotXMLDS extends BotLotDataSource implements BotLotDataSourceInt
 			LotGraph graphOut = new LotGraph();
 			Element rootElement = doc.getDocumentElement();
 			
+			Element graphElement = (Element)rootElement.getFirstChild();
+			while(graphElement.getNodeName() != "graph"){
+				graphElement = (Element)graphElement.getNextSibling();
+			}
+			
 			//get in all nodes
 			//System.out.println("Getting Nodes...");
-			Element curNode = (Element)rootElement.getFirstChild();
+			Element curNode = (Element)graphElement.getFirstChild();
 			while(curNode != null){
 				if(curNode.getNodeName() != "node"){
 					curNode = (Element)curNode.getNextSibling();
@@ -125,7 +130,7 @@ public class BotLotXMLDS extends BotLotDataSource implements BotLotDataSourceInt
 			}
 			//get in all edges
 			//System.out.println("Getting Edges...");
-			curNode = (Element)rootElement.getFirstChild();
+			curNode = (Element)graphElement.getFirstChild();
 			while(curNode != null){
 				if(curNode.getNodeName() != "node"){
 					curNode = (Element)curNode.getNextSibling();
@@ -269,10 +274,14 @@ public class BotLotXMLDS extends BotLotDataSource implements BotLotDataSourceInt
 			DocumentBuilder builder = dbf.newDocumentBuilder();
 			Document doc = builder.newDocument();
 			//set comment detailing purpose of data
-			doc.appendChild(doc.createComment("This data builds a LotGraph, to be used with the BotLotDS object. https://github.com/GregJohnStewart/BotLot "));
+			doc.appendChild(doc.createComment("This data builds a LotGraph or BotLot object, and is to be used with the BotLotXMLDS object. https://github.com/GregJohnStewart/BotLot "));
 			// create the root element node
 			Element rootElement = doc.createElement("root");
 			doc.appendChild(rootElement);
+			
+			
+			Element graphElement = doc.createElement("graph");
+			rootElement.appendChild(graphElement);
 			
 			for(int i = 0; i < graphToSave.getNumNodes(); i++){
 				Element newNode = doc.createElement("node");
@@ -287,7 +296,7 @@ public class BotLotXMLDS extends BotLotDataSource implements BotLotDataSourceInt
 					newNode.setAttribute((String)pair.getKey(), (String)pair.getValue());
 					//it.remove(); // avoids a ConcurrentModificationException
 				}
-				rootElement.appendChild(newNode);
+				graphElement.appendChild(newNode);
 				//add edges
 				ArrayList<LotEdge> curEdgeList = graphToSave.getNode(curNode).getEdges();
 				for(int j = 0; j < curEdgeList.size(); j++){
@@ -311,7 +320,7 @@ public class BotLotXMLDS extends BotLotDataSource implements BotLotDataSourceInt
 			
 			Element randSeed = doc.createElement("randSeed");
 			randSeed.setAttribute("val", Objects.toString(lotIn.mainGraph.getRandSeed(), null));
-			rootElement.appendChild(randSeed);
+			graphElement.appendChild(randSeed);
 			
 			if(lotIn.hasCurNode()){
 				Element newNode = doc.createElement("curNode");

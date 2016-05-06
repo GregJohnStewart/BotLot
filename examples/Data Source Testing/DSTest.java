@@ -1,4 +1,5 @@
 
+import java.io.IOException;
 import botLot.*;
 import botLot.lotGraph.LotGraph;
 import botLot.lotGraph.LotGraphException;
@@ -13,6 +14,25 @@ public class DSTest {
 
 	public final static String xmlLoc = "testMap.xml";
 
+	private static void promptForEnter(){
+		try{
+			System.in.read();
+		}catch(IOException e){
+			
+		}
+	}
+	
+	private static void doneFail(){
+		System.out.println("\n\nExecution complete. Press any key to continue...");
+		promptForEnter();
+		System.exit(1);
+	}
+	
+	private static void done(){
+		System.out.println("\n\nExecution complete. Press any key to continue...");
+		promptForEnter();
+	}
+	
 	public static void main(String[] args) {
 		BotLot origLot = new BotLot();
 
@@ -31,7 +51,7 @@ public class DSTest {
 
 		} catch (BotLotException e) {
 			System.out.println("ERROR:: Failed to create nodes. This should not happen. Error: " + e.getMessage());
-			System.exit(1);
+			doneFail();
 		}
 
 		System.out.println("\tDone.");
@@ -53,7 +73,7 @@ public class DSTest {
 
 		} catch (LotGraphException e) {
 			System.out.println("ERROR:: Failed to create edges. This should not happen. Error: " + e.getMessage());
-			System.exit(1);
+			doneFail();
 		}
 
 		System.out.println("\tDone.");
@@ -62,7 +82,7 @@ public class DSTest {
 			origLot.calcNewPath();
 		} catch (BotLotException e) {
 			System.out.println("ERROR:: Unable to generate path. This should not happen. Error: " + e.getMessage());
-			System.exit(1);
+			doneFail();
 		}
 		System.out.println("\tDone.");
 
@@ -89,7 +109,7 @@ public class DSTest {
 			dataSource.saveGraph(origLot.mainGraph);
 		} catch (BotLotDSException e) {
 			System.out.println("ERROR:: Unable to write graph out to file. Error: " + e.getMessage());
-			System.exit(1);
+			doneFail();
 		}
 		System.out.println("Done.\n");
 
@@ -100,10 +120,16 @@ public class DSTest {
 			System.out.println("\tDone.");
 
 			System.out.println("\tTesting for correctness...");
-
+			
+			//System.out.println("----------------------");
+			//System.out.println(origLot.mainGraph.toString());
+			//System.out.println("----------------------");
+			//System.out.println(graphRetrieved.toString());
+			//System.out.println("----------------------");
+			
 			if (!graphRetrieved.equals(origLot.mainGraph)) {
 				System.out.println("FAILED -- graphs not equal.");
-				System.exit(1);
+				doneFail();
 			} else {
 				System.out.println("\t\tGraphs are equal!");
 			}
@@ -111,7 +137,7 @@ public class DSTest {
 
 		} catch (BotLotDSException e) {
 			System.out.println("ERROR:: Unable to read graph back from file. Error: " + e.getMessage());
-			System.exit(1);
+			doneFail();
 		}
 		System.out.println("Done.\n");
 		
@@ -121,7 +147,7 @@ public class DSTest {
 			dataSource.saveBotLot(origLot);
 		} catch (BotLotDSException e) {
 			System.out.println("ERROR:: Unable to write graph out to file. Error: " + e.getMessage());
-			System.exit(1);
+			doneFail();
 		}
 		System.out.println("Done.\n");
 
@@ -135,7 +161,7 @@ public class DSTest {
 
 			if (!lotRetrieved.equals(origLot)) {
 				System.out.println("FAILED -- BOTLOTs not equal.");
-				System.exit(1);
+				doneFail();
 			} else {
 				System.out.println("\t\tBOTLOTs are equal!");
 			}
@@ -143,12 +169,12 @@ public class DSTest {
 
 		} catch (BotLotDSException e) {
 			System.out.println("ERROR:: Unable to read BOTLOT back from file. Error: " + e.getMessage());
-			System.exit(1);
+			doneFail();
 		}
 		System.out.println("Done.\n");
 
 		System.out.println("\n\nTesting successful!\nAble to store and retrieve graph/botlot data from XML file without issue.");
-
+		done();
 	}
 
 }
